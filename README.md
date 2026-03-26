@@ -1,46 +1,43 @@
 # Pseudonymus standalone — Pseudonymisation multi-format
 
 Script Python local de pseudonymisation/anonymisation de fichiers JSON, CSV, Excel, DOCX et PDF.
-Iso-perimetre fonctionnel avec Pseudonymus v2 + interface web locale DSFR.
+Iso-périmètre fonctionnel avec Pseudonymus v2 + interface web locale DSFR.
 
-Traitement 100% local. Aucune donnee ne transite vers un service externe.
+Traitement 100 % local. Aucune donnée ne transite vers un service externe.
 
 ---
 
-## Demarrage rapide
+## Démarrage rapide
 
-### Interface web (recommande)
+### Interface web (recommandé)
 
 ```bash
 # Lancer le serveur
 python3 serveur.py
 
 # Ouvrir http://127.0.0.1:8090 dans le navigateur
-# Documentation integree : http://127.0.0.1:8090/#documentation
+# Documentation intégrée : http://127.0.0.1:8090/#documentation
 ```
 
 ### Ligne de commande
 
 ```bash
-# 1. Generer les donnees de reference (une seule fois)
-python3 convertir-donnees.py
+# 1. Générer un mapping automatiquement
+python3 pseudonymise.py fichier.json --mapping-generate
 
-# 2. Generer un mapping automatiquement
-python3 pseudonymise.py data/fichier.json --mapping-generate
+# 2. Vérifier le mapping généré, ajuster si besoin
+# 3. Dry-run (test sur 100 enregistrements)
+python3 pseudonymise.py fichier.json --mapping mapping.json --dry-run
 
-# 3. Verifier le mapping genere, ajuster si besoin
-# 4. Dry-run (test sur 100 enregistrements)
-python3 pseudonymise.py data/fichier.json --mapping mapping.json --dry-run
-
-# 5. Pseudonymiser
-python3 pseudonymise.py data/fichier.json --mapping mapping.json --pseudo
+# 4. Pseudonymiser
+python3 pseudonymise.py fichier.json --mapping mapping.json --pseudo
 ```
 
 ---
 
-## Formats supportes
+## Formats supportés
 
-| Format | Import | Export | Dependance |
+| Format | Import | Export | Dépendance |
 |--------|--------|--------|------------|
 | JSON | Oui | Oui | Aucune |
 | CSV / TSV | Oui | Oui | Aucune |
@@ -50,25 +47,25 @@ python3 pseudonymise.py data/fichier.json --mapping mapping.json --pseudo
 | ODT | Oui | Oui | `pip3 install odfpy` |
 | PDF | Oui | Texte (.txt) | `pip3 install pdfplumber` |
 
-Les dependances sont optionnelles : le script fonctionne sans si le format n'est pas utilise.
+Les dépendances sont optionnelles : le script fonctionne sans si le format n'est pas utilisé.
 
 ---
 
 ## Options CLI
 
-| Option | Role |
+| Option | Rôle |
 |--------|------|
 | `--mapping fichier.json` | Fichier de mapping (obligatoire sauf --mapping-generate) |
-| `--pseudo` | Pseudonymisation reversible + CSV correspondances |
-| `--anon` | Anonymisation irreversible |
-| `--dry-run` | Test sur 100 enregistrements, pas de fichier ecrit |
+| `--pseudo` | Pseudonymisation réversible + CSV correspondances |
+| `--anon` | Anonymisation irréversible |
+| `--dry-run` | Test sur 100 enregistrements, pas de fichier écrit |
 | `--score-only` | Scoring RGPD sans pseudonymiser |
-| `--fort` | Mode fort : prenoms isoles, patronymes prefixe, propagation, majuscules |
-| `--nlp` | Pre-filtre spaCy fr (optionnel, +2-5% de detection) |
+| `--fort` | Mode fort : prénoms isolés, patronymes préfixe, propagation, majuscules |
+| `--nlp` | Pré-filtre spaCy fr (optionnel, +2-5 % de détection) |
 | `--tech` | Regex techniques : IPv4/v6, MAC, JWT, API keys, GPS, plaques |
 | `--mapping-generate` | Inspecte le fichier et propose un mapping squelette |
 | `--input-dir dossier/` | Traite tous les .json d'un dossier |
-| `--chunk-size N` | Streaming par paquets de N enregistrements (fichiers > 2 Go, necessite `pip3 install ijson`) |
+| `--chunk-size N` | Streaming par paquets de N enregistrements (fichiers > 2 Go, nécessite `pip3 install ijson`) |
 
 ---
 
@@ -84,23 +81,23 @@ Serveur local sur http://127.0.0.1:8090 avec 6 pages :
 |------|-----|----------|
 | Pseudonymisation | `/#pseudonymisation` | Coller du texte et pseudonymiser |
 | Correspondances | `/#correspondances` | Table jeton/valeur avec recherche et export CSV |
-| Restauration | `/#restauration` | Depseudonymiser avec les correspondances |
+| Restauration | `/#restauration` | Dépseudonymiser avec les correspondances |
 | Import fichier | `/#import-fichier` | Traiter un fichier complet (upload ou chemin local) |
-| Scoring RGPD | `/#scoring-rgpd` | Evaluer le risque avant pseudonymisation |
-| Documentation | `/#documentation` | Glossaire, guide, FAQ, reference technique |
+| Scoring RGPD | `/#scoring-rgpd` | Évaluer le risque avant pseudonymisation |
+| Documentation | `/#documentation` | Glossaire, guide, FAQ, référence technique |
 
 ### API
 
-| Route | Methode | Fonction |
+| Route | Méthode | Fonction |
 |-------|---------|----------|
 | `/api/pseudonymise-texte` | POST | Pseudonymiser du texte brut |
 | `/api/pseudonymise` | POST | Pseudonymiser un fichier (upload) |
 | `/api/pseudonymise-local` | POST | Pseudonymiser via chemin local (gros fichiers) |
 | `/api/depseudonymise` | POST | Restaurer les jetons |
 | `/api/score` | POST | Scoring RGPD |
-| `/api/mapping/generate` | POST | Generation automatique de mapping |
+| `/api/mapping/generate` | POST | Génération automatique de mapping |
 | `/api/stats` | GET | Statistiques dictionnaires |
-| `/api/health` | GET | Sante du serveur |
+| `/api/health` | GET | Santé du serveur |
 
 ---
 
@@ -126,11 +123,11 @@ Serveur local sur http://127.0.0.1:8090 avec 6 pages :
 }
 ```
 
-### JSON imbrique (notation pointee + unwrap)
+### JSON imbriqué (notation pointée + unwrap)
 
 ```json
 {
-  "description": "Reclamations SignalConso",
+  "description": "Réclamations SignalConso",
   "structure": {
     "unwrap": {
       "field": "RCLMFicheReportJsonSC",
@@ -155,57 +152,57 @@ Serveur local sur http://127.0.0.1:8090 avec 6 pages :
 
 ### Champs du mapping
 
-| Champ | Role |
+| Champ | Rôle |
 |-------|------|
-| `champs_sensibles` | Champs a pseudonymiser avec leur type et prefixe de jeton |
-| `texte_libre` | Champs texte a scanner par les regex + dictionnaires |
-| `lookup_noms` | Champs contenant le prenom/nom (pour lookup dans le texte libre) |
-| `whitelist` | Mots a ne jamais pseudonymiser (noms d'entreprise, etc.) |
-| `blacklist` | Mots a toujours forcer en pseudonymisation |
-| `structure.unwrap` | JSON stringifie a depaqueter avant traitement |
+| `champs_sensibles` | Champs à pseudonymiser avec leur type et préfixe de jeton |
+| `texte_libre` | Champs texte à scanner par les regex + dictionnaires |
+| `lookup_noms` | Champs contenant le prénom/nom (pour lookup dans le texte libre) |
+| `whitelist` | Mots à ne jamais pseudonymiser (noms d'entreprise, etc.) |
+| `blacklist` | Mots à toujours forcer en pseudonymisation |
+| `structure.unwrap` | JSON stringifié à dépaqueter avant traitement |
 
 ---
 
-## Depseudonymisation
+## Dépseudonymisation
 
 ```bash
-python3 depseudonymise.py data/fichier_PSEUDO.json \
+python3 depseudonymise.py fichier_PSEUDO.json \
     --correspondances confidentiel/correspondances.csv
 ```
 
-Produit `data/fichier_RESTAURE.json` avec les valeurs originales.
+Produit `fichier_RESTAURE.json` avec les valeurs originales.
 
 ---
 
-## Donnees de reference
+## Données de référence
 
-Generees par `convertir-donnees.py` depuis les fichiers JS de Pseudonymus v2.
+Les dictionnaires sont livrés dans `data/` et prêts à l'emploi. Le script `convertir-donnees.py` ne régénère que les 7 fichiers statiques (stopwords, villes, organisations, etc.). Les fichiers `noms.json` et `prenoms.json` sont des données de référence immuables.
 
-| Fichier | Contenu | Entrees |
+| Fichier | Contenu | Entrées |
 |---------|---------|---------|
 | `data/noms.json` | Patronymes INSEE | 884 314 |
-| `data/prenoms.json` | Prenoms INSEE (M+F) | 169 244 |
-| `data/stopwords-capitalises.json` | Mots capitalises a ne jamais pseudonymiser | 242 |
-| `data/stopwords-minuscules.json` | Mots minuscules a ne jamais pseudonymiser | 151 |
-| `data/majuscules-garder.json` | Mots en majuscules a preserver | 94 |
-| `data/villes-france.json` | Top villes francaises | 97 |
-| `data/mots-organisations.json` | Mots-cles organisations (SA, SARL...) | 38 |
+| `data/prenoms.json` | Prénoms INSEE (M+F) | 169 244 |
+| `data/stopwords-capitalises.json` | Mots capitalisés à ne jamais pseudonymiser | 242 |
+| `data/stopwords-minuscules.json` | Mots minuscules à ne jamais pseudonymiser | 151 |
+| `data/majuscules-garder.json` | Mots en majuscules à préserver | 94 |
+| `data/villes-france.json` | Top villes françaises | 97 |
+| `data/mots-organisations.json` | Mots-clés organisations (SA, SARL...) | 38 |
 | `data/contexte-institution.json` | Mots de contexte institutionnel | 60 |
-| `data/acronymes-garder.json` | Acronymes a preserver | 12 |
+| `data/acronymes-garder.json` | Acronymes à préserver | 12 |
 
 ---
 
 ## Tests
 
 ```bash
-# Tests moteur (v1+v2) : 49 tests
+# Tests moteur : 49 tests
 python3 test-options.py
 
-# Tests v3 (formats, serveur, API) : 43 tests
+# Tests formats, serveur, API : 43 tests
 python3 test-v3.py
 ```
 
-92 tests au total, zero echec.
+92 tests au total, zéro échec.
 
 ---
 
@@ -217,31 +214,36 @@ pseudonymus-standalone/
   depseudonymise.py      Restauration
   formats.py             Parseurs multi-format (CSV, XLSX, ODS, DOCX, ODT, PDF)
   serveur.py             Serveur web local (port 8090)
-  convertir-donnees.py   Regeneration des donnees statiques
+  convertir-donnees.py   Régénération des données statiques
   test-options.py        Tests moteur (49 tests)
   test-v3.py             Tests v3 (43 tests)
-  requirements.txt       Dependances optionnelles
+  requirements.txt       Dépendances optionnelles
   LICENSE                GPL v3
+  CHANGELOG.md           Historique des versions
+  CLAUDE.md              Instructions projet pour Claude Code
   README.md              Ce fichier
-  .gitignore             Exclusions Python, OS, donnees sensibles
+  .gitignore             Exclusions Python, OS, données sensibles
   data/                  Dictionnaires et stopwords
-  exemples/              Exemples de mappings et donnees de test
-  confidentiel/          Correspondances CSV (gitignore)
+  exemples/              Exemples de mappings et données de test
+  confidentiel/          Correspondances CSV (gitignoré)
   interface/             Frontend DSFR
     index.html           6 pages (pseudo, correspondances, restauration, import, scoring, doc)
     app.js               Logique frontend
-    style.css            Styles complementaires
+    style.css            Styles complémentaires
     dsfr/                CSS, JS et polices DSFR en local
+  docs/
+    prd/                 PRD (décisions produit)
+    doc/                 Documentation utilisateur
 ```
 
 ---
 
-## Securite
+## Sécurité
 
-- Le serveur ecoute sur `127.0.0.1` uniquement (pas d'acces reseau)
-- Le fichier `confidentiel/correspondances.csv` contient les donnees en clair
-- Permissions `chmod 600` appliquees automatiquement
-- Gitignored (fichier `.gitignore` cree automatiquement)
+- Le serveur écoute sur `127.0.0.1` uniquement (pas d'accès réseau)
+- Le fichier `confidentiel/correspondances.csv` contient les données en clair
+- Permissions `chmod 600` appliquées automatiquement
+- Gitignoré (fichier `.gitignore` créé automatiquement)
 - Ne jamais partager les correspondances avec un service externe
 
 ---
@@ -252,4 +254,4 @@ pseudonymus-standalone/
 |--------|------|-------|
 | 31 891 enregistrements (118 Mo) | Standard | ~1 minute |
 | 31 891 enregistrements (118 Mo) | Fort | ~5 minutes |
-| > 2 Go | `--chunk-size 5000` | Streaming, memoire constante |
+| > 2 Go | `--chunk-size 5000` | Streaming, mémoire constante |

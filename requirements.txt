@@ -1,13 +1,20 @@
 # Pseudonymus standalone — Pseudonymisation multi-format
 #
-# Le coeur (pseudonymisation JSON/CSV, serveur HTTP, interface DSFR)
-# fonctionne avec zero dependance externe — uniquement la stdlib Python 3.8+.
+# Le cœur (pseudonymisation JSON/CSV, serveur HTTP, interface DSFR)
+# fonctionne avec zéro dépendance externe — uniquement la stdlib Python 3.8+.
 #
-# Les packages ci-dessous ne sont necessaires que pour les formats bureautiques.
-# Installez uniquement ceux dont vous avez besoin :
+# Les packages ci-dessous ne sont nécessaires que pour les formats bureautiques,
+# le streaming et la détection NLP. Installez uniquement ceux dont vous avez besoin :
 #   pip install -r requirements.txt
 
+# Formats bureautiques
 openpyxl>=3.0        # Excel XLSX
 odfpy>=1.4           # OpenDocument ODS/ODT
 python-docx>=0.8     # Word DOCX
 pdfplumber>=0.9      # PDF (lecture seule)
+
+# Streaming (fichiers > 2 Go)
+ijson>=3.0           # --chunk-size N
+
+# NLP (détection avancée des entités nommées)
+# spacy>=3.0         # --nlp (décommenter + installer le modèle : python3 -m spacy download fr_core_news_sm)
