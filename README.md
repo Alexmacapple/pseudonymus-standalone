@@ -246,12 +246,3 @@ pseudonymus-standalone/
 - Gitignoré (fichier `.gitignore` créé automatiquement)
 - Ne jamais partager les correspondances avec un service externe
 
----
-
-## Performance
-
-| Volume | Mode | Temps |
-|--------|------|-------|
-| 31 891 enregistrements (118 Mo) | Standard | ~1 minute |
-| 31 891 enregistrements (118 Mo) | Fort | ~5 minutes |
-| > 2 Go | `--chunk-size 5000` | Streaming, mémoire constante |
