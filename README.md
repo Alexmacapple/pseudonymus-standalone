@@ -231,9 +231,8 @@ pseudonymus-standalone/
     app.js               Logique frontend
     style.css            Styles complémentaires
     dsfr/                CSS, JS et polices DSFR en local
-  docs/
-    prd/                 PRD (décisions produit)
-    doc/                 Documentation utilisateur
+  prd/                   PRD à faire
+    done/                PRD terminés + documentation
 ```
 
 ---

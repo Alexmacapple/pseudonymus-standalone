@@ -32,9 +32,8 @@ pseudonymus-standalone/
 │   ├── app.js             # Logique frontend
 │   ├── style.css          # Styles complémentaires
 │   └── dsfr/              # CSS, JS, polices DSFR embarqués
-├── docs/
-│   ├── prd/               # PRD (décisions produit)
-│   └── doc/               # Documentation utilisateur
+├── prd/                   # PRD à faire (à la racine)
+│   └── done/              # PRD terminés + documentation
 ├── test-options.py        # 49 tests moteur
 ├── test-v3.py             # 43 tests formats + serveur + API
 ├── requirements.txt       # Dépendances optionnelles
