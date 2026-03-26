@@ -9,9 +9,9 @@ PROJECT_DIR = os.path.dirname(TESTS_DIR)
 SCRIPT = os.path.join(PROJECT_DIR, 'pseudonymise.py')
 DEPSEUDO = os.path.join(PROJECT_DIR, 'depseudonymise.py')
 EXEMPLES = os.path.join(PROJECT_DIR, 'exemples')
-TEST_JSON = os.path.join(EXEMPLES, 'test-clients.json')
-MAPPING_PLAT = os.path.join(EXEMPLES, 'mapping-clients.json')
-MAPPING_SC = os.path.join(EXEMPLES, 'mapping-signalconso.json')
+TEST_JSON = os.path.join(EXEMPLES, 'donnees-json-plat.json')
+MAPPING_PLAT = os.path.join(EXEMPLES, 'mapping-json-plat.json')
+MAPPING_SC = os.path.join(EXEMPLES, 'mapping-json-imbrique.json')
 
 passed = 0
 failed = 0
@@ -40,8 +40,8 @@ def run_depseudo(args):
 
 
 # Nettoyage
-for f in ['test-clients_PSEUDO.json', 'test-clients_ANON.json',
-          'test-clients_RESTAURE.json']:
+for f in ['donnees-json-plat_PSEUDO.json', 'donnees-json-plat_ANON.json',
+          'donnees-json-plat_RESTAURE.json']:
     p = os.path.join(EXEMPLES, f)
     if os.path.exists(p):
         os.remove(p)
@@ -79,14 +79,14 @@ test('Code retour zero', r.returncode == 0)
 test('Rapport present', 'RAPPORT DE TRAITEMENT' in r.stderr)
 test('5 enregistrements', '5/5' in r.stderr)
 test('Pas de fichier ecrit', not os.path.exists(
-    os.path.join(EXEMPLES, 'test-clients_PSEUDO.json')))
+    os.path.join(EXEMPLES, 'donnees-json-plat_PSEUDO.json')))
 test('Score RGPD affiche', 'Score RGPD' in r.stderr)
 
 # ============================================================
 print('\n=== TEST 6 : --pseudo JSON plat ===')
 r = run([TEST_JSON, '--mapping', MAPPING_PLAT, '--pseudo'])
 test('Code retour zero', r.returncode == 0)
-pseudo_path = os.path.join(EXEMPLES, 'test-clients_PSEUDO.json')
+pseudo_path = os.path.join(EXEMPLES, 'donnees-json-plat_PSEUDO.json')
 test('JSON pseudo ecrit', os.path.exists(pseudo_path))
 test('CSV correspondances ecrit', os.path.exists(csv_path))
 
@@ -114,7 +114,7 @@ if os.path.exists(csv_path):
 print('\n=== TEST 7 : --anon JSON plat ===')
 r = run([TEST_JSON, '--mapping', MAPPING_PLAT, '--anon'])
 test('Code retour zero', r.returncode == 0)
-anon_path = os.path.join(EXEMPLES, 'test-clients_ANON.json')
+anon_path = os.path.join(EXEMPLES, 'donnees-json-plat_ANON.json')
 test('JSON anon ecrit', os.path.exists(anon_path))
 
 if os.path.exists(anon_path):
@@ -144,11 +144,11 @@ test('Plus de remplacements en fort', True)  # Le mode fort devrait trouver plus
 
 # ============================================================
 print('\n=== TEST 10 : Depseudonymisation ===')
-pseudo_path = os.path.join(EXEMPLES, 'test-clients_PSEUDO.json')
+pseudo_path = os.path.join(EXEMPLES, 'donnees-json-plat_PSEUDO.json')
 if os.path.exists(pseudo_path) and os.path.exists(csv_path):
     r = run_depseudo([pseudo_path, '--correspondances', csv_path])
     test('Code retour zero', r.returncode == 0)
-    restaure_path = os.path.join(EXEMPLES, 'test-clients_RESTAURE.json')
+    restaure_path = os.path.join(EXEMPLES, 'donnees-json-plat_RESTAURE.json')
     test('JSON restaure ecrit', os.path.exists(restaure_path))
     if os.path.exists(restaure_path):
         with open(restaure_path, 'r', encoding='utf-8') as f:
@@ -164,7 +164,7 @@ else:
 
 # ============================================================
 print('\n=== TEST 11 : Mapping SignalConso (unwrap + notation pointee) ===')
-sc_test_path = os.path.join(EXEMPLES, 'test-signalconso.json')
+sc_test_path = os.path.join(EXEMPLES, 'donnees-json-imbrique.json')
 r = run([sc_test_path, '--mapping', MAPPING_SC, '--dry-run'])
 test('Code retour zero', r.returncode == 0)
 test('5 enregistrements', '5/5' in r.stderr)

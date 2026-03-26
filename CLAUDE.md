@@ -83,6 +83,7 @@ Tout en français : commits, documentation, messages d'erreur, interface.
 - Messages de commit en français, forme nominale (« Ajout de... », « Correction de... »)
 - Branches : `feature/`, `fix/`, `docs/`
 - Pas de `git push --force` ni `git reset --hard` sans confirmation
+- Mettre à jour [CHANGELOG.md](CHANGELOG.md) à chaque commit (section courante en haut du fichier)
 
 ### Code Python
 

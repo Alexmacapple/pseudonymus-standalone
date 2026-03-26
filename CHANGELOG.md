@@ -5,19 +5,38 @@ Issu de la branche `feature/alex-workflow` du depot `pseudonymus2`.
 
 ---
 
+## v3.1.0 — 2026-03-26
+
+Restructuration du dépôt pour standards git.
+
+### Structure
+
+- Tests déplacés dans `tests/` (test-options.py, test-v3.py)
+- Documentation réorganisée : `prd/` (à faire) + `prd/done/` (terminés)
+- Exemples renommés : `donnees-json-plat.json`, `donnees-json-imbrique.json`, `mapping-json-plat.json`, `mapping-json-imbrique.json`
+- Placeholders génériques dans l'interface (plus de chemins utilisateur)
+
+### Claude Code
+
+- Init `.claude/` : agents (test-runner, audit-coherence), rules (projet)
+- Ajout `AGENTS.md` : catalogue des sous-agents
+- Ajout `CLAUDE.md` : instructions projet complètes
+
+---
+
 ## v3.0.0 — 2026-03-26
 
-Depot autonome, independant du monorepo `pseudonymus2`.
+Dépôt autonome, indépendant du monorepo `pseudonymus2`.
 
-### Autonomie du depot
+### Autonomie du dépôt
 
 - Renommage `generique/` en `pseudonymus-standalone/`
-- Internalisation complete : zero dependance vers `public/`, `virginie/`, `specifique/`
-- Centralisation de `confidentiel/` a la racine du projet
+- Internalisation complète : zéro dépendance vers `public/`, `virginie/`, `specifique/`
+- Centralisation de `confidentiel/` à la racine du projet
 - Ajout `requirements.txt`, `.gitignore`, `LICENSE` (GPL v3)
-- Nettoyage de toutes les references a l'ancien nom `generique/`
-- Donnees de test SignalConso synthetiques (`exemples/test-signalconso.json`)
-- Documentation reorganisee dans `docs/prd/` et `docs/doc/`
+- Nettoyage de toutes les références à l'ancien nom `generique/`
+- Données de test SignalConso synthétiques (`exemples/donnees-json-imbrique.json`)
+- Documentation réorganisée dans `prd/`
 - 92/92 tests OK en isolation
 
 ### Interface web DSFR

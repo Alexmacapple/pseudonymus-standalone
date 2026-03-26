@@ -1,6 +1,7 @@
 # Agents disponibles
 
 Sous-agents spécialisés pour le projet Pseudonymus standalone.
+Voir [CLAUDE.md](CLAUDE.md) pour l'architecture, les conventions et les commandes du projet.
 
 ---
 
