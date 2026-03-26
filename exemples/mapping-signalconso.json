@@ -1,0 +1,31 @@
+{
+  "description": "Reclamations consommateurs SignalConso",
+  "structure": {
+    "unwrap": {
+      "field": "RCLMFicheReportJsonSC",
+      "parse": "json_string"
+    }
+  },
+  "champs_sensibles": {
+    "DOAR_IDENT": {"type": "id", "jeton": "ID"},
+    "Report.Id": {"type": "uuid", "jeton": "UUID"},
+    "Report.Firstname": {"type": "prenom", "jeton": "PRENOM"},
+    "Report.Lastname": {"type": "nom", "jeton": "NOM"},
+    "Report.Email": {"type": "email", "jeton": "EMAIL"},
+    "Report.Phone": {"type": "tel", "jeton": "TEL"},
+    "Report.ConsumerPhone": {"type": "tel", "jeton": "TEL"},
+    "Report.PostalCode": {"type": "cp", "jeton": "CP"},
+    "Report.Gender": {"type": "genre", "jeton": "GENRE"}
+  },
+  "texte_libre": [
+    "Report.Question",
+    "Report.Description",
+    "Report.Details[].Value"
+  ],
+  "lookup_noms": {
+    "prenom": "Report.Firstname",
+    "nom": "Report.Lastname"
+  },
+  "whitelist": ["ORANGE", "SFR", "FREE", "BOUYGUES", "AMAZON", "CDISCOUNT"],
+  "blacklist": []
+}

@@ -1,0 +1,14 @@
+# Donnees sensibles
+confidentiel/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Fichiers temporaires de test
+_test_*.json
+*.tmp
+
+# OS
+.DS_Store

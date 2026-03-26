@@ -1,0 +1,113 @@
+/* Styles complementaires a DSFR */
+
+.page {
+    display: none;
+}
+.page.active {
+    display: block;
+}
+
+/* Barre de progression */
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: var(--background-alt-grey);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+.progress-bar {
+    height: 100%;
+    background: var(--background-action-high-blue-france);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+/* Tuiles statistiques */
+.fr-tile--sm .fr-tile__body {
+    padding: 1rem;
+    text-align: center;
+}
+.fr-tile--sm .fr-tile__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+.fr-tile--sm .fr-tile__detail {
+    font-size: 0.875rem;
+    color: var(--text-mention-grey);
+    margin: 0.25rem 0 0;
+}
+
+/* Textarea readonly */
+textarea[readonly] {
+    background: var(--background-alt-grey);
+}
+
+/* Alerte personnalisee */
+.fr-alert[hidden] {
+    display: none;
+}
+
+/* Navigation active */
+.fr-nav__link[aria-current="page"] {
+    color: var(--text-active-blue-france);
+}
+
+/* Badge scoring */
+.fr-badge--nul { --badge-color: var(--text-default-success); background-color: var(--background-contrast-success); }
+.fr-badge--faible { --badge-color: var(--text-default-info); background-color: var(--background-contrast-info); }
+.fr-badge--modere { --badge-color: var(--text-default-warning); background-color: var(--background-contrast-warning); }
+.fr-badge--eleve { --badge-color: var(--text-label-orange-terre-battue); background-color: var(--background-contrast-orange-terre-battue); }
+.fr-badge--critique { --badge-color: var(--text-default-error); background-color: var(--background-contrast-error); }
+
+/* Texte aligne a droite */
+.fr-text--right {
+    text-align: right;
+}
+
+/* Modale serveur */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay[hidden] {
+    display: none;
+}
+.modal-dialog {
+    background: var(--background-default-grey, #fff);
+    border-radius: 0.5rem;
+    max-width: 640px;
+    width: calc(100% - 2rem);
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.modal-header h1 {
+    font-size: 1.375rem;
+    margin: 0;
+}
+.modal-content table {
+    width: 100%;
+}
+
+/* Responsive ajustements */
+@media (max-width: 767px) {
+    .fr-grid-row--gutters > [class*="fr-col-md-6"] {
+        margin-bottom: 1rem;
+    }
+}

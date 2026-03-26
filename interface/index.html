@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="system">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Outil de pseudonymisation 100% local. Protégez les données personnelles de vos fichiers JSON, CSV, Excel, DOCX et PDF sans aucun transfert externe.">
+    <title>Pseudonymisation - Outil local</title>
+    <link rel="stylesheet" href="dsfr/css/dsfr.min.css">
+    <link rel="stylesheet" href="dsfr/css/icons.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- En-tete -->
+    <header role="banner" class="fr-header">
+        <div class="fr-header__body">
+            <div class="fr-container">
+                <div class="fr-header__body-row">
+                    <div class="fr-header__brand fr-enlarge-link">
+                        <div class="fr-header__brand-top">
+                            <div class="fr-header__logo">
+                                <p class="fr-logo">République<br>Française</p>
+                            </div>
+                        </div>
+                        <div class="fr-header__service">
+                            <a href="/" title="Pseudonymisation - Accueil">
+                                <p class="fr-header__service-title">Pseudonymisation</p>
+                            </a>
+                            <p class="fr-header__service-tagline">Traitement 100% local — aucune donnée transmise</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation -->
+        <div class="fr-header__menu">
+            <div class="fr-container">
+                <nav class="fr-nav" role="navigation" aria-label="Menu principal">
+                    <ul class="fr-nav__list">
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="#pseudonymisation" data-page="pseudonymisation" aria-current="page">Pseudonymisation</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="#correspondances" data-page="correspondances">Correspondances</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="#restauration" data-page="restauration">Restauration</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="#import-fichier" data-page="import-fichier">Import fichier</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="#scoring-rgpd" data-page="scoring-rgpd">Scoring RGPD</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="#documentation" data-page="documentation">Documentation</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fil d'Ariane -->
+    <div class="fr-container fr-mt-2w">
+        <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+            <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d'Ariane</button>
+            <div class="fr-collapse" id="breadcrumb">
+                <ol class="fr-breadcrumb__list" id="breadcrumb-list">
+                    <li>
+                        <a class="fr-breadcrumb__link" href="#pseudonymisation">Accueil</a>
+                    </li>
+                    <li>
+                        <a class="fr-breadcrumb__link" aria-current="page">Pseudonymisation</a>
+                    </li>
+                </ol>
+            </div>
+        </nav>
+    </div>
+
+    <main role="main" id="main" class="fr-container fr-my-4w">
+
+        <!-- ============================================ -->
+        <!-- PAGE : Pseudonymisation                      -->
+        <!-- ============================================ -->
+        <section id="page-pseudonymisation" class="page active">
+            <h1>Pseudonymisation de texte</h1>
+            <p class="fr-text--lg">Collez ou saisissez du texte contenant des données personnelles.</p>
+
+            <div class="fr-grid-row fr-grid-row--gutters">
+                <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="input-texte">Texte source</label>
+                        <textarea class="fr-input" id="input-texte" rows="12"
+                            placeholder="Bonjour Marie Dupont, votre email est marie.dupont@gmail.com et votre numéro 06 12 34 56 78."></textarea>
+                    </div>
+                </div>
+                <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="output-texte">Résultat pseudonymisé</label>
+                        <textarea class="fr-input" id="output-texte" rows="12" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <fieldset class="fr-fieldset fr-my-2w" aria-label="Options de pseudonymisation">
+                <legend class="fr-fieldset__legend">Options</legend>
+                <div class="fr-fieldset__content fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="mode-standard" name="mode-detection" value="standard" checked>
+                            <label class="fr-label" for="mode-standard">Standard</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="mode-fort" name="mode-detection" value="fort">
+                            <label class="fr-label" for="mode-fort">Fort (pipeline complet)</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-checkbox-group">
+                            <input type="checkbox" id="opt-tech">
+                            <label class="fr-label" for="opt-tech">Tech (IP, JWT, MAC)</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-checkbox-group">
+                            <input type="checkbox" id="opt-nlp">
+                            <label class="fr-label" for="opt-nlp">NLP (spaCy)</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Whitelist / Blacklist -->
+            <div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
+                <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="input-whitelist">Whitelist (mots à ne jamais pseudonymiser, séparés par des virgules)</label>
+                        <input class="fr-input" type="text" id="input-whitelist" placeholder="ORANGE, SFR, FREE">
+                    </div>
+                </div>
+                <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="input-blacklist">Blacklist (mots à toujours pseudonymiser, séparés par des virgules)</label>
+                        <input class="fr-input" type="text" id="input-blacklist" placeholder="Victor Hugo, Jean Moulin">
+                    </div>
+                </div>
+            </div>
+
+            <div class="fr-btns-group fr-btns-group--inline">
+                <button class="fr-btn" id="btn-pseudonymise" type="button">Pseudonymiser</button>
+                <button class="fr-btn fr-btn--secondary" id="btn-clear" type="button">Effacer</button>
+            </div>
+
+            <!-- Alerte resultat -->
+            <div id="alert-pseudo" class="fr-alert fr-my-2w" role="status" aria-live="polite" hidden></div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE : Correspondances                       -->
+        <!-- ============================================ -->
+        <section id="page-correspondances" class="page">
+            <h1>Table de correspondances</h1>
+            <p class="fr-text--lg">Visualisez les correspondances jeton / valeur originale de la dernière pseudonymisation.</p>
+
+            <div id="correspondances-vide" class="fr-callout">
+                <p class="fr-callout__text">Aucune correspondance. Lancez d'abord une pseudonymisation.</p>
+            </div>
+
+            <div id="correspondances-content" hidden>
+                <div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
+                    <div class="fr-col-12 fr-col-md-6">
+                        <div class="fr-search-bar" role="search">
+                            <label class="fr-label" for="search-correspondances">Rechercher</label>
+                            <input class="fr-input" type="search" id="search-correspondances" placeholder="Filtrer par jeton ou valeur...">
+                            <button class="fr-btn" title="Rechercher" type="button">Rechercher</button>
+                        </div>
+                    </div>
+                    <div class="fr-col-12 fr-col-md-6 fr-text--right">
+                        <button class="fr-btn fr-btn--secondary fr-btn--sm" id="btn-export-csv" type="button">Exporter CSV</button>
+                    </div>
+                </div>
+
+                <div class="fr-table">
+                    <table id="table-correspondances">
+                        <thead>
+                            <tr>
+                                <th scope="col">Type</th>
+                                <th scope="col">Jeton</th>
+                                <th scope="col">Valeur originale</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-correspondances"></tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav role="navigation" class="fr-pagination" aria-label="Pagination">
+                    <ul class="fr-pagination__list" id="pagination-correspondances"></ul>
+                </nav>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE : Restauration                          -->
+        <!-- ============================================ -->
+        <section id="page-restauration" class="page">
+            <h1>Restauration (dépseudonymisation)</h1>
+            <p class="fr-text--lg">Remplacez les jetons par les valeurs originales.</p>
+
+            <div class="fr-grid-row fr-grid-row--gutters">
+                <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="input-restauration">Texte pseudonymisé</label>
+                        <textarea class="fr-input" id="input-restauration" rows="10"
+                            placeholder="Bonjour [PERSONNE_1], votre email est [EMAIL_1]..."></textarea>
+                    </div>
+                </div>
+                <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="output-restauration">Texte restauré</label>
+                        <textarea class="fr-input" id="output-restauration" rows="10" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fr-upload-group fr-my-2w">
+                <label class="fr-label" for="upload-correspondances">
+                    Charger un fichier de correspondances (CSV)
+                    <span class="fr-hint-text">Format : type;jeton;valeur_originale</span>
+                </label>
+                <input class="fr-upload" type="file" id="upload-correspondances" accept=".csv" title="Charger un fichier de correspondances CSV">
+            </div>
+
+            <p class="fr-text--sm fr-mb-2w" id="restauration-source-info"></p>
+
+            <div class="fr-btns-group fr-btns-group--inline">
+                <button class="fr-btn" id="btn-restaurer" type="button">Restaurer</button>
+                <button class="fr-btn fr-btn--secondary" id="btn-restaurer-auto" type="button">Utiliser les correspondances en mémoire</button>
+            </div>
+
+            <div id="alert-restauration" class="fr-alert fr-my-2w" role="status" aria-live="polite" hidden></div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE : Import fichier                        -->
+        <!-- ============================================ -->
+        <section id="page-import-fichier" class="page">
+            <h1>Import de fichier</h1>
+            <p class="fr-text--lg">Importez un fichier JSON, CSV, Excel, DOCX ou PDF pour le pseudonymiser.</p>
+
+            <!-- Choix du mode d'import -->
+            <fieldset class="fr-fieldset fr-mb-2w" aria-label="Mode d'import du fichier">
+                <legend class="fr-fieldset__legend">Source du fichier</legend>
+                <div class="fr-fieldset__content fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="import-source-upload" name="import-source" value="upload" checked>
+                            <label class="fr-label" for="import-source-upload">Upload (petits fichiers)</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="import-source-local" name="import-source" value="local">
+                            <label class="fr-label" for="import-source-local">Chemin local (fichiers volumineux)</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="fr-grid-row fr-grid-row--gutters">
+                <div class="fr-col-12 fr-col-md-6">
+                    <!-- Upload classique -->
+                    <div id="import-upload-zone">
+                        <div class="fr-upload-group">
+                            <label class="fr-label" for="upload-fichier">
+                                Fichier source
+                                <span class="fr-hint-text">Formats : JSON, CSV, TSV, XLSX, ODS, DOCX, ODT, PDF</span>
+                            </label>
+                            <input class="fr-upload" type="file" id="upload-fichier"
+                                accept=".json,.csv,.tsv,.xlsx,.xls,.ods,.docx,.odt,.pdf" title="Fichier source">
+                        </div>
+                    </div>
+                    <!-- Chemin local -->
+                    <div id="import-local-zone" hidden>
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="input-filepath">
+                                Chemin du fichier sur le disque
+                                <span class="fr-hint-text">Le fichier est lu directement par le serveur, sans transit HTTP</span>
+                            </label>
+                            <input class="fr-input" type="text" id="input-filepath"
+                                placeholder="/Users/alex/donnees/fichier.json">
+                        </div>
+                        <div class="fr-input-group fr-mt-1w">
+                            <label class="fr-label" for="input-mappingpath">
+                                Chemin du mapping (optionnel)
+                                <span class="fr-hint-text">Alternative au textarea — le serveur lit le mapping sur le disque</span>
+                            </label>
+                            <input class="fr-input" type="text" id="input-mappingpath"
+                                placeholder="/Users/alex/donnees/mapping.json">
+                        </div>
+                    </div>
+                </div>
+                <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="import-mapping">
+                            Mapping (JSON)
+                            <span class="fr-hint-text">Collez le JSON du mapping ou chargez un fichier</span>
+                        </label>
+                        <textarea class="fr-input" id="import-mapping" rows="8" placeholder='{
+  "description": "Mon fichier",
+  "champs_sensibles": {
+    "nom": {"type": "nom", "jeton": "NOM"}
+  },
+  "texte_libre": ["commentaire"]
+}'></textarea>
+                    </div>
+                    <div class="fr-upload-group fr-mt-1w">
+                        <label class="fr-label" for="upload-mapping">ou charger un fichier mapping</label>
+                        <input class="fr-upload" type="file" id="upload-mapping" accept=".json" title="ou charger un fichier mapping">
+                    </div>
+                    <button class="fr-btn fr-btn--secondary fr-btn--sm fr-mt-1w" id="btn-analyze" type="button">Analyser la structure</button>
+                </div>
+            </div>
+
+            <!-- Options import -->
+            <fieldset class="fr-fieldset fr-my-2w" aria-label="Options d'import">
+                <legend class="fr-fieldset__legend">Options</legend>
+                <div class="fr-fieldset__content fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="import-mode-pseudo" name="import-mode" value="pseudo" checked>
+                            <label class="fr-label" for="import-mode-pseudo">Pseudonymisation</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="import-mode-anon" name="import-mode" value="anon">
+                            <label class="fr-label" for="import-mode-anon">Anonymisation</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-checkbox-group">
+                            <input type="checkbox" id="import-fort">
+                            <label class="fr-label" for="import-fort">Mode fort</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-checkbox-group">
+                            <input type="checkbox" id="import-tech">
+                            <label class="fr-label" for="import-tech">Tech (IP, JWT, MAC)</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-checkbox-group">
+                            <input type="checkbox" id="import-nlp">
+                            <label class="fr-label" for="import-nlp">NLP (spaCy)</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <button class="fr-btn" id="btn-import" type="button">Lancer le traitement</button>
+
+            <!-- Progression -->
+            <div id="import-progress" class="fr-my-2w" hidden>
+                <p id="import-progress-text" class="fr-text--bold"></p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="import-progress-bar"></div>
+                </div>
+            </div>
+
+            <div id="alert-import" class="fr-alert fr-my-2w" role="status" aria-live="polite" hidden></div>
+
+            <!-- Resultat import -->
+            <div id="import-result" class="fr-my-2w" hidden>
+                <h2>Résultat</h2>
+                <div class="fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-auto">
+                        <div class="fr-tile fr-tile--sm">
+                            <div class="fr-tile__body">
+                                <p class="fr-tile__title" id="import-stat-total">-</p>
+                                <p class="fr-tile__detail">Enregistrements</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-tile fr-tile--sm">
+                            <div class="fr-tile__body">
+                                <p class="fr-tile__title" id="import-stat-remplacements">-</p>
+                                <p class="fr-tile__detail">Remplacements</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-tile fr-tile--sm">
+                            <div class="fr-tile__body">
+                                <p class="fr-tile__title" id="import-stat-score">-</p>
+                                <p class="fr-tile__detail">Score RGPD</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fr-btns-group fr-btns-group--inline fr-mt-2w">
+                    <button class="fr-btn" id="btn-download-result" type="button">Télécharger le résultat</button>
+                    <button class="fr-btn fr-btn--secondary" id="btn-download-correspondances" type="button">Télécharger les correspondances</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE : Scoring RGPD                          -->
+        <!-- ============================================ -->
+        <section id="page-scoring-rgpd" class="page">
+            <h1>Scoring RGPD</h1>
+            <p class="fr-text--lg">Évaluez le niveau de risque RGPD d'un texte avant pseudonymisation.</p>
+
+            <div class="fr-input-group">
+                <label class="fr-label" for="input-scoring">Texte à analyser</label>
+                <textarea class="fr-input" id="input-scoring" rows="8"
+                    placeholder="Collez le texte à analyser..."></textarea>
+            </div>
+
+            <fieldset class="fr-fieldset fr-my-2w" aria-label="Mode d'analyse">
+                <legend class="fr-fieldset__legend">Mode</legend>
+                <div class="fr-fieldset__content fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="score-standard" name="score-mode" value="standard" checked>
+                            <label class="fr-label" for="score-standard">Standard</label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="score-fort" name="score-mode" value="fort">
+                            <label class="fr-label" for="score-fort">Fort</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <button class="fr-btn" id="btn-score" type="button">Analyser</button>
+
+            <div id="scoring-result" class="fr-my-3w" hidden>
+                <!-- Badge niveau -->
+                <div class="fr-mb-2w">
+                    <p class="fr-text--bold">Niveau de risque :
+                        <span id="score-badge" class="fr-badge"></span>
+                    </p>
+                    <p class="fr-text--lg">Score : <strong id="score-value">0</strong> points</p>
+                </div>
+
+                <!-- Details par categorie -->
+                <div class="fr-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Catégorie</th>
+                                <th scope="col">Points par unité</th>
+                                <th scope="col">Détections</th>
+                                <th scope="col">Sous-total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-scoring"></tbody>
+                    </table>
+                </div>
+
+                <!-- Details des detections -->
+                <h2 class="fr-mt-3w">Détections par type</h2>
+                <div class="fr-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Type</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Exemples</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-scoring-details"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE : Documentation                         -->
+        <!-- ============================================ -->
+        <section id="page-documentation" class="page">
+            <h1>Documentation</h1>
+            <p class="fr-text--lg">Outil de pseudonymisation 100% local. Aucune donnée personnelle ne quitte la machine.</p>
+
+            <!-- ===== PREMIERS PAS ===== -->
+            <h2>Premiers pas</h2>
+            <p>Votre premier test en 30 secondes :</p>
+            <ol>
+                <li>Allez dans l'onglet <a href="#pseudonymisation">Pseudonymisation</a></li>
+                <li>Collez ce texte dans le champ « Texte source » :<br>
+                    <code>Bonjour Marie Dupont, votre email est marie.dupont@gmail.com et votre numéro 06 12 34 56 78.</code></li>
+                <li>Cliquez sur <strong>Pseudonymiser</strong></li>
+                <li>Le résultat apparaît à droite :<br>
+                    <code>Bonjour [PERSONNE_1], votre email est [EMAIL_1] et votre numéro [TEL_1].</code></li>
+            </ol>
+            <p>Les données personnelles ont été remplacées par des jetons. La table de correspondances (onglet <a href="#correspondances">Correspondances</a>) vous montre que <code>[PERSONNE_1]</code> = Marie Dupont, <code>[EMAIL_1]</code> = marie.dupont@gmail.com, etc.</p>
+
+            <h3>Pour traiter un fichier complet</h3>
+            <ol>
+                <li>Allez dans l'onglet <a href="#import-fichier">Import fichier</a></li>
+                <li>Choisissez <strong>Chemin local</strong> si votre fichier fait plus de 50 Mo, sinon <strong>Upload</strong></li>
+                <li>Sélectionnez ou saisissez le chemin de votre fichier (JSON, CSV, Excel, DOCX ou PDF)</li>
+                <li>Cliquez sur <strong>Analyser la structure</strong> : le moteur inspecte votre fichier et propose un mapping automatique</li>
+                <li>Vérifiez le mapping dans le textarea : les champs détectés comme sensibles sont-ils les bons ? Ajustez si besoin</li>
+                <li>Cliquez sur <strong>Lancer le traitement</strong></li>
+                <li>Le fichier pseudonymisé est écrit sur le disque. Téléchargez le zip (fichier + correspondances)</li>
+            </ol>
+
+            <h3>Pour restaurer un texte pseudonymisé</h3>
+            <ol>
+                <li>Allez dans l'onglet <a href="#restauration">Restauration</a></li>
+                <li>Collez le texte contenant les jetons (<code>[PERSONNE_1]</code>, <code>[EMAIL_1]</code>...)</li>
+                <li>Chargez le fichier <code>confidentiel/correspondances.csv</code> généré lors de la pseudonymisation</li>
+                <li>Cliquez sur <strong>Restaurer</strong> : les valeurs originales réapparaissent</li>
+            </ol>
+
+            <!-- ===== GLOSSAIRE ===== -->
+            <h2>Glossaire</h2>
+            <p>Les termes utilisés dans l'outil, expliqués simplement.</p>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Terme</th>
+                            <th scope="col">Définition</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Pseudonymisation</strong></td>
+                            <td>Remplacer les données personnelles par des codes réversibles (ex : « Marie Dupont » devient <code>[PERSONNE_1]</code>). On peut revenir en arrière grâce à la table de correspondances.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Anonymisation</strong></td>
+                            <td>Remplacer les données personnelles par des codes irréversibles. Aucun retour possible : les correspondances ne sont pas générées.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jeton</strong></td>
+                            <td>Le texte de remplacement. Chaque valeur unique reçoit un numéro unique : <code>[EMAIL_1]</code>, <code>[PERSONNE_2]</code>, <code>[TEL_3]</code>. Si la même personne apparaît plusieurs fois, elle reçoit toujours le même jeton.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mapping</strong></td>
+                            <td>Fichier JSON qui décrit votre fichier : quels champs contiennent des données sensibles, lesquels contiennent du texte libre à analyser, quels mots protéger. Sans mapping, le moteur ne sait pas quoi pseudonymiser.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Whitelist</strong></td>
+                            <td>Mots à ne <strong>jamais</strong> pseudonymiser, même s'ils ressemblent à des noms de famille. Exemple : ORANGE (l'entreprise, pas le patronyme), SFR, FREE.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Blacklist</strong></td>
+                            <td>Mots à <strong>toujours</strong> pseudonymiser, même si le contexte les protège normalement. Exemple : « Victor Hugo » est protégé dans « école Victor Hugo », mais la blacklist force sa pseudonymisation.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stopwords</strong></td>
+                            <td>Mots courants que le moteur ignore pour éviter les faux positifs. « Bonjour », « Direction », « Pierre » (le matériau) ne sont pas pseudonymisés grâce aux stopwords.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lookup noms</strong></td>
+                            <td>Le mapping indique quels champs contiennent le prénom et le nom de la personne. Le moteur cherche ensuite ces noms dans les champs texte libre pour les pseudonymiser aussi.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RGPD</strong></td>
+                            <td>Règlement Général sur la Protection des Données. Le scoring RGPD évalue le risque d'un texte en comptant les données personnelles détectées et leur sensibilité.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unwrap</strong></td>
+                            <td>Certains champs JSON contiennent eux-mêmes du JSON sous forme de texte (JSON stringifié). L'unwrap ouvre ce contenu imbriqué pour l'analyser.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analyser la structure</strong></td>
+                            <td>Bouton de l'onglet Import qui inspecte automatiquement votre fichier et propose un mapping. Le moteur lit les premiers enregistrements, détecte les champs qui ressemblent à des noms, emails, téléphones, etc., et pré-remplit le mapping. À vérifier avant de lancer le traitement.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Faux positif</strong></td>
+                            <td>Un mot pseudonymisé par erreur. Exemple : « PETIT » (adjectif) détecté comme un patronyme. Les stopwords et la whitelist servent à les éliminer.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ===== GUIDE PAGE PAR PAGE ===== -->
+            <h2>Guide page par page</h2>
+
+            <h3><a href="#pseudonymisation">Pseudonymisation</a></h3>
+            <p><strong>À quoi ça sert :</strong> coller un texte court et voir immédiatement le résultat pseudonymisé à côté. Idéal pour tester ou pour un texte isolé (email, courrier, paragraphe).</p>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Option</th>
+                            <th scope="col">Ce qu'elle fait</th>
+                            <th scope="col">Quand l'utiliser</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Standard</strong></td><td>Détecte les emails, téléphones, IBAN, noms avec contexte (« Bonjour Marie », « M. Dupont »), URLs, adresses, organisations, villes</td><td>Par défaut, suffit dans la majorité des cas</td></tr>
+                        <tr><td><strong>Fort</strong></td><td>Standard + prénoms isolés (« Marie » seul), patronymes en majuscules (« DUPONT »), codes postaux, dates de naissance, plaques d'immatriculation, GPS</td><td>Quand le texte contient des noms sans contexte (listes, tableaux) ou des données indirectes</td></tr>
+                        <tr><td><strong>Tech</strong></td><td>Détecte les adresses IP (v4/v6), adresses MAC, tokens JWT, clés API</td><td>Quand le texte contient des données techniques (logs, configurations)</td></tr>
+                        <tr><td><strong>NLP</strong></td><td>Utilise l'intelligence artificielle (spaCy) pour détecter des noms que les regex ne trouvent pas (+2 à 5% de détection)</td><td>Quand le mode Fort ne suffit pas. Nécessite l'installation de spaCy</td></tr>
+                        <tr><td><strong>Whitelist</strong></td><td>Mots séparés par des virgules qui ne seront jamais pseudonymisés</td><td>Quand des noms d'entreprise sont confondus avec des patronymes (ORANGE, PETIT, MARTIN...)</td></tr>
+                        <tr><td><strong>Blacklist</strong></td><td>Mots séparés par des virgules qui seront toujours pseudonymisés</td><td>Quand un nom est protégé par un contexte institutionnel mais doit être pseudonymisé quand même</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><a href="#correspondances">Correspondances</a></h3>
+            <p><strong>À quoi ça sert :</strong> visualiser la table de correspondances entre les jetons et les valeurs originales après une pseudonymisation. Permet de vérifier ce qui a été détecté.</p>
+            <p><strong>Fonctionnalités :</strong> recherche par jeton ou valeur, pagination, export CSV.</p>
+
+            <h3><a href="#restauration">Restauration</a></h3>
+            <p><strong>À quoi ça sert :</strong> remettre les valeurs originales à la place des jetons (dépseudonymisation). Utile pour retrouver le texte original à partir d'un texte pseudonymisé.</p>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Option</th>
+                            <th scope="col">Ce qu'elle fait</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Restaurer</strong></td><td>Utilise les correspondances chargées depuis un fichier CSV</td></tr>
+                        <tr><td><strong>Utiliser les correspondances en mémoire</strong></td><td>Utilise les correspondances de la dernière pseudonymisation effectuée dans cette session</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Le fichier CSV de correspondances est généré automatiquement lors de chaque pseudonymisation (dossier <code>confidentiel/correspondances.csv</code>).</p>
+
+            <h3><a href="#import-fichier">Import fichier</a></h3>
+            <p><strong>À quoi ça sert :</strong> pseudonymiser un fichier entier (JSON, CSV, Excel, DOCX, PDF). C'est la page principale pour le traitement en masse.</p>
+
+            <h4>Source du fichier</h4>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Mode</th>
+                            <th scope="col">Fonctionnement</th>
+                            <th scope="col">Quand l'utiliser</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Upload</strong></td><td>Le fichier est envoyé au serveur via le navigateur</td><td>Fichiers de petite taille (&lt; 50 Mo)</td></tr>
+                        <tr><td><strong>Chemin local</strong></td><td>Vous saisissez le chemin du fichier sur votre disque. Le serveur le lit directement, sans transit par le navigateur</td><td>Fichiers volumineux (50 Mo et plus). Pas de limite de taille</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Le mapping</h4>
+            <p>Le mapping est <strong>obligatoire</strong> pour traiter un fichier. Trois façons de le fournir :</p>
+            <ol>
+                <li><strong>Analyser la structure</strong> (recommandé pour la première fois) : cliquez sur le bouton, le moteur inspecte votre fichier et propose un mapping automatique dans le textarea. Vérifiez et ajustez avant de lancer.</li>
+                <li><strong>Charger un fichier mapping</strong> : si vous avez déjà un fichier <code>.json</code> de mapping (fourni par un collègue, généré précédemment).</li>
+                <li><strong>Chemin du mapping</strong> (mode local uniquement) : saisissez le chemin du fichier mapping sur le disque.</li>
+            </ol>
+
+            <h4>Options de traitement</h4>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Option</th>
+                            <th scope="col">Ce qu'elle fait</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Pseudonymisation</strong></td><td>Remplace par des jetons réversibles + génère les correspondances et un zip téléchargeable</td></tr>
+                        <tr><td><strong>Anonymisation</strong></td><td>Remplace par des jetons irréversibles. Pas de correspondances, pas de retour possible</td></tr>
+                        <tr><td><strong>Mode fort</strong></td><td>Active le pipeline complet (prénoms isolés, patronymes, codes postaux, etc.)</td></tr>
+                        <tr><td><strong>Tech</strong></td><td>Détecte aussi les données techniques (IP, JWT, MAC)</td></tr>
+                        <tr><td><strong>NLP</strong></td><td>Utilise spaCy pour détecter des noms supplémentaires</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><a href="#scoring-rgpd">Scoring RGPD</a></h3>
+            <p><strong>À quoi ça sert :</strong> évaluer le niveau de risque RGPD d'un texte <strong>avant</strong> de le pseudonymiser. Le scoring compte les données personnelles détectées et attribue un score.</p>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Mode</th>
+                            <th scope="col">Ce qu'il analyse</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Standard</strong></td><td>Emails, téléphones, IBAN, noms avec contexte, URLs, adresses</td></tr>
+                        <tr><td><strong>Fort</strong></td><td>Standard + prénoms isolés, patronymes, codes postaux, dates de naissance</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="fr-table fr-mt-2w">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Catégorie</th>
+                            <th scope="col">Points par détection</th>
+                            <th scope="col">Exemples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Direct</td><td>3</td><td>Noms, emails, téléphones</td></tr>
+                        <tr><td>Finance</td><td>5</td><td>CB, IBAN, NIR, numéro fiscal</td></tr>
+                        <tr><td>Tech</td><td>2</td><td>IP, JWT, MAC</td></tr>
+                        <tr><td>Indirect</td><td>1</td><td>Dates, villes, adresses</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Niveaux de risque : <strong>NUL</strong> (0), <strong>FAIBLE</strong> (&lt;10), <strong>MODÉRÉ</strong> (&lt;50), <strong>ÉLEVÉ</strong> (&lt;100), <strong>CRITIQUE</strong> (100 et plus).</p>
+
+            <!-- ===== FAQ ===== -->
+            <h2>Questions fréquentes</h2>
+
+            <h3>Mes données sortent-elles de ma machine ?</h3>
+            <p>Non. Le serveur tourne sur <code>127.0.0.1</code> (votre machine uniquement). Aucune donnée n'est envoyée sur Internet. Tout le traitement est local.</p>
+
+            <h3>Quelle différence entre pseudonymisation et anonymisation ?</h3>
+            <p><strong>Pseudonymisation</strong> : les jetons sont réversibles. Un fichier de correspondances (<code>confidentiel/correspondances.csv</code>) permet de retrouver les valeurs originales. <strong>Anonymisation</strong> : les jetons ne sont pas réversibles. Aucune correspondance n'est générée. Impossible de revenir en arrière.</p>
+
+            <h3>Pourquoi certains noms ne sont pas détectés ?</h3>
+            <p>En mode <strong>Standard</strong>, le moteur ne détecte que les noms avec un contexte : « Bonjour Marie », « M. Dupont », « De: Pierre Martin &lt;email&gt; ». Un prénom seul (« Marie ») ou un nom en majuscules sans contexte (« DUPONT ») nécessitent le mode <strong>Fort</strong>. Si le nom n'est ni dans les dictionnaires INSEE ni détecté par les regex, essayez le mode <strong>NLP</strong>.</p>
+
+            <h3>Comment traiter un fichier de plus de 100 Mo ?</h3>
+            <p>Dans l'onglet <a href="#import-fichier">Import fichier</a>, choisissez <strong>Chemin local</strong> au lieu de Upload. Saisissez le chemin complet du fichier sur votre disque. Le serveur le lit directement sans passer par le navigateur. Un fichier de 118 Mo (31 891 enregistrements) se traite en environ 1 minute.</p>
+
+            <h3>Je n'ai pas de mapping, comment faire ?</h3>
+            <p>Cliquez sur <strong>Analyser la structure</strong> dans l'onglet Import. Le moteur inspecte votre fichier et propose un mapping automatique. Le mapping apparaît dans le textarea : vérifiez que les champs détectés sont corrects, ajustez si besoin, puis lancez le traitement.</p>
+
+            <h3>Comment ajouter des mots à ne jamais pseudonymiser ?</h3>
+            <p>Dans le champ <strong>Whitelist</strong> (onglet Pseudonymisation) ou dans le champ <code>"whitelist"</code> du mapping (onglet Import). Séparez les mots par des virgules. Exemple : <code>ORANGE, SFR, FREE</code>.</p>
+
+            <h3>Comment restaurer un texte pseudonymisé ?</h3>
+            <p>Allez dans l'onglet <a href="#restauration">Restauration</a>. Collez le texte pseudonymisé, puis chargez le fichier CSV de correspondances (généré lors de la pseudonymisation dans le dossier <code>confidentiel/</code>). Cliquez sur Restaurer.</p>
+
+            <h3>Qu'est-ce que le score RGPD ?</h3>
+            <p>Un indicateur numérique du risque de fuite de données personnelles dans un texte. Plus le score est élevé, plus le texte contient de données sensibles. Utilisez l'onglet <a href="#scoring-rgpd">Scoring RGPD</a> pour évaluer un texte avant de le pseudonymiser.</p>
+
+            <h3>Un mot a été pseudonymisé par erreur (faux positif), que faire ?</h3>
+            <p>Certains mots courants sont aussi des patronymes INSEE : PETIT, BLANC, MARTIN, PIERRE. Si le mode <strong>Fort</strong> les pseudonymise, ajoutez-les dans la <strong>Whitelist</strong> (onglet Pseudonymisation) ou dans le champ <code>"whitelist"</code> du mapping. Le dry-run affiche les 20 mots les plus fréquemment matchés pour vous aider à calibrer.</p>
+
+            <h3>Que contient le zip téléchargeable ?</h3>
+            <p>En mode chemin local, après le traitement, un zip est créé automatiquement. Il contient deux fichiers : le fichier pseudonymisé (<code>fichier_PSEUDO.json</code>) et la table de correspondances (<code>confidentiel/correspondances.csv</code>). Le bouton « Télécharger le zip » déclenche le téléchargement.</p>
+
+            <h3>Que signifient les jetons [VOIE_1], [ORGANISATION_1], etc. ?</h3>
+            <p>Chaque type de donnée détectée reçoit un préfixe différent : <code>[PERSONNE_1]</code> pour les noms, <code>[EMAIL_1]</code> pour les emails, <code>[TEL_1]</code> pour les téléphones, <code>[VOIE_1]</code> pour les adresses, <code>[VILLE_1]</code> pour les villes, <code>[ORGANISATION_1]</code> pour les entreprises, <code>[IBAN_1]</code> pour les IBAN, <code>[NIR_1]</code> pour les numéros de sécurité sociale. La liste complète est dans la section Référence technique ci-dessous.</p>
+
+            <h3>Comment installer les dépendances pour Excel, DOCX ou PDF ?</h3>
+            <p>Le moteur fonctionne sans installation pour JSON et CSV. Pour les autres formats, installez le paquet correspondant avec <code>pip3 install</code>. Par exemple : <code>pip3 install openpyxl</code> pour Excel, <code>pip3 install python-docx</code> pour DOCX, <code>pip3 install pdfplumber</code> pour PDF. La liste complète est dans la section Référence technique.</p>
+
+            <h3>Le traitement est lent, que faire ?</h3>
+            <p>Le mode <strong>Standard</strong> traite 31 000 enregistrements en ~1 minute. Le mode <strong>Fort</strong> est plus lent (vérifie chaque mot contre les dictionnaires INSEE). Conseils : commencez par le mode Standard, n'activez Fort que si nécessaire. Utilisez <strong>Chemin local</strong> au lieu d'Upload pour les gros fichiers. En ligne de commande, <code>--chunk-size 5000</code> permet de traiter des fichiers de plus de 2 Go sans saturer la mémoire.</p>
+
+            <!-- ===== REFERENCE TECHNIQUE ===== -->
+            <h2>Référence technique</h2>
+
+            <h3>Formats supportés</h3>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Format</th>
+                            <th scope="col">Import</th>
+                            <th scope="col">Export</th>
+                            <th scope="col">Dépendance Python</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>JSON</td><td>Oui</td><td>Oui</td><td>Aucune</td></tr>
+                        <tr><td>CSV / TSV</td><td>Oui</td><td>Oui</td><td>Aucune</td></tr>
+                        <tr><td>XLSX / XLS</td><td>Oui</td><td>Oui</td><td>openpyxl</td></tr>
+                        <tr><td>ODS</td><td>Oui</td><td>Oui</td><td>odfpy</td></tr>
+                        <tr><td>DOCX</td><td>Oui</td><td>Oui</td><td>python-docx</td></tr>
+                        <tr><td>ODT</td><td>Oui</td><td>Oui</td><td>odfpy</td></tr>
+                        <tr><td>PDF</td><td>Oui</td><td>Texte (.txt)</td><td>pdfplumber</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Types de champs sensibles</h3>
+            <div class="fr-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Jeton</th>
+                            <th scope="col">Exemple</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>nom</td><td>NOM</td><td>Dupont → [NOM_1]</td></tr>
+                        <tr><td>prenom</td><td>PRENOM</td><td>Marie → [PRENOM_1]</td></tr>
+                        <tr><td>email</td><td>EMAIL</td><td>marie@test.com → [EMAIL_1]</td></tr>
+                        <tr><td>tel</td><td>TEL</td><td>06 12 34 56 78 → [TEL_1]</td></tr>
+                        <tr><td>cp</td><td>CP</td><td>75001 → [CP_1]</td></tr>
+                        <tr><td>id</td><td>ID</td><td>12345 → [ID_1]</td></tr>
+                        <tr><td>uuid</td><td>UUID</td><td>abc-def-123 → [UUID_1]</td></tr>
+                        <tr><td>genre</td><td>GENRE</td><td>Male → [GENRE_1]</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Structure du mapping</h3>
+            <p>Le mapping est un fichier JSON qui dit au moteur : « dans mon fichier, voici les champs qui contiennent des données personnelles ». Voici un exemple simple pour un fichier de clients :</p>
+            <pre><code>{
+  "description": "Fichier clients",
+  "champs_sensibles": {
+    "nom": {"type": "nom", "jeton": "NOM"},
+    "prenom": {"type": "prenom", "jeton": "PRENOM"},
+    "email": {"type": "email", "jeton": "EMAIL"},
+    "telephone": {"type": "tel", "jeton": "TEL"}
+  },
+  "texte_libre": ["commentaire"],
+  "lookup_noms": {
+    "prenom": "prenom",
+    "nom": "nom"
+  },
+  "whitelist": ["ORANGE", "SFR"],
+  "blacklist": []
+}</code></pre>
+            <p>Avec ce mapping, un enregistrement comme :</p>
+            <pre><code>{"nom": "Dupont", "prenom": "Marie", "email": "marie@test.com",
+ "telephone": "06 12 34 56 78", "commentaire": "Contacter Marie Dupont"}</code></pre>
+            <p>Devient :</p>
+            <pre><code>{"nom": "[NOM_1]", "prenom": "[PRENOM_1]", "email": "[EMAIL_1]",
+ "telephone": "[TEL_1]", "commentaire": "Contacter [PERSONNE_1]"}</code></pre>
+            <p>Le champ <code>commentaire</code> est en <code>texte_libre</code> : le moteur y cherche automatiquement les noms, emails, telephones, etc. Le <code>lookup_noms</code> lui dit que le prenom et le nom de la personne sont dans les champs « prenom » et « nom », pour les retrouver aussi dans le texte libre.</p>
+
+            <div class="fr-table fr-mt-2w">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Champ du mapping</th>
+                            <th scope="col">Rôle</th>
+                            <th scope="col">Obligatoire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>champs_sensibles</code></td><td>Liste des champs à remplacer directement par des jetons typés</td><td>Oui</td></tr>
+                        <tr><td><code>texte_libre</code></td><td>Champs contenant du texte analysé par le moteur de détection (emails, noms, téléphones dans le texte)</td><td>Non</td></tr>
+                        <tr><td><code>lookup_noms</code></td><td>Indique où trouver le prénom et le nom. Le moteur les cherche ensuite dans les champs texte libre</td><td>Non</td></tr>
+                        <tr><td><code>whitelist</code></td><td>Mots à ne jamais pseudonymiser (noms d'entreprise : ORANGE, SFR...)</td><td>Non</td></tr>
+                        <tr><td><code>blacklist</code></td><td>Mots à toujours pseudonymiser même si protégés par le contexte</td><td>Non</td></tr>
+                        <tr><td><code>structure.unwrap</code></td><td>Pour les fichiers dont un champ contient du JSON imbriqué sous forme de texte</td><td>Non</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Exemple réel : fichier SignalConso</h4>
+            <p>Ce fichier a une structure complexe : un champ <code>RCLMFicheReportJsonSC</code> contient du JSON sous forme de texte, avec des sous-champs comme <code>Report.Firstname</code>, <code>Report.Email</code>, etc. Le mapping utilise <code>structure.unwrap</code> pour ouvrir ce contenu :</p>
+            <pre><code>{
+  "description": "Réclamations SignalConso",
+  "structure": {
+    "unwrap": {
+      "field": "RCLMFicheReportJsonSC",
+      "parse": "json_string"
+    }
+  },
+  "champs_sensibles": {
+    "DOAR_IDENT": {"type": "id", "jeton": "ID"},
+    "Report.Firstname": {"type": "prenom", "jeton": "PRENOM"},
+    "Report.Lastname": {"type": "nom", "jeton": "NOM"},
+    "Report.Email": {"type": "email", "jeton": "EMAIL"},
+    "Report.Phone": {"type": "tel", "jeton": "TEL"},
+    "Report.PostalCode": {"type": "cp", "jeton": "CP"}
+  },
+  "texte_libre": ["Report.Description", "Report.Question"],
+  "lookup_noms": {
+    "prenom": "Report.Firstname",
+    "nom": "Report.Lastname"
+  },
+  "whitelist": ["ORANGE", "SFR", "FREE", "BOUYGUES"],
+  "blacklist": []
+}</code></pre>
+
+            <h3>Commandes CLI</h3>
+            <p>L'outil fonctionne aussi en ligne de commande, sans interface web.</p>
+            <pre><code># Pseudonymisation (réversible, génère les correspondances)
+python3 pseudonymise.py fichier.json --mapping mapping.json --pseudo
+
+# Anonymisation (irréversible, pas de correspondances)
+python3 pseudonymise.py fichier.json --mapping mapping.json --anon
+
+# Mode fort + NLP (détection maximale)
+python3 pseudonymise.py fichier.json --mapping mapping.json --fort --nlp --pseudo
+
+# Avec détection technique (IP, JWT, MAC)
+python3 pseudonymise.py fichier.json --mapping mapping.json --tech --pseudo
+
+# Traiter tous les fichiers JSON d'un dossier
+python3 pseudonymise.py dummy --mapping mapping.json --input-dir /chemin/dossier/ --pseudo
+
+# Streaming pour fichiers volumineux (> 2 Go)
+python3 pseudonymise.py gros-fichier.json --mapping mapping.json --chunk-size 5000 --pseudo
+
+# Scoring RGPD (évaluation sans pseudonymiser)
+python3 pseudonymise.py fichier.json --mapping mapping.json --score-only
+
+# Test sur les 100 premiers enregistrements
+python3 pseudonymise.py fichier.json --mapping mapping.json --dry-run
+
+# Génération automatique de mapping
+python3 pseudonymise.py fichier.json --mapping-generate
+
+# Dépseudonymisation (restauration)
+python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/correspondances.csv
+
+# Lancer le serveur web local
+python3 serveur.py --port 8090</code></pre>
+
+            <h3>Installation des dépendances optionnelles</h3>
+            <p>Le moteur fonctionne sans dépendance pour JSON et CSV. Les autres formats nécessitent des paquets Python :</p>
+            <pre><code># Excel (XLSX)
+pip3 install openpyxl
+
+# ODS et ODT
+pip3 install odfpy
+
+# DOCX
+pip3 install python-docx
+
+# PDF
+pip3 install pdfplumber
+
+# NLP (détection par intelligence artificielle)
+pip3 install spacy
+python3 -m spacy download fr_core_news_sm
+
+# Streaming gros fichiers (> 2 Go)
+pip3 install ijson</code></pre>
+        </section>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="fr-footer" role="contentinfo" id="footer">
+        <div class="fr-container">
+            <div class="fr-footer__body">
+                <div class="fr-footer__brand fr-enlarge-link">
+                    <a href="/" title="Retour à l'accueil du site - Pseudonymisation">
+                        <p class="fr-logo">République<br>Française</p>
+                    </a>
+                </div>
+                <div class="fr-footer__content">
+                    <p class="fr-footer__content-desc">
+                        Outil de pseudonymisation 100% local. Aucune donnée personnelle ne quitte la machine.
+                        Le code source est ouvert et le traitement s'exécute intégralement sur votre poste.
+                    </p>
+                    <ul class="fr-footer__content-list">
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener" href="https://legifrance.gouv.fr">legifrance.gouv.fr</a>
+                        </li>
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener" href="https://gouvernement.fr">gouvernement.fr</a>
+                        </li>
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener" href="https://service-public.fr">service-public.fr</a>
+                        </li>
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener" href="https://data.gouv.fr">data.gouv.fr</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="fr-footer__bottom">
+                <ul class="fr-footer__bottom-list">
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="#documentation">Accessibilité : partiellement conforme</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="#documentation">Documentation</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <button class="fr-footer__bottom-link" aria-controls="modal-serveur" data-fr-opened="false">Informations du serveur</button>
+                    </li>
+                </ul>
+                <div class="fr-footer__bottom-copy">
+                    <p>Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous
+                        <a href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" rel="noopener">licence etalab-2.0</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modale informations serveur -->
+    <div id="modal-serveur" class="modal-overlay" hidden>
+        <div class="modal-dialog" role="dialog" aria-labelledby="modal-serveur-title" aria-modal="true">
+            <div class="modal-header">
+                <h1 id="modal-serveur-title">Informations du serveur</h1>
+                <button class="fr-btn--close fr-btn" id="modal-serveur-close" title="Fermer la fenêtre">Fermer</button>
+            </div>
+            <div class="modal-content" id="modal-serveur-content">
+                <p>Chargement...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="dsfr/js/dsfr.module.min.js" type="module"></script>
+    <script src="app.js"></script>
+</body>
+</html>
