@@ -148,8 +148,8 @@ Sur la page Import fichier, en mode "Chemin local" :
 #### Comportement attendu — traitement complet
 
 ```
-Utilisateur saisit "/Users/alex/donnees/" et active "Traiter un dossier"
-  -> Requete POST /api/pseudonymise-batch {path: "/Users/alex/donnees/", mapping, mode: "pseudo"}
+Utilisateur saisit "/chemin/vers/donnees/" et active "Traiter un dossier"
+  -> Requete POST /api/pseudonymise-batch {path: "/chemin/vers/donnees/", mapping, mode: "pseudo"}
   -> Serveur liste 12 fichiers, traite chacun, continue malgre les erreurs
   -> Interface affiche le tableau recap : 11 ok, 1 erreur
   -> Correspondances ecrites : confidentiel/correspondances_fichier1.csv, ..._fichier2.csv, etc.
@@ -172,10 +172,10 @@ Utilisateur clique "Previsualiser" en mode dossier
 
 | Fichier | Action |
 |---------|--------|
-| `pseudonymus-standalone/serveur.py` | Ajout `dry_run` dans les handlers existants + nouvelle route `/api/pseudonymise-batch` + passage a `ThreadingHTTPServer` |
-| `pseudonymus-standalone/interface/index.html` | Bouton "Previsualiser" + zone resultat dry-run + option "Dossier" + tableau recap batch |
-| `pseudonymus-standalone/interface/app.js` | Logique dry-run + logique batch + progression fichier par fichier |
-| `pseudonymus-standalone/interface/style.css` | Eventuels styles pour la zone de previsualisation et le tableau batch |
+| `serveur.py` | Ajout `dry_run` dans les handlers existants + nouvelle route `/api/pseudonymise-batch` + passage a `ThreadingHTTPServer` |
+| `interface/index.html` | Bouton "Previsualiser" + zone resultat dry-run + option "Dossier" + tableau recap batch |
+| `interface/app.js` | Logique dry-run + logique batch + progression fichier par fichier |
+| `interface/style.css` | Eventuels styles pour la zone de previsualisation et le tableau batch |
 
 ---
 
@@ -256,8 +256,17 @@ server = ThreadingHTTPServer((args.host, args.port), APIHandler)
 - [ ] Tableau recapitulatif en fin de traitement : nom, statut, enregistrements, remplacements, score par fichier
 - [ ] Previsualiser en mode dossier : dry-run sur le premier fichier uniquement + listing des fichiers detectes
 
+### Tests automatises a ajouter dans `tests/test-v3.py`
+
+- [ ] `POST /api/pseudonymise-local` avec `dry_run: true` : retourne des resultats, aucun fichier `_PSEUDO` ecrit sur disque
+- [ ] `POST /api/pseudonymise` (upload) avec `dry_run: true` : retourne `data` limitee a 100 enregistrements max
+- [ ] `POST /api/pseudonymise-batch` avec un dossier contenant 2+ fichiers JSON : retourne un rapport avec un element par fichier
+- [ ] `POST /api/pseudonymise-batch` avec `dry_run: true` : traite uniquement le premier fichier, liste tous les fichiers detectes
+- [ ] `POST /api/pseudonymise-batch` avec un chemin invalide : retourne erreur 404
+- [ ] `POST /api/pseudonymise-batch` avec un dossier vide : retourne erreur 400
+
 ### Non-regression
 
-- [ ] `python3 test-options.py` : 49/49
-- [ ] `python3 test-v3.py` : 43/43
+- [ ] `python3 tests/test-options.py` : 49/49
+- [ ] `python3 tests/test-v3.py` : tous les tests passent (anciens + nouveaux)
 - [ ] `/api/health` repond pendant un traitement batch (ThreadingHTTPServer)
