@@ -34,8 +34,9 @@ pseudonymus-standalone/
 │   └── dsfr/              # CSS, JS, polices DSFR embarqués
 ├── prd/                   # PRD à faire (à la racine)
 │   └── done/              # PRD terminés + documentation
-├── test-options.py        # 49 tests moteur
-├── test-v3.py             # 43 tests formats + serveur + API
+├── tests/
+│   ├── test-options.py    # 49 tests moteur
+│   └── test-v3.py         # 43 tests formats + serveur + API
 ├── requirements.txt       # Dépendances optionnelles
 ├── CHANGELOG.md           # Historique des versions
 └── LICENSE                # GPL v3
@@ -65,8 +66,8 @@ python3 pseudonymise.py fichier.json --mapping mapping.json --score-only
 python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/correspondances.csv
 
 # Tests
-python3 test-options.py    # 49 tests moteur
-python3 test-v3.py         # 43 tests formats + API
+python3 tests/test-options.py    # 49 tests moteur
+python3 tests/test-v3.py         # 43 tests formats + API
 ```
 
 ---
@@ -112,8 +113,8 @@ Tout en français : commits, documentation, messages d'erreur, interface.
 Toujours exécuter les deux suites après modification :
 
 ```bash
-python3 test-options.py    # Moteur : modes, options, formats, dépseudonymisation
-python3 test-v3.py         # Formats multi, serveur, API REST
+python3 tests/test-options.py    # Moteur : modes, options, formats, dépseudonymisation
+python3 tests/test-v3.py         # Formats multi, serveur, API REST
 ```
 
 Seuil : **92/92 (49 + 43)**, 0 FAIL, 0 SKIP.

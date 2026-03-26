@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Tests automatises pour la v3 : formats, serveur, routes API.
-Lance : python3 test-v3.py
+Lance : python3 tests/test-v3.py
 """
 
 import csv
@@ -14,7 +14,8 @@ import time
 import urllib.request
 import urllib.error
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(TESTS_DIR)
 OK = 0
 FAIL = 0
 
@@ -35,7 +36,7 @@ def test(name, condition, detail=''):
 
 print('\n=== Tests formats ===\n')
 
-sys.path.insert(0, SCRIPT_DIR)
+sys.path.insert(0, PROJECT_DIR)
 from formats import detect_format, load_csv, save_csv, load_file, save_file
 
 # --- CSV ---
@@ -156,7 +157,7 @@ with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
     }, f)
 
 result = subprocess.run(
-    [sys.executable, os.path.join(SCRIPT_DIR, 'pseudonymise.py'),
+    [sys.executable, os.path.join(PROJECT_DIR, 'pseudonymise.py'),
      csv_test, '--mapping', mapping_test, '--pseudo'],
     capture_output=True, text=True
 )
@@ -215,6 +216,7 @@ test('Serveur accessible', server_ok)
 if not server_ok:
     print('\nServeur non accessible sur port 8090. Demarrez-le avec :')
     print('  python3 serveur.py --port 8090 &')
+    print('puis relancez : python3 tests/test-v3.py')
     print('puis relancez les tests.\n')
 else:
     # --- /api/health ---

@@ -196,10 +196,10 @@ Les dictionnaires sont livrés dans `data/` et prêts à l'emploi. Le script `co
 
 ```bash
 # Tests moteur : 49 tests
-python3 test-options.py
+python3 tests/test-options.py
 
 # Tests formats, serveur, API : 43 tests
-python3 test-v3.py
+python3 tests/test-v3.py
 ```
 
 92 tests au total, zéro échec.
@@ -215,8 +215,9 @@ pseudonymus-standalone/
   formats.py             Parseurs multi-format (CSV, XLSX, ODS, DOCX, ODT, PDF)
   serveur.py             Serveur web local (port 8090)
   convertir-donnees.py   Régénération des données statiques
-  test-options.py        Tests moteur (49 tests)
-  test-v3.py             Tests v3 (43 tests)
+  tests/
+    test-options.py      Tests moteur (49 tests)
+    test-v3.py           Tests v3 (43 tests)
   requirements.txt       Dépendances optionnelles
   LICENSE                GPL v3
   CHANGELOG.md           Historique des versions

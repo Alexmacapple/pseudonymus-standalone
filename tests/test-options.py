@@ -1,13 +1,14 @@
-"""Tests automatisés du script generique pseudonymise.py."""
+"""Tests automatisés du script pseudonymise.py."""
 import json
 import os
 import subprocess
 import sys
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-SCRIPT = os.path.join(SCRIPT_DIR, 'pseudonymise.py')
-DEPSEUDO = os.path.join(SCRIPT_DIR, 'depseudonymise.py')
-EXEMPLES = os.path.join(SCRIPT_DIR, 'exemples')
+TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(TESTS_DIR)
+SCRIPT = os.path.join(PROJECT_DIR, 'pseudonymise.py')
+DEPSEUDO = os.path.join(PROJECT_DIR, 'depseudonymise.py')
+EXEMPLES = os.path.join(PROJECT_DIR, 'exemples')
 TEST_JSON = os.path.join(EXEMPLES, 'test-clients.json')
 MAPPING_PLAT = os.path.join(EXEMPLES, 'mapping-clients.json')
 MAPPING_SC = os.path.join(EXEMPLES, 'mapping-signalconso.json')
@@ -29,13 +30,13 @@ def test(name, condition, detail=''):
 def run(args):
     return subprocess.run(
         ['python3', SCRIPT] + args,
-        capture_output=True, text=True, cwd=SCRIPT_DIR)
+        capture_output=True, text=True, cwd=PROJECT_DIR)
 
 
 def run_depseudo(args):
     return subprocess.run(
         ['python3', DEPSEUDO] + args,
-        capture_output=True, text=True, cwd=SCRIPT_DIR)
+        capture_output=True, text=True, cwd=PROJECT_DIR)
 
 
 # Nettoyage
@@ -44,7 +45,7 @@ for f in ['test-clients_PSEUDO.json', 'test-clients_ANON.json',
     p = os.path.join(EXEMPLES, f)
     if os.path.exists(p):
         os.remove(p)
-csv_path = os.path.join(SCRIPT_DIR, 'confidentiel', 'correspondances.csv')
+csv_path = os.path.join(PROJECT_DIR, 'confidentiel', 'correspondances.csv')
 if os.path.exists(csv_path):
     os.remove(csv_path)
 
