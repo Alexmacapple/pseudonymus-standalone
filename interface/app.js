@@ -406,7 +406,7 @@ document.getElementById('btn-import').addEventListener('click', async () => {
         let data;
 
         if (isLocal) {
-            // --- Mode chemin local (gros fichiers) ---
+            // --- Mode chemin local ---
             const filepath = document.getElementById('input-filepath').value.trim();
             if (!filepath) {
                 showAlert('alert-import', 'Veuillez saisir le chemin du fichier.', 'warning');
@@ -414,26 +414,59 @@ document.getElementById('btn-import').addEventListener('click', async () => {
             }
 
             const mappingPath = document.getElementById('input-mappingpath').value.trim();
+            const isBatch = document.getElementById('import-batch') && document.getElementById('import-batch').checked;
 
-            document.getElementById('import-progress-text').textContent = 'Traitement en cours sur le serveur...';
+            document.getElementById('import-progress-text').textContent = isBatch ? 'Traitement du dossier...' : 'Traitement en cours sur le serveur...';
             document.getElementById('import-progress-bar').style.width = '50%';
 
             const nlp = document.getElementById('import-nlp').checked;
             const tech = document.getElementById('import-tech').checked;
             const payload = {path: filepath, mode, fort, nlp, tech};
             if (mappingPath && !mappingText) {
-                // Chemin mapping sur disque
                 payload.mapping_path = mappingPath;
             } else {
                 payload.mapping = mapping;
             }
 
-            const res = await fetch(API + '/api/pseudonymise-local', {
+            const endpoint = isBatch ? '/api/pseudonymise-batch' : '/api/pseudonymise-local';
+            const res = await fetch(API + endpoint, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(payload),
             });
             data = await res.json();
+
+            // Affichage batch
+            if (isBatch && data.fichiers) {
+                document.getElementById('import-progress-bar').style.width = '100%';
+                document.getElementById('import-progress-text').textContent = 'Terminé.';
+
+                if (data.erreur) {
+                    showAlert('alert-import', 'Erreur : ' + data.erreur, 'error');
+                    return;
+                }
+
+                document.getElementById('batch-result').hidden = false;
+                document.getElementById('import-result').hidden = true;
+
+                const r = data.resume;
+                document.getElementById('batch-summary').textContent =
+                    r.fichiers_traites + ' fichiers traités, ' + r.fichiers_en_erreur + ' en erreur, ' +
+                    r.total_enregistrements + ' enregistrements, ' + r.total_remplacements + ' remplacements.';
+
+                const tbody = document.getElementById('tbody-batch');
+                tbody.innerHTML = data.fichiers.map(f => {
+                    if (f.statut === 'erreur') {
+                        return '<tr class="fr-text--error"><td>' + escapeHtml(f.nom) + '</td><td>Erreur</td>' +
+                            '<td colspan="3">' + escapeHtml(f.erreur) + '</td></tr>';
+                    }
+                    return '<tr><td>' + escapeHtml(f.nom) + '</td><td>OK</td>' +
+                        '<td>' + f.total + '</td><td>' + f.remplacements + '</td><td>' + f.score + '</td></tr>';
+                }).join('');
+
+                showAlert('alert-import', r.fichiers_traites + ' fichiers traités avec succès.', 'success');
+                return;
+            }
 
         } else {
             // --- Mode upload classique (petits fichiers) ---
@@ -501,6 +534,146 @@ document.getElementById('btn-import').addEventListener('click', async () => {
     } finally {
         btn.disabled = false;
         btn.textContent = 'Lancer le traitement';
+    }
+});
+
+// --- Bouton Previsualiser (dry-run) ---
+
+document.getElementById('btn-preview').addEventListener('click', async () => {
+    const isLocal = document.getElementById('import-source-local').checked;
+
+    const mappingText = document.getElementById('import-mapping').value.trim();
+    const hasMappingPath = isLocal && document.getElementById('input-mappingpath').value.trim();
+
+    if (!mappingText && !hasMappingPath) {
+        showAlert('alert-import', 'Veuillez fournir un mapping pour la prévisualisation.', 'warning');
+        return;
+    }
+
+    let mapping = {};
+    if (mappingText) {
+        try {
+            mapping = JSON.parse(mappingText);
+        } catch {
+            showAlert('alert-import', 'Le mapping n\'est pas un JSON valide.', 'error');
+            return;
+        }
+    }
+
+    const fort = document.getElementById('import-fort').checked;
+    const nlp = document.getElementById('import-nlp').checked;
+    const tech = document.getElementById('import-tech').checked;
+
+    const btn = document.getElementById('btn-preview');
+    btn.disabled = true;
+    btn.textContent = 'Analyse...';
+
+    // Masquer les anciens resultats
+    document.getElementById('preview-result').hidden = true;
+    document.getElementById('import-result').hidden = true;
+
+    try {
+        let data;
+
+        if (isLocal) {
+            const filepath = document.getElementById('input-filepath').value.trim();
+            if (!filepath) {
+                showAlert('alert-import', 'Veuillez saisir le chemin du fichier.', 'warning');
+                return;
+            }
+            const mappingPath = document.getElementById('input-mappingpath').value.trim();
+            const isBatch = document.getElementById('import-batch') && document.getElementById('import-batch').checked;
+            const payload = {path: filepath, mode: 'pseudo', fort, nlp, tech, dry_run: true};
+            if (mappingPath && !mappingText) {
+                payload.mapping_path = mappingPath;
+            } else {
+                payload.mapping = mapping;
+            }
+            const endpoint = isBatch ? '/api/pseudonymise-batch' : '/api/pseudonymise-local';
+            const res = await fetch(API + endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload),
+            });
+            data = await res.json();
+
+            // Batch dry-run : affichage specifique
+            if (isBatch && data.fichiers) {
+                const previewResult = document.getElementById('preview-result');
+                previewResult.hidden = false;
+                const f = data.fichiers[0] || {};
+                const detectes = (data.fichiers_detectes || []).length;
+                document.getElementById('preview-summary').textContent =
+                    detectes + ' fichiers détectés. Prévisualisation sur ' + (f.nom || '?') + ' : ' +
+                    (f.total || 0) + ' enregistrements, ' + (f.remplacements || 0) + ' remplacements, Score RGPD ' + (f.score || 0);
+                const correspondances = f.correspondances || [];
+                const tbody = document.getElementById('tbody-preview');
+                tbody.innerHTML = correspondances.slice(0, 10).map(c =>
+                    '<tr><td>' + escapeHtml(c.type) + '</td>' +
+                    '<td>' + escapeHtml(c.valeur) + '</td>' +
+                    '<td><code>' + escapeHtml(c.jeton) + '</code></td></tr>'
+                ).join('');
+                showAlert('alert-import', 'Prévisualisation batch (dry-run). ' + detectes + ' fichiers détectés. Aucun fichier écrit.', 'info');
+                return;
+            }
+        } else {
+            const fileInput = document.getElementById('upload-fichier');
+            const file = fileInput.files[0];
+            if (!file) {
+                showAlert('alert-import', 'Veuillez sélectionner un fichier.', 'warning');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append('mapping', JSON.stringify(mapping));
+            formData.append('mode', 'pseudo');
+            formData.append('fort', fort);
+            formData.append('nlp', nlp);
+            formData.append('tech', tech);
+            formData.append('dry_run', 'true');
+            formData.append('filename', file.name);
+
+            const res = await fetch(API + '/api/pseudonymise', {
+                method: 'POST',
+                body: formData,
+            });
+            data = await res.json();
+        }
+
+        if (data.erreur) {
+            showAlert('alert-import', 'Erreur : ' + data.erreur, 'error');
+            return;
+        }
+
+        // Afficher le resultat de previsualisation
+        const previewResult = document.getElementById('preview-result');
+        previewResult.hidden = false;
+
+        const traites = data.traites || 0;
+        const totalRemp = data.stats ? data.stats.total : 0;
+        const score = data.score ? data.score.total : 0;
+        const niveau = data.score ? data.score.niveau : '';
+
+        document.getElementById('preview-summary').textContent =
+            traites + ' enregistrements testés, ' + totalRemp + ' remplacements détectés. Score RGPD : ' + score + ' (' + niveau + ')';
+
+        // Tableau des 10 premiers remplacements
+        const correspondances = data.correspondances || [];
+        const tbody = document.getElementById('tbody-preview');
+        tbody.innerHTML = correspondances.slice(0, 10).map(c =>
+            '<tr><td>' + escapeHtml(c.type) + '</td>' +
+            '<td>' + escapeHtml(c.valeur) + '</td>' +
+            '<td><code>' + escapeHtml(c.jeton) + '</code></td></tr>'
+        ).join('');
+
+        showAlert('alert-import',
+            'Prévisualisation terminée (dry-run). Aucun fichier écrit. Cliquez sur « Lancer le traitement » pour tout traiter.',
+            'info');
+    } catch (err) {
+        showAlert('alert-import', 'Erreur : ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Prévisualiser';
     }
 });
 

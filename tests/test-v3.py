@@ -204,6 +204,11 @@ def api_post(path, data):
         )
         with urllib.request.urlopen(req, timeout=30) as resp:
             return json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        try:
+            return json.loads(e.read())
+        except Exception:
+            return {'erreur': str(e)}
     except Exception as e:
         return {'erreur': str(e)}
 
@@ -324,6 +329,92 @@ else:
     pseudo_out = local_path.replace('.json', '_PSEUDO.json')
     if os.path.exists(pseudo_out):
         os.unlink(pseudo_out)
+
+
+# =============================================================
+#  TESTS DRY-RUN ET BATCH
+# =============================================================
+
+if server_ok:
+    print('\n=== Tests dry-run et batch ===\n')
+
+    # --- Dry-run local ---
+    with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
+        dryrun_path = f.name
+        json.dump([
+            {'nom': 'Dupont', 'prenom': 'Marie', 'email': 'marie@test.com', 'note': 'Bonjour Marie Dupont'}
+        ], f, ensure_ascii=False)
+
+    with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
+        dryrun_mapping = f.name
+        json.dump({
+            'description': 'test dryrun',
+            'champs_sensibles': {'nom': {'type': 'nom', 'jeton': 'NOM'}, 'email': {'type': 'email', 'jeton': 'EMAIL'}},
+            'texte_libre': ['note'],
+            'lookup_noms': {}
+        }, f)
+
+    r = api_post('/api/pseudonymise-local', {
+        'path': dryrun_path,
+        'mapping': json.load(open(dryrun_mapping)),
+        'mode': 'pseudo',
+        'dry_run': True,
+    })
+    test('Dry-run local: dry_run flag', r.get('dry_run') is True)
+    test('Dry-run local: output_path None', r.get('output_path') is None)
+    test('Dry-run local: remplacements > 0', r.get('stats', {}).get('total', 0) > 0)
+    pseudo_out_dryrun = dryrun_path.replace('.json', '_PSEUDO.json')
+    test('Dry-run local: aucun fichier ecrit', not os.path.exists(pseudo_out_dryrun))
+
+    os.unlink(dryrun_path)
+    os.unlink(dryrun_mapping)
+    if os.path.exists(pseudo_out_dryrun):
+        os.unlink(pseudo_out_dryrun)
+
+    # --- Batch : dossier avec 2 fichiers ---
+    batch_dir = tempfile.mkdtemp()
+    for i, nom in enumerate(['alice', 'bob']):
+        with open(os.path.join(batch_dir, f'{nom}.json'), 'w') as f:
+            json.dump([{'nom': nom.capitalize(), 'email': f'{nom}@test.com'}], f)
+
+    batch_mapping = {
+        'description': 'test batch',
+        'champs_sensibles': {'nom': {'type': 'nom', 'jeton': 'NOM'}, 'email': {'type': 'email', 'jeton': 'EMAIL'}},
+        'texte_libre': [],
+        'lookup_noms': {}
+    }
+
+    r = api_post('/api/pseudonymise-batch', {
+        'path': batch_dir,
+        'mapping': batch_mapping,
+        'mode': 'pseudo',
+    })
+    test('Batch: 2 fichiers traites', r.get('resume', {}).get('fichiers_traites', 0) == 2)
+    test('Batch: 0 erreurs', r.get('resume', {}).get('fichiers_en_erreur', 0) == 0)
+    test('Batch: rapport par fichier', len(r.get('fichiers', [])) == 2)
+
+    # --- Batch dry-run ---
+    r = api_post('/api/pseudonymise-batch', {
+        'path': batch_dir,
+        'mapping': batch_mapping,
+        'mode': 'pseudo',
+        'dry_run': True,
+    })
+    test('Batch dry-run: dry_run flag', r.get('dry_run') is True)
+    test('Batch dry-run: 1 fichier traite', len(r.get('fichiers', [])) == 1)
+    test('Batch dry-run: tous fichiers detectes', len(r.get('fichiers_detectes', [])) == 2)
+
+    # --- Batch erreur 404 ---
+    r = api_post('/api/pseudonymise-batch', {'path': '/inexistant/dossier'})
+    test('Batch erreur 404', 'introuvable' in r.get('erreur', '').lower())
+
+    # --- Batch erreur 400 ---
+    r = api_post('/api/pseudonymise-batch', {'path': ''})
+    test('Batch erreur 400', 'requis' in r.get('erreur', '').lower())
+
+    # Nettoyage batch
+    import shutil
+    shutil.rmtree(batch_dir, ignore_errors=True)
 
 
 # =============================================================

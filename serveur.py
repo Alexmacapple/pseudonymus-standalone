@@ -16,7 +16,7 @@ import re
 import sys
 import tempfile
 import traceback
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
 # Ajouter le dossier courant au path pour les imports
@@ -75,6 +75,8 @@ class APIHandler(SimpleHTTPRequestHandler):
             self._handle_pseudonymise_local()
         elif path == '/api/mapping/generate':
             self._handle_mapping_generate_post()
+        elif path == '/api/pseudonymise-batch':
+            self._handle_pseudonymise_batch()
         else:
             self._json_error(404, 'Route non trouvee')
 
@@ -142,6 +144,9 @@ class APIHandler(SimpleHTTPRequestHandler):
             use_tech = params.get('tech', False)
             if isinstance(use_tech, str):
                 use_tech = use_tech.lower() in ('true', '1', 'oui')
+            dry_run = params.get('dry_run', False)
+            if isinstance(dry_run, str):
+                dry_run = dry_run.lower() in ('true', '1', 'oui')
 
             # Charger les données
             if file_data:
@@ -166,6 +171,10 @@ class APIHandler(SimpleHTTPRequestHandler):
                 self._json_error(400, 'Aucune donnee fournie')
                 return
 
+            # Dry-run : limiter a 100 enregistrements
+            if dry_run and isinstance(data, list):
+                data = data[:100]
+
             # Traitement
             tokens = engine.TokenTable()
             stats = engine.Stats()
@@ -187,7 +196,7 @@ class APIHandler(SimpleHTTPRequestHandler):
 
             correspondances = self._tokens_to_list(tokens)
 
-            self._json_response({
+            response = {
                 'data': output,
                 'correspondances': correspondances,
                 'stats': self._stats_to_dict(stats),
@@ -199,7 +208,10 @@ class APIHandler(SimpleHTTPRequestHandler):
                 'total': len(data),
                 'traites': len(output) - stats.errors,
                 'erreurs': stats.errors,
-            })
+            }
+            if dry_run:
+                response['dry_run'] = True
+            self._json_response(response)
         except Exception as e:
             traceback.print_exc()
             self._json_error(500, str(e))
@@ -217,6 +229,7 @@ class APIHandler(SimpleHTTPRequestHandler):
             fort = body.get('fort', False)
             use_nlp = body.get('nlp', False)
             use_tech = body.get('tech', False)
+            dry_run = body.get('dry_run', False)
 
             if not file_path:
                 self._json_error(400, 'Chemin de fichier requis (champ "path")')
@@ -248,7 +261,9 @@ class APIHandler(SimpleHTTPRequestHandler):
                     mapping = {**mapping, 'texte_libre': ['texte']}
 
             total = len(data)
-            print(f'[serveur] {total} enregistrements charges.', file=sys.stderr)
+            if dry_run:
+                data = data[:100]
+            print(f'[serveur] {total} enregistrements charges{" (dry-run: 100 max)" if dry_run else ""}.', file=sys.stderr)
 
             # Traitement
             tokens = engine.TokenTable()
@@ -269,10 +284,34 @@ class APIHandler(SimpleHTTPRequestHandler):
                 if (i + 1) % 1000 == 0:
                     print(f'[serveur] [{i + 1}/{total}]', file=sys.stderr)
 
+            correspondances = self._tokens_to_list(tokens)
+
+            print(f'[serveur] Termine : {len(output)} enregistrements, '
+                  f'{sum(stats.counts.values())} remplacements.', file=sys.stderr)
+
+            if dry_run:
+                # Dry-run : pas d'ecriture, retour du rapport uniquement
+                self._json_response({
+                    'dry_run': True,
+                    'output_path': None,
+                    'csv_path': None,
+                    'zip_path': None,
+                    'correspondances': correspondances,
+                    'stats': self._stats_to_dict(stats),
+                    'score': {
+                        'total': scorer.score,
+                        'niveau': scorer.level(),
+                        'details': scorer.details,
+                    },
+                    'total': total,
+                    'traites': len(output) - stats.errors,
+                    'erreurs': stats.errors,
+                })
+                return
+
             # Ecriture sur disque
             suffix = '_PSEUDO' if mode == 'pseudo' else '_ANON'
             base_dir = os.path.dirname(file_path)
-            base_name = os.path.splitext(os.path.basename(file_path))[0]
 
             output_path = save_file(output, file_path, suffix, mapping)
 
@@ -283,11 +322,6 @@ class APIHandler(SimpleHTTPRequestHandler):
                 os.makedirs(csv_dir, exist_ok=True)
                 csv_path = os.path.join(csv_dir, 'correspondances.csv')
                 tokens.export_csv(csv_path)
-
-            correspondances = self._tokens_to_list(tokens)
-
-            print(f'[serveur] Termine : {len(output)} enregistrements, '
-                  f'{sum(stats.counts.values())} remplacements.', file=sys.stderr)
 
             # Creer un zip avec le resultat + correspondances
             zip_path = None
@@ -316,6 +350,160 @@ class APIHandler(SimpleHTTPRequestHandler):
                 'traites': len(output) - stats.errors,
                 'erreurs': stats.errors,
             })
+        except Exception as e:
+            traceback.print_exc()
+            self._json_error(500, str(e))
+
+    # ----- API : traitement batch (dossier) -----
+
+    SUPPORTED_EXT = {'.json', '.csv', '.tsv', '.xlsx', '.xls', '.ods', '.docx', '.odt', '.pdf'}
+
+    def _handle_pseudonymise_batch(self):
+        """Traite tous les fichiers supportes d'un dossier."""
+        try:
+            body = self._read_json_body()
+            dir_path = body.get('path', '')
+            mapping = body.get('mapping', {})
+            mapping_path = body.get('mapping_path', '')
+            mode = body.get('mode', 'pseudo')
+            fort = body.get('fort', False)
+            use_nlp = body.get('nlp', False)
+            use_tech = body.get('tech', False)
+            dry_run = body.get('dry_run', False)
+
+            if not dir_path:
+                self._json_error(400, 'Chemin de dossier requis (champ "path")')
+                return
+
+            if not os.path.isdir(dir_path):
+                self._json_error(404, f'Dossier introuvable : {dir_path}')
+                return
+
+            # Charger le mapping
+            if mapping_path:
+                if not os.path.isfile(mapping_path):
+                    self._json_error(404, f'Mapping introuvable : {mapping_path}')
+                    return
+                with open(mapping_path, 'r', encoding='utf-8') as f:
+                    mapping = json.load(f)
+
+            # Lister les fichiers supportes
+            fichiers = sorted(
+                f for f in os.listdir(dir_path)
+                if os.path.isfile(os.path.join(dir_path, f))
+                and os.path.splitext(f)[1].lower() in self.SUPPORTED_EXT
+                and '_PSEUDO' not in f
+                and '_ANON' not in f
+            )
+
+            if not fichiers:
+                self._json_error(400, f'Aucun fichier traitable dans {dir_path}')
+                return
+
+            print(f'[serveur] Batch : {len(fichiers)} fichiers dans {dir_path}', file=sys.stderr)
+
+            # Dry-run batch : traiter uniquement le premier fichier (100 enregistrements)
+            if dry_run:
+                fichiers_a_traiter = fichiers[:1]
+            else:
+                fichiers_a_traiter = fichiers
+
+            resultats = []
+            total_enregistrements = 0
+            total_remplacements = 0
+            fichiers_en_erreur = 0
+
+            for nom_fichier in fichiers_a_traiter:
+                file_path = os.path.join(dir_path, nom_fichier)
+                print(f'[serveur] Batch : traitement de {nom_fichier}...', file=sys.stderr)
+
+                try:
+                    ext = os.path.splitext(nom_fichier)[1].lower()
+                    if ext == '.json':
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            data = json.load(f)
+                    else:
+                        data = load_file(file_path, mapping)
+                        if ext in ('.docx', '.odt', '.pdf') and mapping.get('texte_libre') == ['*']:
+                            mapping = {**mapping, 'texte_libre': ['texte']}
+
+                    if dry_run:
+                        data = data[:100]
+
+                    tokens = engine.TokenTable()
+                    stats = engine.Stats()
+                    scorer = engine.RiskScorer()
+                    output = []
+
+                    for record in data:
+                        try:
+                            processed = engine.process_record(
+                                record, mode, fort, use_nlp, use_tech,
+                                tokens, stats, scorer, mapping
+                            )
+                            output.append(processed)
+                        except Exception:
+                            stats.errors += 1
+                            output.append(record)
+
+                    remplacements = sum(stats.counts.values())
+                    total_enregistrements += len(data)
+                    total_remplacements += remplacements
+
+                    resultat = {
+                        'nom': nom_fichier,
+                        'statut': 'ok',
+                        'total': len(data),
+                        'remplacements': remplacements,
+                        'score': scorer.score,
+                    }
+
+                    if dry_run:
+                        # Dry-run : retourner les correspondances du premier fichier
+                        resultat['correspondances'] = self._tokens_to_list(tokens)
+                    else:
+                        # Ecriture sur disque
+                        output_path = save_file(output, file_path, '_PSEUDO' if mode == 'pseudo' else '_ANON', mapping)
+                        resultat['output_path'] = output_path
+
+                        # Correspondances par fichier
+                        csv_path = None
+                        if mode == 'pseudo':
+                            csv_dir = os.path.join(SCRIPT_DIR, 'confidentiel')
+                            os.makedirs(csv_dir, exist_ok=True)
+                            base_name = os.path.splitext(nom_fichier)[0]
+                            csv_path = os.path.join(csv_dir, f'correspondances_{base_name}.csv')
+                            tokens.export_csv(csv_path)
+                        resultat['csv_path'] = csv_path
+
+                    resultats.append(resultat)
+
+                except Exception as e:
+                    fichiers_en_erreur += 1
+                    resultats.append({
+                        'nom': nom_fichier,
+                        'statut': 'erreur',
+                        'erreur': str(e),
+                    })
+                    print(f'[serveur] Batch : erreur sur {nom_fichier} : {e}', file=sys.stderr)
+
+            response = {
+                'fichiers': resultats,
+                'fichiers_detectes': fichiers,
+                'resume': {
+                    'fichiers_traites': len(fichiers_a_traiter) - fichiers_en_erreur,
+                    'fichiers_en_erreur': fichiers_en_erreur,
+                    'total_enregistrements': total_enregistrements,
+                    'total_remplacements': total_remplacements,
+                },
+            }
+            if dry_run:
+                response['dry_run'] = True
+
+            print(f'[serveur] Batch termine : {len(fichiers_a_traiter)} fichiers, '
+                  f'{total_enregistrements} enregistrements, {total_remplacements} remplacements.', file=sys.stderr)
+
+            self._json_response(response)
         except Exception as e:
             traceback.print_exc()
             self._json_error(500, str(e))
@@ -726,7 +914,7 @@ def main():
         print(f'Attention : dossier {INTERFACE_DIR} absent, creation...', file=sys.stderr)
         os.makedirs(INTERFACE_DIR, exist_ok=True)
 
-    server = HTTPServer((args.host, args.port), APIHandler)
+    server = ThreadingHTTPServer((args.host, args.port), APIHandler)
     print(f'\nServeur de pseudonymisation demarre', file=sys.stderr)
     print(f'  Interface : http://{args.host}:{args.port}/', file=sys.stderr)
     print(f'  API       : http://{args.host}:{args.port}/api/', file=sys.stderr)

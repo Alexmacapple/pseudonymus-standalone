@@ -301,6 +301,12 @@
                             <input class="fr-input" type="text" id="input-mappingpath"
                                 placeholder="/chemin/vers/mapping.json">
                         </div>
+                        <div class="fr-checkbox-group fr-mt-2w">
+                            <input type="checkbox" id="import-batch">
+                            <label class="fr-label" for="import-batch">Traiter un dossier entier
+                                <span class="fr-hint-text">Le chemin ci-dessus est un dossier. Tous les fichiers supportés seront traités.</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="fr-col-12 fr-col-md-6">
@@ -362,7 +368,10 @@
                 </div>
             </fieldset>
 
-            <button class="fr-btn" id="btn-import" type="button">Lancer le traitement</button>
+            <div class="fr-btns-group fr-btns-group--inline">
+                <button class="fr-btn" id="btn-import" type="button">Lancer le traitement</button>
+                <button class="fr-btn fr-btn--secondary" id="btn-preview" type="button">Prévisualiser</button>
+            </div>
 
             <!-- Progression -->
             <div id="import-progress" class="fr-my-2w" hidden>
@@ -373,6 +382,46 @@
             </div>
 
             <div id="alert-import" class="fr-alert fr-my-2w" role="status" aria-live="polite" hidden></div>
+
+            <!-- Resultat previsualisation -->
+            <div id="preview-result" class="fr-my-2w" hidden>
+                <h2>Prévisualisation</h2>
+                <p id="preview-summary" class="fr-text--bold"></p>
+                <div class="fr-table fr-mt-2w">
+                    <table>
+                        <caption>10 premiers remplacements détectés</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Type</th>
+                                <th scope="col">Original</th>
+                                <th scope="col">Jeton</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-preview"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Resultat batch -->
+            <div id="batch-result" class="fr-my-2w" hidden>
+                <h2>Résultat du traitement par lot</h2>
+                <p id="batch-summary" class="fr-text--bold"></p>
+                <div class="fr-table fr-mt-2w">
+                    <table>
+                        <caption>Détail par fichier</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Fichier</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Enregistrements</th>
+                                <th scope="col">Remplacements</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-batch"></tbody>
+                    </table>
+                </div>
+            </div>
 
             <!-- Resultat import -->
             <div id="import-result" class="fr-my-2w" hidden>

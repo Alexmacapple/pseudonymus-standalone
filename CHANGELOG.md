@@ -5,6 +5,24 @@ Issu de la branche `feature/alex-workflow` du depot `pseudonymus2`.
 
 ---
 
+## v3.2.0 — 2026-03-26
+
+Parité fonctionnelle CLI / interface web.
+
+### Nouvelles fonctionnalités
+
+- **Dry-run (prévisualisation)** : bouton "Prévisualiser" sur la page Import, traite 100 enregistrements max sans écrire de fichier. Fonctionne en mode local et upload.
+- **Traitement par lot (batch)** : nouvelle route `/api/pseudonymise-batch`, checkbox "Traiter un dossier entier" en mode local. Tableau récapitulatif par fichier avec gestion des erreurs.
+- **ThreadingHTTPServer** : le serveur reste réactif pendant les traitements longs (remplace HTTPServer mono-thread).
+- **Nommage CSV par fichier en batch** : `confidentiel/correspondances_{nom_fichier}.csv` (corrige l'écrasement du CLI).
+
+### Tests
+
+- 12 nouveaux tests dans `tests/test-v3.py` : dry-run local, batch, batch dry-run, erreurs 400/404
+- Total : 104/104 (49 + 55), 0 FAIL
+
+---
+
 ## v3.1.0 — 2026-03-26
 
 Restructuration du dépôt pour standards git.
