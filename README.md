@@ -246,3 +246,16 @@ pseudonymus-standalone/
 - Gitignoré (fichier `.gitignore` créé automatiquement)
 - Ne jamais partager les correspondances avec un service externe
 
+---
+
+## Origine et crédits
+
+Ce projet s'est fortement inspiré de [Pseudonymus v2](https://forge.apps.education.fr/vibe-edu/pseudonymus2/), application JavaScript de pseudonymisation côté client développée sur la Forge des Communs Numériques Éducatifs.
+
+Pseudonymus standalone en reprend les dictionnaires (patronymes INSEE, prénoms) et la logique de détection par regex, mais constitue une réécriture complète :
+
+- Portage en **Python** avec CLI complète (modes pseudo, anon, dry-run, scoring, batch, streaming)
+- Interface web **DSFR** (Design System de l'État) avec serveur local
+- Gestion native du **JSON structuré** : notation pointée, unwrap de JSON imbriqué, mappings configurables
+- Support **multi-format** : CSV, XLSX, ODS, DOCX, ODT, PDF
+
