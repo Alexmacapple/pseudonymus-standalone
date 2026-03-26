@@ -136,6 +136,10 @@ Le cœur fonctionne avec zéro dépendance (stdlib Python uniquement). Les forma
 
 ---
 
+## Historique
+
+Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet des versions (v1.0.0 à v3.0.0).
+
 ## Origine
 
-Issu de Pseudonymus v2 (JavaScript, dépôt `claude-workflow-perso`). La v3 Python a été extraite comme dépôt autonome le 2026-03-26. Voir `CHANGELOG.md` pour l'historique complet.
+Issu de Pseudonymus v2 (JavaScript, dépôt `claude-workflow-perso`). La v3 Python a été extraite comme dépôt autonome le 2026-03-26.
