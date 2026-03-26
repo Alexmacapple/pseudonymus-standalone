@@ -1,0 +1,18 @@
+{
+  "description": "Registre clients (exemple)",
+  "champs_sensibles": {
+    "nom": {"type": "nom", "jeton": "NOM"},
+    "prenom": {"type": "prenom", "jeton": "PRENOM"},
+    "email": {"type": "email", "jeton": "EMAIL"},
+    "telephone": {"type": "tel", "jeton": "TEL"},
+    "code_postal": {"type": "cp", "jeton": "CP"},
+    "id": {"type": "id", "jeton": "ID"}
+  },
+  "texte_libre": ["commentaire"],
+  "lookup_noms": {
+    "prenom": "prenom",
+    "nom": "nom"
+  },
+  "whitelist": ["ORANGE", "SFR", "FREE", "AMAZON"],
+  "blacklist": []
+}

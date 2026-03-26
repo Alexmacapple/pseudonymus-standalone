@@ -1,0 +1,260 @@
+{
+  "output_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/test-alex/donnees-json-plat_ANON.json",
+  "csv_path": null,
+  "zip_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/test-alex/donnees-json-plat_ANON.zip",
+  "correspondances": [
+    {
+      "type": "iban_txt",
+      "jeton": "[IBAN_1]",
+      "valeur": "FR76 1234 5678 9012 3456 7890 123"
+    },
+    {
+      "type": "nir_txt",
+      "jeton": "[NIR_1]",
+      "valeur": "2 90 03 75 123 456 78"
+    },
+    {
+      "type": "orga_txt",
+      "jeton": "[ORGANISATION_1]",
+      "valeur": "Societe Generale SA"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_1]",
+      "valeur": "01 23 45 67 89"
+    },
+    {
+      "type": "ville_txt",
+      "jeton": "[VILLE_1]",
+      "valeur": "Bordeaux"
+    },
+    {
+      "type": "voie_txt",
+      "jeton": "[VOIE_1]",
+      "valeur": "12 rue Victor Hugo a"
+    }
+  ],
+  "stats": {
+    "remplacements": {
+      "nom": 5,
+      "prenom": 5,
+      "email": 5,
+      "tel": 4,
+      "cp": 5,
+      "id": 5,
+      "lookup_prenom": 1,
+      "tel_txt": 1,
+      "lookup_nom": 4,
+      "iban_txt": 1,
+      "orga_txt": 1,
+      "nir_txt": 1,
+      "ville_txt": 1,
+      "voie_txt": 1
+    },
+    "total": 40,
+    "erreurs": 0,
+    "echantillons": {
+      "nom": [
+        {
+          "original": "Dupont",
+          "remplacement": "***"
+        },
+        {
+          "original": "Martin",
+          "remplacement": "***"
+        },
+        {
+          "original": "Petit",
+          "remplacement": "***"
+        },
+        {
+          "original": "Ben Ahmed",
+          "remplacement": "***"
+        },
+        {
+          "original": "Blanc",
+          "remplacement": "***"
+        }
+      ],
+      "prenom": [
+        {
+          "original": "Marie",
+          "remplacement": "***"
+        },
+        {
+          "original": "Pierre",
+          "remplacement": "***"
+        },
+        {
+          "original": "Lea",
+          "remplacement": "***"
+        },
+        {
+          "original": "Ali",
+          "remplacement": "***"
+        },
+        {
+          "original": "Eva",
+          "remplacement": "***"
+        }
+      ],
+      "email": [
+        {
+          "original": "marie.dupont@gmail.com",
+          "remplacement": "anonyme@example.com"
+        },
+        {
+          "original": "pierre.martin@hotmail.fr",
+          "remplacement": "anonyme@example.com"
+        },
+        {
+          "original": "lea.petit@yahoo.fr",
+          "remplacement": "anonyme@example.com"
+        },
+        {
+          "original": "ali.benahmed@free.fr",
+          "remplacement": "anonyme@example.com"
+        },
+        {
+          "original": "eva.blanc@sfr.fr",
+          "remplacement": "anonyme@example.com"
+        }
+      ],
+      "tel": [
+        {
+          "original": "06 12 34 56 78",
+          "remplacement": "00 00 00 00 00"
+        },
+        {
+          "original": "0698765432",
+          "remplacement": "00 00 00 00 00"
+        },
+        {
+          "original": "+33 6 11 22 33 44",
+          "remplacement": "00 00 00 00 00"
+        },
+        {
+          "original": "07 99 88 77 66",
+          "remplacement": "00 00 00 00 00"
+        }
+      ],
+      "cp": [
+        {
+          "original": "75015",
+          "remplacement": "00000"
+        },
+        {
+          "original": "69001",
+          "remplacement": "00000"
+        },
+        {
+          "original": "33000",
+          "remplacement": "00000"
+        },
+        {
+          "original": "13001",
+          "remplacement": "00000"
+        },
+        {
+          "original": "59000",
+          "remplacement": "00000"
+        }
+      ],
+      "id": [
+        {
+          "original": "1",
+          "remplacement": 1
+        },
+        {
+          "original": "2",
+          "remplacement": 2
+        },
+        {
+          "original": "3",
+          "remplacement": 3
+        },
+        {
+          "original": "4",
+          "remplacement": 4
+        },
+        {
+          "original": "5",
+          "remplacement": 5
+        }
+      ],
+      "lookup_prenom": [
+        {
+          "original": "Marie",
+          "remplacement": "[SUPPRIMÉ]"
+        }
+      ],
+      "tel_txt": [
+        {
+          "original": "01 23 45 67 89",
+          "remplacement": "[TEL_1]"
+        }
+      ],
+      "lookup_nom": [
+        {
+          "original": "Martin",
+          "remplacement": "[SUPPRIMÉ]"
+        },
+        {
+          "original": "Lea Petit",
+          "remplacement": "[SUPPRIMÉ]"
+        },
+        {
+          "original": "Ali Ben Ahmed",
+          "remplacement": "[SUPPRIMÉ]"
+        },
+        {
+          "original": "Eva Blanc",
+          "remplacement": "[SUPPRIMÉ]"
+        }
+      ],
+      "iban_txt": [
+        {
+          "original": "FR76 1234 5678 9012 3456 7890 123",
+          "remplacement": "[IBAN_1]"
+        }
+      ],
+      "orga_txt": [
+        {
+          "original": "Societe Generale SA",
+          "remplacement": "[ORGANISATION_1]"
+        }
+      ],
+      "nir_txt": [
+        {
+          "original": "2 90 03 75 123 456 78",
+          "remplacement": "[NIR_1]"
+        }
+      ],
+      "ville_txt": [
+        {
+          "original": "Bordeaux",
+          "remplacement": "[VILLE_1]"
+        }
+      ],
+      "voie_txt": [
+        {
+          "original": "12 rue Victor Hugo a ",
+          "remplacement": "[VOIE_1]"
+        }
+      ]
+    }
+  },
+  "score": {
+    "total": 16,
+    "niveau": "MODÉRÉ",
+    "details": {
+      "direct": 1,
+      "finance": 2,
+      "tech": 0,
+      "indirect": 3
+    }
+  },
+  "total": 5,
+  "traites": 5,
+  "erreurs": 0
+}

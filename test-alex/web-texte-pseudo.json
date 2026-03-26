@@ -1,0 +1,72 @@
+{
+  "texte_original": "Bonjour Marie Dupont, votre email est marie.dupont@gmail.com et votre numero 06 12 34 56 78. IBAN FR76 1234 5678 9012 3456 7890 123.",
+  "texte_pseudonymise": "Bonjour [PERSONNE_1], votre email est [EMAIL_1] et votre numero [TEL_1]. IBAN [IBAN_1].",
+  "correspondances": [
+    {
+      "type": "email_txt",
+      "jeton": "[EMAIL_1]",
+      "valeur": "marie.dupont@gmail.com"
+    },
+    {
+      "type": "iban_txt",
+      "jeton": "[IBAN_1]",
+      "valeur": "FR76 1234 5678 9012 3456 7890 123"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_1]",
+      "valeur": "Marie Dupont"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_1]",
+      "valeur": "06 12 34 56 78"
+    }
+  ],
+  "stats": {
+    "remplacements": {
+      "iban_txt": 1,
+      "email_txt": 1,
+      "tel_txt": 1,
+      "salutation": 1
+    },
+    "total": 4,
+    "erreurs": 0,
+    "echantillons": {
+      "iban_txt": [
+        {
+          "original": "FR76 1234 5678 9012 3456 7890 123",
+          "remplacement": "[IBAN_1]"
+        }
+      ],
+      "email_txt": [
+        {
+          "original": "marie.dupont@gmail.com",
+          "remplacement": "[EMAIL_1]"
+        }
+      ],
+      "tel_txt": [
+        {
+          "original": "06 12 34 56 78",
+          "remplacement": "[TEL_1]"
+        }
+      ],
+      "salutation": [
+        {
+          "original": "Bonjour Marie Dupont",
+          "remplacement": "Bonjour [PERSONNE_1]"
+        }
+      ]
+    }
+  },
+  "score": {
+    "total": 14,
+    "niveau": "MODÉRÉ",
+    "details": {
+      "direct": 3,
+      "finance": 1,
+      "tech": 0,
+      "indirect": 0
+    }
+  }
+}

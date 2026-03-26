@@ -1,0 +1,587 @@
+{
+  "output_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/test-alex/donnees-json-imbrique_PSEUDO.json",
+  "csv_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/confidentiel/correspondances.csv",
+  "zip_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/test-alex/donnees-json-imbrique_PSEUDO.zip",
+  "correspondances": [
+    {
+      "type": "cp",
+      "jeton": "[CP_1]",
+      "valeur": "75001"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_2]",
+      "valeur": "69001"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_3]",
+      "valeur": "33000"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_4]",
+      "valeur": "31000"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_5]",
+      "valeur": "44000"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_1]",
+      "valeur": "marie.dupont@example.fr"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_2]",
+      "valeur": "jean.martin@example.fr"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_3]",
+      "valeur": "sophie.bernard@example.fr"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_4]",
+      "valeur": "luc.moreau@example.fr"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_5]",
+      "valeur": "emilie.leroy@example.fr"
+    },
+    {
+      "type": "email_txt",
+      "jeton": "[EMAIL_1]",
+      "valeur": "luc.moreau@example.fr"
+    },
+    {
+      "type": "genre",
+      "jeton": "[GENRE_1]",
+      "valeur": "Female"
+    },
+    {
+      "type": "genre",
+      "jeton": "[GENRE_2]",
+      "valeur": "Male"
+    },
+    {
+      "type": "iban_txt",
+      "jeton": "[IBAN_1]",
+      "valeur": "FR76 1234 5678 9012 3456 7890 123"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_1]",
+      "valeur": "10000001"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_2]",
+      "valeur": "10000002"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_3]",
+      "valeur": "10000003"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_4]",
+      "valeur": "10000004"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_5]",
+      "valeur": "10000005"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_1]",
+      "valeur": "Dupont"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_2]",
+      "valeur": "Martin"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_3]",
+      "valeur": "Bernard"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_4]",
+      "valeur": "Moreau"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_5]",
+      "valeur": "Leroy"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_10]",
+      "valeur": "M. Petit ne repond plus"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_1]",
+      "valeur": "Marie"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_2]",
+      "valeur": "Dupont"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_3]",
+      "valeur": "Jean"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_4]",
+      "valeur": "Martin"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_5]",
+      "valeur": "Bernard"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_6]",
+      "valeur": "Sophie"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_7]",
+      "valeur": "Luc Moreau"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_8]",
+      "valeur": "Emilie"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_9]",
+      "valeur": "Leroy"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_1]",
+      "valeur": "Marie"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_2]",
+      "valeur": "Jean"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_3]",
+      "valeur": "Sophie"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_4]",
+      "valeur": "Luc"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_5]",
+      "valeur": "Emilie"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_1]",
+      "valeur": "01 23 45 67 89"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_2]",
+      "valeur": "06 12 34 56 78"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_3]",
+      "valeur": "07 98 76 54 32"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_4]",
+      "valeur": "05 56 78 90 12"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_5]",
+      "valeur": "06 11 22 33 44"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_6]",
+      "valeur": "06 55 44 33 22"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_7]",
+      "valeur": "02 40 12 34 56"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_8]",
+      "valeur": "06 77 88 99 00"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_1]",
+      "valeur": "06 12 34 56 78"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_2]",
+      "valeur": "07 98 76 54 32"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_3]",
+      "valeur": "05 56 78 90 12"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_4]",
+      "valeur": "06 55 44 33 22"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_5]",
+      "valeur": "02 40 12 34 56"
+    },
+    {
+      "type": "uuid",
+      "jeton": "[UUID_1]",
+      "valeur": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    },
+    {
+      "type": "uuid",
+      "jeton": "[UUID_2]",
+      "valeur": "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+    },
+    {
+      "type": "uuid",
+      "jeton": "[UUID_3]",
+      "valeur": "c3d4e5f6-a7b8-9012-cdef-123456789012"
+    },
+    {
+      "type": "uuid",
+      "jeton": "[UUID_4]",
+      "valeur": "d4e5f6a7-b8c9-0123-defa-234567890123"
+    },
+    {
+      "type": "uuid",
+      "jeton": "[UUID_5]",
+      "valeur": "e5f6a7b8-c9d0-1234-efab-345678901234"
+    }
+  ],
+  "stats": {
+    "remplacements": {
+      "id": 5,
+      "uuid": 5,
+      "prenom": 5,
+      "nom": 5,
+      "email": 5,
+      "tel": 8,
+      "cp": 5,
+      "genre": 5,
+      "lookup_prenom": 11,
+      "lookup_nom": 14,
+      "tel_txt": 5,
+      "email_txt": 1,
+      "titre": 1,
+      "iban_txt": 1
+    },
+    "total": 76,
+    "erreurs": 0,
+    "echantillons": {
+      "id": [
+        {
+          "original": "10000001",
+          "remplacement": "[ID_1]"
+        },
+        {
+          "original": "10000002",
+          "remplacement": "[ID_2]"
+        },
+        {
+          "original": "10000003",
+          "remplacement": "[ID_3]"
+        },
+        {
+          "original": "10000004",
+          "remplacement": "[ID_4]"
+        },
+        {
+          "original": "10000005",
+          "remplacement": "[ID_5]"
+        }
+      ],
+      "uuid": [
+        {
+          "original": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "remplacement": "[UUID_1]"
+        },
+        {
+          "original": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+          "remplacement": "[UUID_2]"
+        },
+        {
+          "original": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+          "remplacement": "[UUID_3]"
+        },
+        {
+          "original": "d4e5f6a7-b8c9-0123-defa-234567890123",
+          "remplacement": "[UUID_4]"
+        },
+        {
+          "original": "e5f6a7b8-c9d0-1234-efab-345678901234",
+          "remplacement": "[UUID_5]"
+        }
+      ],
+      "prenom": [
+        {
+          "original": "Marie",
+          "remplacement": "[PRENOM_1]"
+        },
+        {
+          "original": "Jean",
+          "remplacement": "[PRENOM_2]"
+        },
+        {
+          "original": "Sophie",
+          "remplacement": "[PRENOM_3]"
+        },
+        {
+          "original": "Luc",
+          "remplacement": "[PRENOM_4]"
+        },
+        {
+          "original": "Emilie",
+          "remplacement": "[PRENOM_5]"
+        }
+      ],
+      "nom": [
+        {
+          "original": "Dupont",
+          "remplacement": "[NOM_1]"
+        },
+        {
+          "original": "Martin",
+          "remplacement": "[NOM_2]"
+        },
+        {
+          "original": "Bernard",
+          "remplacement": "[NOM_3]"
+        },
+        {
+          "original": "Moreau",
+          "remplacement": "[NOM_4]"
+        },
+        {
+          "original": "Leroy",
+          "remplacement": "[NOM_5]"
+        }
+      ],
+      "email": [
+        {
+          "original": "marie.dupont@example.fr",
+          "remplacement": "[EMAIL_1]"
+        },
+        {
+          "original": "jean.martin@example.fr",
+          "remplacement": "[EMAIL_2]"
+        },
+        {
+          "original": "sophie.bernard@example.fr",
+          "remplacement": "[EMAIL_3]"
+        },
+        {
+          "original": "luc.moreau@example.fr",
+          "remplacement": "[EMAIL_4]"
+        },
+        {
+          "original": "emilie.leroy@example.fr",
+          "remplacement": "[EMAIL_5]"
+        }
+      ],
+      "tel": [
+        {
+          "original": "01 23 45 67 89",
+          "remplacement": "[TEL_1]"
+        },
+        {
+          "original": "06 12 34 56 78",
+          "remplacement": "[TEL_2]"
+        },
+        {
+          "original": "07 98 76 54 32",
+          "remplacement": "[TEL_3]"
+        },
+        {
+          "original": "05 56 78 90 12",
+          "remplacement": "[TEL_4]"
+        },
+        {
+          "original": "06 11 22 33 44",
+          "remplacement": "[TEL_5]"
+        }
+      ],
+      "cp": [
+        {
+          "original": "75001",
+          "remplacement": "[CP_1]"
+        },
+        {
+          "original": "69001",
+          "remplacement": "[CP_2]"
+        },
+        {
+          "original": "33000",
+          "remplacement": "[CP_3]"
+        },
+        {
+          "original": "31000",
+          "remplacement": "[CP_4]"
+        },
+        {
+          "original": "44000",
+          "remplacement": "[CP_5]"
+        }
+      ],
+      "genre": [
+        {
+          "original": "Female",
+          "remplacement": "[GENRE_1]"
+        },
+        {
+          "original": "Male",
+          "remplacement": "[GENRE_2]"
+        },
+        {
+          "original": "Female",
+          "remplacement": "[GENRE_1]"
+        },
+        {
+          "original": "Male",
+          "remplacement": "[GENRE_2]"
+        },
+        {
+          "original": "Female",
+          "remplacement": "[GENRE_1]"
+        }
+      ],
+      "lookup_prenom": [
+        {
+          "original": "Marie",
+          "remplacement": "[PERSONNE_1]"
+        },
+        {
+          "original": "Marie",
+          "remplacement": "[PERSONNE_1]"
+        },
+        {
+          "original": "marie",
+          "remplacement": "[PERSONNE_1]"
+        },
+        {
+          "original": "Jean",
+          "remplacement": "[PERSONNE_3]"
+        },
+        {
+          "original": "Jean",
+          "remplacement": "[PERSONNE_3]"
+        }
+      ],
+      "lookup_nom": [
+        {
+          "original": "Dupont",
+          "remplacement": "[PERSONNE_2]"
+        },
+        {
+          "original": "Dupont",
+          "remplacement": "[PERSONNE_2]"
+        },
+        {
+          "original": "dupont",
+          "remplacement": "[PERSONNE_2]"
+        },
+        {
+          "original": "Martin",
+          "remplacement": "[PERSONNE_4]"
+        },
+        {
+          "original": "Martin",
+          "remplacement": "[PERSONNE_4]"
+        }
+      ],
+      "tel_txt": [
+        {
+          "original": "06 12 34 56 78",
+          "remplacement": "[TEL_1]"
+        },
+        {
+          "original": "07 98 76 54 32",
+          "remplacement": "[TEL_2]"
+        },
+        {
+          "original": "05 56 78 90 12",
+          "remplacement": "[TEL_3]"
+        },
+        {
+          "original": "06 55 44 33 22",
+          "remplacement": "[TEL_4]"
+        },
+        {
+          "original": "02 40 12 34 56",
+          "remplacement": "[TEL_5]"
+        }
+      ],
+      "email_txt": [
+        {
+          "original": "luc.moreau@example.fr",
+          "remplacement": "[EMAIL_1]"
+        }
+      ],
+      "titre": [
+        {
+          "original": "M. Petit ne repond plus",
+          "remplacement": "[PERSONNE_10]"
+        }
+      ],
+      "iban_txt": [
+        {
+          "original": "FR76 1234 5678 9012 3456 7890 123",
+          "remplacement": "[IBAN_1]"
+        }
+      ]
+    }
+  },
+  "score": {
+    "total": 26,
+    "niveau": "MODÉRÉ",
+    "details": {
+      "direct": 7,
+      "finance": 1,
+      "tech": 0,
+      "indirect": 0
+    }
+  },
+  "total": 5,
+  "traites": 5,
+  "erreurs": 0
+}

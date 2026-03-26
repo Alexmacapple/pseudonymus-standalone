@@ -1,0 +1,41 @@
+type;jeton;valeur_originale
+cp;[CP_1];75015
+cp;[CP_2];69001
+cp;[CP_3];33000
+cp;[CP_4];13001
+cp;[CP_5];59000
+email;[EMAIL_1];marie.dupont@gmail.com
+email;[EMAIL_2];pierre.martin@hotmail.fr
+email;[EMAIL_3];lea.petit@yahoo.fr
+email;[EMAIL_4];ali.benahmed@free.fr
+email;[EMAIL_5];eva.blanc@sfr.fr
+iban_txt;[IBAN_1];FR76 1234 5678 9012 3456 7890 123
+id;[ID_1];1
+id;[ID_2];2
+id;[ID_3];3
+id;[ID_4];4
+id;[ID_5];5
+nir_txt;[NIR_1];2 90 03 75 123 456 78
+nom;[NOM_1];Dupont
+nom;[NOM_2];Martin
+nom;[NOM_3];Petit
+nom;[NOM_4];Ben Ahmed
+nom;[NOM_5];Blanc
+orga_txt;[ORGANISATION_1];Societe Generale SA
+personne;[PERSONNE_1];Marie
+personne;[PERSONNE_2];Martin
+personne;[PERSONNE_3];Lea Petit
+personne;[PERSONNE_4];Ali Ben Ahmed
+personne;[PERSONNE_5];Eva Blanc
+prenom;[PRENOM_1];Marie
+prenom;[PRENOM_2];Pierre
+prenom;[PRENOM_3];Lea
+prenom;[PRENOM_4];Ali
+prenom;[PRENOM_5];Eva
+tel;[TEL_1];06 12 34 56 78
+tel;[TEL_2];0698765432
+tel;[TEL_3];+33 6 11 22 33 44
+tel;[TEL_4];07 99 88 77 66
+tel_txt;[TEL_1];01 23 45 67 89
+ville_txt;[VILLE_1];Bordeaux
+voie_txt;[VOIE_1];12 rue Victor Hugo a

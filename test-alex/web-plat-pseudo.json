@@ -1,0 +1,430 @@
+{
+  "output_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/test-alex/donnees-json-plat_PSEUDO.json",
+  "csv_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/confidentiel/correspondances.csv",
+  "zip_path": "/Users/alex/Claude/active/pseudonymus2/pseudonymus-standalone/test-alex/donnees-json-plat_PSEUDO.zip",
+  "correspondances": [
+    {
+      "type": "cp",
+      "jeton": "[CP_1]",
+      "valeur": "75015"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_2]",
+      "valeur": "69001"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_3]",
+      "valeur": "33000"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_4]",
+      "valeur": "13001"
+    },
+    {
+      "type": "cp",
+      "jeton": "[CP_5]",
+      "valeur": "59000"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_1]",
+      "valeur": "marie.dupont@gmail.com"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_2]",
+      "valeur": "pierre.martin@hotmail.fr"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_3]",
+      "valeur": "lea.petit@yahoo.fr"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_4]",
+      "valeur": "ali.benahmed@free.fr"
+    },
+    {
+      "type": "email",
+      "jeton": "[EMAIL_5]",
+      "valeur": "eva.blanc@sfr.fr"
+    },
+    {
+      "type": "iban_txt",
+      "jeton": "[IBAN_1]",
+      "valeur": "FR76 1234 5678 9012 3456 7890 123"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_1]",
+      "valeur": "1"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_2]",
+      "valeur": "2"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_3]",
+      "valeur": "3"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_4]",
+      "valeur": "4"
+    },
+    {
+      "type": "id",
+      "jeton": "[ID_5]",
+      "valeur": "5"
+    },
+    {
+      "type": "nir_txt",
+      "jeton": "[NIR_1]",
+      "valeur": "2 90 03 75 123 456 78"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_1]",
+      "valeur": "Dupont"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_2]",
+      "valeur": "Martin"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_3]",
+      "valeur": "Petit"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_4]",
+      "valeur": "Ben Ahmed"
+    },
+    {
+      "type": "nom",
+      "jeton": "[NOM_5]",
+      "valeur": "Blanc"
+    },
+    {
+      "type": "orga_txt",
+      "jeton": "[ORGANISATION_1]",
+      "valeur": "Societe Generale SA"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_1]",
+      "valeur": "Marie"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_2]",
+      "valeur": "Martin"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_3]",
+      "valeur": "Lea Petit"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_4]",
+      "valeur": "Ali Ben Ahmed"
+    },
+    {
+      "type": "personne",
+      "jeton": "[PERSONNE_5]",
+      "valeur": "Eva Blanc"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_1]",
+      "valeur": "Marie"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_2]",
+      "valeur": "Pierre"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_3]",
+      "valeur": "Lea"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_4]",
+      "valeur": "Ali"
+    },
+    {
+      "type": "prenom",
+      "jeton": "[PRENOM_5]",
+      "valeur": "Eva"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_1]",
+      "valeur": "06 12 34 56 78"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_2]",
+      "valeur": "0698765432"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_3]",
+      "valeur": "+33 6 11 22 33 44"
+    },
+    {
+      "type": "tel",
+      "jeton": "[TEL_4]",
+      "valeur": "07 99 88 77 66"
+    },
+    {
+      "type": "tel_txt",
+      "jeton": "[TEL_1]",
+      "valeur": "01 23 45 67 89"
+    },
+    {
+      "type": "ville_txt",
+      "jeton": "[VILLE_1]",
+      "valeur": "Bordeaux"
+    },
+    {
+      "type": "voie_txt",
+      "jeton": "[VOIE_1]",
+      "valeur": "12 rue Victor Hugo a"
+    }
+  ],
+  "stats": {
+    "remplacements": {
+      "nom": 5,
+      "prenom": 5,
+      "email": 5,
+      "tel": 4,
+      "cp": 5,
+      "id": 5,
+      "lookup_prenom": 1,
+      "tel_txt": 1,
+      "lookup_nom": 4,
+      "iban_txt": 1,
+      "orga_txt": 1,
+      "nir_txt": 1,
+      "ville_txt": 1,
+      "voie_txt": 1
+    },
+    "total": 40,
+    "erreurs": 0,
+    "echantillons": {
+      "nom": [
+        {
+          "original": "Dupont",
+          "remplacement": "[NOM_1]"
+        },
+        {
+          "original": "Martin",
+          "remplacement": "[NOM_2]"
+        },
+        {
+          "original": "Petit",
+          "remplacement": "[NOM_3]"
+        },
+        {
+          "original": "Ben Ahmed",
+          "remplacement": "[NOM_4]"
+        },
+        {
+          "original": "Blanc",
+          "remplacement": "[NOM_5]"
+        }
+      ],
+      "prenom": [
+        {
+          "original": "Marie",
+          "remplacement": "[PRENOM_1]"
+        },
+        {
+          "original": "Pierre",
+          "remplacement": "[PRENOM_2]"
+        },
+        {
+          "original": "Lea",
+          "remplacement": "[PRENOM_3]"
+        },
+        {
+          "original": "Ali",
+          "remplacement": "[PRENOM_4]"
+        },
+        {
+          "original": "Eva",
+          "remplacement": "[PRENOM_5]"
+        }
+      ],
+      "email": [
+        {
+          "original": "marie.dupont@gmail.com",
+          "remplacement": "[EMAIL_1]"
+        },
+        {
+          "original": "pierre.martin@hotmail.fr",
+          "remplacement": "[EMAIL_2]"
+        },
+        {
+          "original": "lea.petit@yahoo.fr",
+          "remplacement": "[EMAIL_3]"
+        },
+        {
+          "original": "ali.benahmed@free.fr",
+          "remplacement": "[EMAIL_4]"
+        },
+        {
+          "original": "eva.blanc@sfr.fr",
+          "remplacement": "[EMAIL_5]"
+        }
+      ],
+      "tel": [
+        {
+          "original": "06 12 34 56 78",
+          "remplacement": "[TEL_1]"
+        },
+        {
+          "original": "0698765432",
+          "remplacement": "[TEL_2]"
+        },
+        {
+          "original": "+33 6 11 22 33 44",
+          "remplacement": "[TEL_3]"
+        },
+        {
+          "original": "07 99 88 77 66",
+          "remplacement": "[TEL_4]"
+        }
+      ],
+      "cp": [
+        {
+          "original": "75015",
+          "remplacement": "[CP_1]"
+        },
+        {
+          "original": "69001",
+          "remplacement": "[CP_2]"
+        },
+        {
+          "original": "33000",
+          "remplacement": "[CP_3]"
+        },
+        {
+          "original": "13001",
+          "remplacement": "[CP_4]"
+        },
+        {
+          "original": "59000",
+          "remplacement": "[CP_5]"
+        }
+      ],
+      "id": [
+        {
+          "original": "1",
+          "remplacement": "[ID_1]"
+        },
+        {
+          "original": "2",
+          "remplacement": "[ID_2]"
+        },
+        {
+          "original": "3",
+          "remplacement": "[ID_3]"
+        },
+        {
+          "original": "4",
+          "remplacement": "[ID_4]"
+        },
+        {
+          "original": "5",
+          "remplacement": "[ID_5]"
+        }
+      ],
+      "lookup_prenom": [
+        {
+          "original": "Marie",
+          "remplacement": "[PERSONNE_1]"
+        }
+      ],
+      "tel_txt": [
+        {
+          "original": "01 23 45 67 89",
+          "remplacement": "[TEL_1]"
+        }
+      ],
+      "lookup_nom": [
+        {
+          "original": "Martin",
+          "remplacement": "[PERSONNE_2]"
+        },
+        {
+          "original": "Lea Petit",
+          "remplacement": "[PERSONNE_3]"
+        },
+        {
+          "original": "Ali Ben Ahmed",
+          "remplacement": "[PERSONNE_4]"
+        },
+        {
+          "original": "Eva Blanc",
+          "remplacement": "[PERSONNE_5]"
+        }
+      ],
+      "iban_txt": [
+        {
+          "original": "FR76 1234 5678 9012 3456 7890 123",
+          "remplacement": "[IBAN_1]"
+        }
+      ],
+      "orga_txt": [
+        {
+          "original": "Societe Generale SA",
+          "remplacement": "[ORGANISATION_1]"
+        }
+      ],
+      "nir_txt": [
+        {
+          "original": "2 90 03 75 123 456 78",
+          "remplacement": "[NIR_1]"
+        }
+      ],
+      "ville_txt": [
+        {
+          "original": "Bordeaux",
+          "remplacement": "[VILLE_1]"
+        }
+      ],
+      "voie_txt": [
+        {
+          "original": "12 rue Victor Hugo a ",
+          "remplacement": "[VOIE_1]"
+        }
+      ]
+    }
+  },
+  "score": {
+    "total": 16,
+    "niveau": "MODÉRÉ",
+    "details": {
+      "direct": 1,
+      "finance": 2,
+      "tech": 0,
+      "indirect": 3
+    }
+  },
+  "total": 5,
+  "traites": 5,
+  "erreurs": 0
+}

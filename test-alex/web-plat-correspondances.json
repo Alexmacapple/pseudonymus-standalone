@@ -1,0 +1,202 @@
+[
+  {
+    "type": "cp",
+    "jeton": "[CP_1]",
+    "valeur": "75015"
+  },
+  {
+    "type": "cp",
+    "jeton": "[CP_2]",
+    "valeur": "69001"
+  },
+  {
+    "type": "cp",
+    "jeton": "[CP_3]",
+    "valeur": "33000"
+  },
+  {
+    "type": "cp",
+    "jeton": "[CP_4]",
+    "valeur": "13001"
+  },
+  {
+    "type": "cp",
+    "jeton": "[CP_5]",
+    "valeur": "59000"
+  },
+  {
+    "type": "email",
+    "jeton": "[EMAIL_1]",
+    "valeur": "marie.dupont@gmail.com"
+  },
+  {
+    "type": "email",
+    "jeton": "[EMAIL_2]",
+    "valeur": "pierre.martin@hotmail.fr"
+  },
+  {
+    "type": "email",
+    "jeton": "[EMAIL_3]",
+    "valeur": "lea.petit@yahoo.fr"
+  },
+  {
+    "type": "email",
+    "jeton": "[EMAIL_4]",
+    "valeur": "ali.benahmed@free.fr"
+  },
+  {
+    "type": "email",
+    "jeton": "[EMAIL_5]",
+    "valeur": "eva.blanc@sfr.fr"
+  },
+  {
+    "type": "iban_txt",
+    "jeton": "[IBAN_1]",
+    "valeur": "FR76 1234 5678 9012 3456 7890 123"
+  },
+  {
+    "type": "id",
+    "jeton": "[ID_1]",
+    "valeur": "1"
+  },
+  {
+    "type": "id",
+    "jeton": "[ID_2]",
+    "valeur": "2"
+  },
+  {
+    "type": "id",
+    "jeton": "[ID_3]",
+    "valeur": "3"
+  },
+  {
+    "type": "id",
+    "jeton": "[ID_4]",
+    "valeur": "4"
+  },
+  {
+    "type": "id",
+    "jeton": "[ID_5]",
+    "valeur": "5"
+  },
+  {
+    "type": "nir_txt",
+    "jeton": "[NIR_1]",
+    "valeur": "2 90 03 75 123 456 78"
+  },
+  {
+    "type": "nom",
+    "jeton": "[NOM_1]",
+    "valeur": "Dupont"
+  },
+  {
+    "type": "nom",
+    "jeton": "[NOM_2]",
+    "valeur": "Martin"
+  },
+  {
+    "type": "nom",
+    "jeton": "[NOM_3]",
+    "valeur": "Petit"
+  },
+  {
+    "type": "nom",
+    "jeton": "[NOM_4]",
+    "valeur": "Ben Ahmed"
+  },
+  {
+    "type": "nom",
+    "jeton": "[NOM_5]",
+    "valeur": "Blanc"
+  },
+  {
+    "type": "orga_txt",
+    "jeton": "[ORGANISATION_1]",
+    "valeur": "Societe Generale SA"
+  },
+  {
+    "type": "personne",
+    "jeton": "[PERSONNE_1]",
+    "valeur": "Marie"
+  },
+  {
+    "type": "personne",
+    "jeton": "[PERSONNE_2]",
+    "valeur": "Martin"
+  },
+  {
+    "type": "personne",
+    "jeton": "[PERSONNE_3]",
+    "valeur": "Lea Petit"
+  },
+  {
+    "type": "personne",
+    "jeton": "[PERSONNE_4]",
+    "valeur": "Ali Ben Ahmed"
+  },
+  {
+    "type": "personne",
+    "jeton": "[PERSONNE_5]",
+    "valeur": "Eva Blanc"
+  },
+  {
+    "type": "prenom",
+    "jeton": "[PRENOM_1]",
+    "valeur": "Marie"
+  },
+  {
+    "type": "prenom",
+    "jeton": "[PRENOM_2]",
+    "valeur": "Pierre"
+  },
+  {
+    "type": "prenom",
+    "jeton": "[PRENOM_3]",
+    "valeur": "Lea"
+  },
+  {
+    "type": "prenom",
+    "jeton": "[PRENOM_4]",
+    "valeur": "Ali"
+  },
+  {
+    "type": "prenom",
+    "jeton": "[PRENOM_5]",
+    "valeur": "Eva"
+  },
+  {
+    "type": "tel",
+    "jeton": "[TEL_1]",
+    "valeur": "06 12 34 56 78"
+  },
+  {
+    "type": "tel",
+    "jeton": "[TEL_2]",
+    "valeur": "0698765432"
+  },
+  {
+    "type": "tel",
+    "jeton": "[TEL_3]",
+    "valeur": "+33 6 11 22 33 44"
+  },
+  {
+    "type": "tel",
+    "jeton": "[TEL_4]",
+    "valeur": "07 99 88 77 66"
+  },
+  {
+    "type": "tel_txt",
+    "jeton": "[TEL_1]",
+    "valeur": "01 23 45 67 89"
+  },
+  {
+    "type": "ville_txt",
+    "jeton": "[VILLE_1]",
+    "valeur": "Bordeaux"
+  },
+  {
+    "type": "voie_txt",
+    "jeton": "[VOIE_1]",
+    "valeur": "12 rue Victor Hugo a"
+  }
+]

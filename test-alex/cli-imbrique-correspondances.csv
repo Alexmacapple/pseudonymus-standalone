@@ -1,0 +1,58 @@
+type;jeton;valeur_originale
+cp;[CP_1];75001
+cp;[CP_2];69001
+cp;[CP_3];33000
+cp;[CP_4];31000
+cp;[CP_5];44000
+email;[EMAIL_1];marie.dupont@example.fr
+email;[EMAIL_2];jean.martin@example.fr
+email;[EMAIL_3];sophie.bernard@example.fr
+email;[EMAIL_4];luc.moreau@example.fr
+email;[EMAIL_5];emilie.leroy@example.fr
+email_txt;[EMAIL_1];luc.moreau@example.fr
+genre;[GENRE_1];Female
+genre;[GENRE_2];Male
+iban_txt;[IBAN_1];FR76 1234 5678 9012 3456 7890 123
+id;[ID_1];10000001
+id;[ID_2];10000002
+id;[ID_3];10000003
+id;[ID_4];10000004
+id;[ID_5];10000005
+nom;[NOM_1];Dupont
+nom;[NOM_2];Martin
+nom;[NOM_3];Bernard
+nom;[NOM_4];Moreau
+nom;[NOM_5];Leroy
+personne;[PERSONNE_10];M. Petit ne repond plus
+personne;[PERSONNE_1];Marie
+personne;[PERSONNE_2];Dupont
+personne;[PERSONNE_3];Jean
+personne;[PERSONNE_4];Martin
+personne;[PERSONNE_5];Bernard
+personne;[PERSONNE_6];Sophie
+personne;[PERSONNE_7];Luc Moreau
+personne;[PERSONNE_8];Emilie
+personne;[PERSONNE_9];Leroy
+prenom;[PRENOM_1];Marie
+prenom;[PRENOM_2];Jean
+prenom;[PRENOM_3];Sophie
+prenom;[PRENOM_4];Luc
+prenom;[PRENOM_5];Emilie
+tel;[TEL_1];01 23 45 67 89
+tel;[TEL_2];06 12 34 56 78
+tel;[TEL_3];07 98 76 54 32
+tel;[TEL_4];05 56 78 90 12
+tel;[TEL_5];06 11 22 33 44
+tel;[TEL_6];06 55 44 33 22
+tel;[TEL_7];02 40 12 34 56
+tel;[TEL_8];06 77 88 99 00
+tel_txt;[TEL_1];06 12 34 56 78
+tel_txt;[TEL_2];07 98 76 54 32
+tel_txt;[TEL_3];05 56 78 90 12
+tel_txt;[TEL_4];06 55 44 33 22
+tel_txt;[TEL_5];02 40 12 34 56
+uuid;[UUID_1];a1b2c3d4-e5f6-7890-abcd-ef1234567890
+uuid;[UUID_2];b2c3d4e5-f6a7-8901-bcde-f12345678901
+uuid;[UUID_3];c3d4e5f6-a7b8-9012-cdef-123456789012
+uuid;[UUID_4];d4e5f6a7-b8c9-0123-defa-234567890123
+uuid;[UUID_5];e5f6a7b8-c9d0-1234-efab-345678901234
