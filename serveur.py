@@ -688,41 +688,53 @@ class APIHandler(SimpleHTTPRequestHandler):
             self._json_error(500, str(e))
 
     def _classify_field(self, key, sample_val, champs, texte_libre):
-        """Classifie un champ par heuristique (valeur + nom de cle)."""
+        """Classifie un champ par heuristique (nom de cle prioritaire, puis valeur)."""
         val_str = str(sample_val)
         val_upper = val_str.upper().strip()
         key_lower = key.lower().split('.')[-1]  # Dernier segment pour les chemins pointes
 
-        # Par valeur
-        if '@' in val_str and '.' in val_str:
+        # --- Par nom de cle (prioritaire — plus fiable que la valeur) ---
+        if any(k in key_lower for k in ('firstname', 'prenom', 'first_name', 'given')):
+            champs[key] = {'type': 'prenom', 'jeton': 'PRENOM'}
+        elif any(k in key_lower for k in ('lastname', 'nom', 'last_name', 'family', 'patronyme')):
+            champs[key] = {'type': 'nom', 'jeton': 'NOM'}
+        elif any(k in key_lower for k in ('siret',)):
+            champs[key] = {'type': 'siret', 'jeton': 'SIRET'}
+        elif any(k in key_lower for k in ('siren',)):
+            champs[key] = {'type': 'siren', 'jeton': 'SIREN'}
+        elif any(k in key_lower for k in ('guid', 'uuid')):
+            champs[key] = {'type': 'uuid', 'jeton': 'UUID'}
+        elif any(k in key_lower for k in ('mail', 'email', 'courriel')):
             champs[key] = {'type': 'email', 'jeton': 'EMAIL'}
-        elif re.match(r'^[\d\s\+\.\-]{8,}$', val_str):
+        elif any(k in key_lower for k in ('phone', 'mobile', 'fax', 'consumerphone')):
             champs[key] = {'type': 'tel', 'jeton': 'TEL'}
-        elif re.match(r'^\d{5}$', val_str):
+        elif any(k in key_lower for k in ('postal', 'cp', 'zipcode', 'zip_code', 'code_postal', 'postalcode')):
             champs[key] = {'type': 'cp', 'jeton': 'CP'}
+        elif any(k in key_lower for k in ('gender', 'genre', 'sexe')):
+            champs[key] = {'type': 'genre', 'jeton': 'GENRE'}
+        elif any(k in key_lower for k in ('comment', 'note', 'description', 'texte',
+                                           'question', 'message', 'detail', 'contenu', 'objet')):
+            texte_libre.append(key)
+        # --- Par valeur (fallback quand le nom de cle n'est pas parlant) ---
+        elif '@' in val_str and '.' in val_str:
+            champs[key] = {'type': 'email', 'jeton': 'EMAIL'}
         elif re.match(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
                       val_str, re.IGNORECASE):
             champs[key] = {'type': 'uuid', 'jeton': 'UUID'}
+        elif re.match(r'^\d{14}$', val_str):
+            champs[key] = {'type': 'siret', 'jeton': 'SIRET'}
+        elif re.match(r'^\d{9}$', val_str):
+            champs[key] = {'type': 'siren', 'jeton': 'SIREN'}
+        elif re.match(r'^\d{5}$', val_str):
+            champs[key] = {'type': 'cp', 'jeton': 'CP'}
         elif val_str.lower() in ('male', 'female', 'homme', 'femme', 'm', 'f'):
             champs[key] = {'type': 'genre', 'jeton': 'GENRE'}
+        elif re.match(r'^[\d\s\+\.\-]{8,}$', val_str) and not re.match(r'^\d{9,14}$', val_str):
+            champs[key] = {'type': 'tel', 'jeton': 'TEL'}
         elif val_upper in engine.PRENOMS:
             champs[key] = {'type': 'prenom', 'jeton': 'PRENOM'}
         elif val_upper in engine.PATRONYMES:
             champs[key] = {'type': 'nom', 'jeton': 'NOM'}
-        # Par nom de cle
-        elif any(k in key_lower for k in ('firstname', 'prenom', 'first_name', 'given')):
-            champs[key] = {'type': 'prenom', 'jeton': 'PRENOM'}
-        elif any(k in key_lower for k in ('lastname', 'nom', 'last_name', 'family', 'patronyme')):
-            champs[key] = {'type': 'nom', 'jeton': 'NOM'}
-        elif any(k in key_lower for k in ('mail', 'email', 'courriel')):
-            champs[key] = {'type': 'email', 'jeton': 'EMAIL'}
-        elif any(k in key_lower for k in ('tel', 'phone', 'mobile', 'fax')):
-            champs[key] = {'type': 'tel', 'jeton': 'TEL'}
-        elif any(k in key_lower for k in ('postal', 'cp', 'zipcode', 'zip_code', 'code_postal')):
-            champs[key] = {'type': 'cp', 'jeton': 'CP'}
-        elif any(k in key_lower for k in ('comment', 'note', 'description', 'texte',
-                                           'question', 'message', 'detail', 'contenu', 'objet')):
-            texte_libre.append(key)
         elif len(val_str) > 80:
             texte_libre.append(key)
 

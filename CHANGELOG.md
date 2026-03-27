@@ -7,13 +7,16 @@ Issu de la branche `feature/alex-workflow` du depot `pseudonymus2`.
 
 ## v3.2.1 — 2026-03-27
 
-Correction prévisualisation.
+Correction prévisualisation et mapping automatique.
 
 ### Corrections
 
-- Prévisualisation : aperçu avant/après sur les 5 premiers enregistrements (détails dépliables par enregistrement, champs modifiés surlignés)
-- Prévisualisation : résumé par type (nombre + exemples) au lieu des 10 premiers CP
-- Serveur : dry-run retourne `apercu_avant` et `apercu_apres` (5 premiers enregistrements)
+- **Prévisualisation** : aperçu structuré par champ du mapping (avant/après), résumé par type (nombre + exemples)
+- **Serveur** : deepcopy des données avant traitement pour un vrai diff avant/après
+- **Mapping automatique** : détection par nom de clé prioritaire sur la détection par valeur
+  - `Report.Siret` correctement typé `siret` (plus `tel`)
+  - `Report.Lastname` correctement typé `nom` (plus `prenom`)
+  - Ajout détection SIRET (14 chiffres), SIREN (9 chiffres), GUID, Gender, PostalCode par nom de clé
 
 ---
 
