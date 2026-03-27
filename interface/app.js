@@ -669,13 +669,21 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
 
             for (const c of champsApercu) {
                 if (c.exemples && c.exemples.length > 0) {
-                    const ex = c.exemples[0];
-                    html += '<tr style="background:#fff3cd">' +
-                        '<td><strong>' + escapeHtml(c.champ) + '</strong></td>' +
-                        '<td>' + escapeHtml(c.type) + '</td>' +
-                        '<td><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
-                        '<td>' + escapeHtml(ex.avant) + '</td>' +
-                        '<td>' + escapeHtml(ex.apres) + '</td></tr>';
+                    for (let j = 0; j < c.exemples.length; j++) {
+                        const ex = c.exemples[j];
+                        if (j === 0) {
+                            html += '<tr style="background:#fff3cd">' +
+                                '<td rowspan="' + c.exemples.length + '"><strong>' + escapeHtml(c.champ) + '</strong></td>' +
+                                '<td rowspan="' + c.exemples.length + '">' + escapeHtml(c.type) + '</td>' +
+                                '<td rowspan="' + c.exemples.length + '"><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
+                                '<td>' + escapeHtml(ex.avant) + '</td>' +
+                                '<td>' + escapeHtml(ex.apres) + '</td></tr>';
+                        } else {
+                            html += '<tr style="background:#fff3cd">' +
+                                '<td>' + escapeHtml(ex.avant) + '</td>' +
+                                '<td>' + escapeHtml(ex.apres) + '</td></tr>';
+                        }
+                    }
                 } else {
                     html += '<tr>' +
                         '<td>' + escapeHtml(c.champ) + '</td>' +
@@ -690,20 +698,6 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
             recordsDiv.innerHTML = '';
         }
 
-        // Resume par type
-        const correspondances = data.correspondances || [];
-        const parType = {};
-        for (const c of correspondances) {
-            if (!parType[c.type]) parType[c.type] = [];
-            parType[c.type].push(c);
-        }
-
-        const tbody = document.getElementById('tbody-preview');
-        tbody.innerHTML = Object.entries(parType).map(([type, items]) => {
-            const exemples = items.slice(0, 3).map(c => escapeHtml(c.valeur)).join(', ');
-            return '<tr><td>' + escapeHtml(type) + '</td><td>' + items.length + '</td>' +
-                '<td>' + exemples + (items.length > 3 ? ', ...' : '') + '</td></tr>';
-        }).join('');
 
         showAlert('alert-import',
             'Prévisualisation terminée (dry-run). Aucun fichier écrit. Cliquez sur « Lancer le traitement » pour tout traiter.',

@@ -779,7 +779,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                         'avant': str(val_avant)[:150],
                         'apres': str(val_apres)[:150],
                     })
-                if len(exemples) >= 2:
+                if len(exemples) >= 3:
                     break
             result.append({
                 'champ': champ,
@@ -799,7 +799,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                         'avant': str(val_avant)[:200],
                         'apres': str(val_apres)[:200],
                     })
-                if len(exemples) >= 1:
+                if len(exemples) >= 2:
                     break
             result.append({
                 'champ': champ,
