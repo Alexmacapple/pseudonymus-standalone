@@ -681,8 +681,11 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
                     const apVal = typeof ap[k] === 'string' ? (ap[k] || '') : JSON.stringify(ap[k] || '');
                     if (changed) {
                         html += '<tr style="background:#fff3cd"><td><strong>' + escapeHtml(k) + '</strong></td>' +
-                            '<td>' + escapeHtml((avVal || '').substring(0, 200)) + '</td>' +
-                            '<td>' + escapeHtml((apVal || '').substring(0, 200)) + '</td></tr>';
+                            '<td>' + escapeHtml((avVal || '').substring(0, 300)) + '</td>' +
+                            '<td>' + escapeHtml((apVal || '').substring(0, 300)) + '</td></tr>';
+                    } else {
+                        html += '<tr><td>' + escapeHtml(k) + '</td>' +
+                            '<td colspan="2" style="color:#666">' + escapeHtml((avVal || '').substring(0, 200)) + '</td></tr>';
                     }
                 }
                 html += '</tbody></table></div></details>';
