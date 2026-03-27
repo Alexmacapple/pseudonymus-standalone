@@ -665,23 +665,26 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
         if (champsApercu.length > 0) {
             let html = '<div class="fr-table"><table><thead><tr>' +
                 '<th scope="col">Champ</th><th scope="col">Type</th><th scope="col">Jeton</th>' +
-                '<th scope="col">Avant</th><th scope="col">Après</th></tr></thead><tbody>';
+                '<th scope="col">Avant</th><th scope="col">Après</th><th scope="col">Fiche</th></tr></thead><tbody>';
 
             for (const c of champsApercu) {
                 if (c.exemples && c.exemples.length > 0) {
                     for (let j = 0; j < c.exemples.length; j++) {
                         const ex = c.exemples[j];
+                        const bg = j % 2 === 0 ? '#fff3cd' : '#fff9e6';
                         if (j === 0) {
-                            html += '<tr style="background:#fff3cd">' +
+                            html += '<tr style="background:' + bg + '">' +
                                 '<td rowspan="' + c.exemples.length + '"><strong>' + escapeHtml(c.champ) + '</strong></td>' +
                                 '<td rowspan="' + c.exemples.length + '">' + escapeHtml(c.type) + '</td>' +
                                 '<td rowspan="' + c.exemples.length + '"><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
                                 '<td>' + escapeHtml(ex.avant) + '</td>' +
-                                '<td>' + escapeHtml(ex.apres) + '</td></tr>';
+                                '<td>' + escapeHtml(ex.apres) + '</td>' +
+                                '<td style="color:#666;font-size:0.85em">Fiche ' + ex.enregistrement + '</td></tr>';
                         } else {
-                            html += '<tr style="background:#fff3cd">' +
+                            html += '<tr style="background:' + bg + '">' +
                                 '<td>' + escapeHtml(ex.avant) + '</td>' +
-                                '<td>' + escapeHtml(ex.apres) + '</td></tr>';
+                                '<td>' + escapeHtml(ex.apres) + '</td>' +
+                                '<td style="color:#666;font-size:0.85em">Fiche ' + ex.enregistrement + '</td></tr>';
                         }
                     }
                 } else {
@@ -689,7 +692,7 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
                         '<td>' + escapeHtml(c.champ) + '</td>' +
                         '<td>' + escapeHtml(c.type) + '</td>' +
                         '<td><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
-                        '<td colspan="2" style="color:#999">Aucune modification détectée</td></tr>';
+                        '<td colspan="3" style="color:#999">Aucune modification détectée</td></tr>';
                 }
             }
             html += '</tbody></table></div>';
