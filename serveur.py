@@ -263,6 +263,8 @@ class APIHandler(SimpleHTTPRequestHandler):
             total = len(data)
             if dry_run:
                 data = data[:100]
+                import copy
+                apercu_avant = copy.deepcopy(data[:5])
             print(f'[serveur] {total} enregistrements charges{" (dry-run: 100 max)" if dry_run else ""}.', file=sys.stderr)
 
             # Traitement
@@ -297,8 +299,9 @@ class APIHandler(SimpleHTTPRequestHandler):
                     'csv_path': None,
                     'zip_path': None,
                     'correspondances': correspondances,
-                    'apercu_avant': data[:5],
+                    'apercu_avant': apercu_avant,
                     'apercu_apres': output[:5],
+                    'apercu_champs': self._build_apercu_champs(apercu_avant, output[:5], mapping),
                     'stats': self._stats_to_dict(stats),
                     'score': {
                         'total': scorer.score,
@@ -745,6 +748,82 @@ class APIHandler(SimpleHTTPRequestHandler):
                     self._classify_field(f'{full_key}[]', val[0], champs, texte_libre)
 
     # ----- API : telechargement de fichier -----
+
+    def _build_apercu_champs(self, avant_list, apres_list, mapping):
+        """Construit un apercu structure par champ du mapping pour la previsualisation."""
+        champs_sensibles = mapping.get('champs_sensibles', {})
+        texte_libre = mapping.get('texte_libre', [])
+        unwrap_config = (mapping.get('structure', {}) or {}).get('unwrap')
+
+        result = []
+        for champ, config in champs_sensibles.items():
+            exemples = []
+            for i, (av, ap) in enumerate(zip(avant_list, apres_list)):
+                val_avant = self._resolve_dotted(av, champ, unwrap_config)
+                val_apres = self._resolve_dotted(ap, champ, unwrap_config)
+                if val_avant != val_apres and val_avant:
+                    exemples.append({
+                        'enregistrement': i + 1,
+                        'avant': str(val_avant)[:150],
+                        'apres': str(val_apres)[:150],
+                    })
+                if len(exemples) >= 2:
+                    break
+            result.append({
+                'champ': champ,
+                'type': config.get('type', ''),
+                'jeton': config.get('jeton', ''),
+                'exemples': exemples,
+            })
+
+        for champ in texte_libre:
+            exemples = []
+            for i, (av, ap) in enumerate(zip(avant_list, apres_list)):
+                val_avant = self._resolve_dotted(av, champ, unwrap_config)
+                val_apres = self._resolve_dotted(ap, champ, unwrap_config)
+                if val_avant != val_apres and val_avant:
+                    exemples.append({
+                        'enregistrement': i + 1,
+                        'avant': str(val_avant)[:200],
+                        'apres': str(val_apres)[:200],
+                    })
+                if len(exemples) >= 1:
+                    break
+            result.append({
+                'champ': champ,
+                'type': 'texte_libre',
+                'jeton': '',
+                'exemples': exemples,
+            })
+        return result
+
+    def _resolve_dotted(self, record, dotted_key, unwrap_config=None):
+        """Resout un champ en notation pointee (Report.Firstname) dans un enregistrement."""
+        obj = record
+        # Si unwrap configure, desemballer d'abord
+        if unwrap_config and '.' in dotted_key:
+            field = unwrap_config.get('field', '')
+            raw = record.get(field, '')
+            if isinstance(raw, str) and raw.strip().startswith('{'):
+                try:
+                    obj = json.loads(raw)
+                except Exception:
+                    return None
+            elif isinstance(raw, dict):
+                obj = raw
+            # Retirer le prefixe du champ unwrap si present
+            parts = dotted_key.split('.')
+        else:
+            parts = dotted_key.split('.')
+
+        for part in parts:
+            if isinstance(obj, dict):
+                obj = obj.get(part)
+            else:
+                return None
+            if obj is None:
+                return None
+        return obj
 
     def _handle_download(self, parsed):
         """Sert un fichier local en telechargement."""

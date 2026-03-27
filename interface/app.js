@@ -658,39 +658,34 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
             traites + ' enregistrements testés (sur ' + (data.total || '?') + '), ' +
             totalRemp + ' remplacements détectés. Score RGPD : ' + score + ' (' + niveau + ')';
 
-        // Apercu avant/apres
-        const avant = data.apercu_avant || [];
-        const apres = data.apercu_apres || [];
+        // Apercu structure par champ du mapping
+        const champsApercu = data.apercu_champs || [];
         const recordsDiv = document.getElementById('preview-records');
 
-        if (avant.length > 0) {
-            let html = '';
-            for (let i = 0; i < avant.length; i++) {
-                const av = avant[i];
-                const ap = apres[i] || {};
-                const keys = Object.keys(av);
-                const diffs = keys.filter(k => JSON.stringify(av[k]) !== JSON.stringify(ap[k]));
+        if (champsApercu.length > 0) {
+            let html = '<div class="fr-table"><table><thead><tr>' +
+                '<th scope="col">Champ</th><th scope="col">Type</th><th scope="col">Jeton</th>' +
+                '<th scope="col">Avant</th><th scope="col">Après</th></tr></thead><tbody>';
 
-                if (diffs.length === 0) continue;
-
-                html += '<details class="fr-mb-2w"><summary class="fr-text--bold">Enregistrement ' + (i + 1) + ' — ' + diffs.length + ' champ(s) modifié(s)</summary>';
-                html += '<div class="fr-table fr-table--no-caption"><table><thead><tr><th>Champ</th><th>Avant</th><th>Après</th></tr></thead><tbody>';
-                for (const k of keys) {
-                    const changed = JSON.stringify(av[k]) !== JSON.stringify(ap[k]);
-                    const avVal = typeof av[k] === 'string' ? av[k] : JSON.stringify(av[k]);
-                    const apVal = typeof ap[k] === 'string' ? (ap[k] || '') : JSON.stringify(ap[k] || '');
-                    if (changed) {
-                        html += '<tr style="background:#fff3cd"><td><strong>' + escapeHtml(k) + '</strong></td>' +
-                            '<td>' + escapeHtml((avVal || '').substring(0, 300)) + '</td>' +
-                            '<td>' + escapeHtml((apVal || '').substring(0, 300)) + '</td></tr>';
-                    } else {
-                        html += '<tr><td>' + escapeHtml(k) + '</td>' +
-                            '<td colspan="2" style="color:#666">' + escapeHtml((avVal || '').substring(0, 200)) + '</td></tr>';
-                    }
+            for (const c of champsApercu) {
+                if (c.exemples && c.exemples.length > 0) {
+                    const ex = c.exemples[0];
+                    html += '<tr style="background:#fff3cd">' +
+                        '<td><strong>' + escapeHtml(c.champ) + '</strong></td>' +
+                        '<td>' + escapeHtml(c.type) + '</td>' +
+                        '<td><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
+                        '<td>' + escapeHtml(ex.avant) + '</td>' +
+                        '<td>' + escapeHtml(ex.apres) + '</td></tr>';
+                } else {
+                    html += '<tr>' +
+                        '<td>' + escapeHtml(c.champ) + '</td>' +
+                        '<td>' + escapeHtml(c.type) + '</td>' +
+                        '<td><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
+                        '<td colspan="2" style="color:#999">Aucune modification détectée</td></tr>';
                 }
-                html += '</tbody></table></div></details>';
             }
-            recordsDiv.innerHTML = html || '<p>Aucune modification détectée sur les 5 premiers enregistrements.</p>';
+            html += '</tbody></table></div>';
+            recordsDiv.innerHTML = html;
         } else {
             recordsDiv.innerHTML = '';
         }
