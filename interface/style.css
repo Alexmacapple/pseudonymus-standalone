@@ -73,43 +73,7 @@ textarea[readonly] {
     text-align: right;
 }
 
-/* Modale serveur */
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 2000;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.modal-overlay[hidden] {
-    display: none;
-}
-.modal-dialog {
-    background: var(--background-default-grey, #fff);
-    border-radius: 0.5rem;
-    max-width: 640px;
-    width: calc(100% - 2rem);
-    max-height: 80vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-.modal-header h1 {
-    font-size: 1.375rem;
-    margin: 0;
-}
-.modal-content table {
-    width: 100%;
-}
+/* Modale serveur : utilise le composant DSFR fr-modal + dialog natif */
 
 /* Responsive ajustements */
 @media (max-width: 767px) {

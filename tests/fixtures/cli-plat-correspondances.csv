@@ -4,11 +4,11 @@ cp;[CP_2];69001
 cp;[CP_3];33000
 cp;[CP_4];13001
 cp;[CP_5];59000
-email;[EMAIL_1];marie.dupont@gmail.com
-email;[EMAIL_2];pierre.martin@hotmail.fr
-email;[EMAIL_3];lea.petit@yahoo.fr
-email;[EMAIL_4];ali.benahmed@free.fr
-email;[EMAIL_5];eva.blanc@sfr.fr
+email;[EMAIL_1];marie.dupont@example.fr
+email;[EMAIL_2];pierre.martin@example.fr
+email;[EMAIL_3];lea.petit@example.fr
+email;[EMAIL_4];ali.benahmed@example.fr
+email;[EMAIL_5];eva.blanc@example.fr
 iban_txt;[IBAN_1];FR76 1234 5678 9012 3456 7890 123
 id;[ID_1];1
 id;[ID_2];2

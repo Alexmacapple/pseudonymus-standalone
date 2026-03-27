@@ -3,7 +3,7 @@
     "id": 1,
     "prenom": "Marie",
     "nom": "Dupont",
-    "email": "marie.dupont@gmail.com",
+    "email": "marie.dupont@example.fr",
     "telephone": "06 12 34 56 78",
     "code_postal": "75015",
     "commentaire": "Bonjour Marie, votre commande chez ORANGE est en cours. Contactez-nous au 01 23 45 67 89."
@@ -12,7 +12,7 @@
     "id": 2,
     "prenom": "Pierre",
     "nom": "Martin",
-    "email": "pierre.martin@hotmail.fr",
+    "email": "pierre.martin@example.fr",
     "telephone": "0698765432",
     "code_postal": "69001",
     "commentaire": "M. Martin a signale un probleme avec la Societe Generale SA. Son IBAN FR76 1234 5678 9012 3456 7890 123 a ete debite a tort."
@@ -21,7 +21,7 @@
     "id": 3,
     "prenom": "Lea",
     "nom": "Petit",
-    "email": "lea.petit@yahoo.fr",
+    "email": "lea.petit@example.fr",
     "telephone": "+33 6 11 22 33 44",
     "code_postal": "33000",
     "commentaire": "Lea Petit habite au 12 rue Victor Hugo a Bordeaux. Elle est nee le 15/03/1990. Numero de secu : 2 90 03 75 123 456 78."
@@ -30,7 +30,7 @@
     "id": 4,
     "prenom": "Ali",
     "nom": "Ben Ahmed",
-    "email": "ali.benahmed@free.fr",
+    "email": "ali.benahmed@example.fr",
     "telephone": "07 99 88 77 66",
     "code_postal": "13001",
     "commentaire": "Ali Ben Ahmed a contacte l'ecole Victor Hugo pour inscrire son fils. Son email est ali [at] example [dot] com."
@@ -39,7 +39,7 @@
     "id": 5,
     "prenom": "Eva",
     "nom": "Blanc",
-    "email": "eva.blanc@sfr.fr",
+    "email": "eva.blanc@example.fr",
     "telephone": "",
     "code_postal": "59000",
     "commentaire": "Eva Blanc a achete une pierre decorative chez AMAZON pour 25 euros. Reference commande n 12345. La Direction regionale a ete informee."

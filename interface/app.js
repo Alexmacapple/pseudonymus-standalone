@@ -862,16 +862,12 @@ const btnCloseModal = document.getElementById('modal-serveur-close');
 
 function openModal() {
     if (!modalServeur) return;
-    modalServeur.hidden = false;
-    document.body.style.overflow = 'hidden';
-    if (btnCloseModal) btnCloseModal.focus();
+    modalServeur.showModal();
     loadServerInfo();
 }
 function closeModal() {
     if (!modalServeur) return;
-    modalServeur.hidden = true;
-    document.body.style.overflow = '';
-    if (btnOpenModal) btnOpenModal.focus();
+    modalServeur.close();
 }
 
 if (btnOpenModal) btnOpenModal.addEventListener('click', openModal);
@@ -879,9 +875,6 @@ if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
 if (modalServeur) {
     modalServeur.addEventListener('click', (e) => {
         if (e.target === modalServeur) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !modalServeur.hidden) closeModal();
     });
 }
 
@@ -905,9 +898,12 @@ async function loadServerInfo() {
         container.innerHTML = `
             <div class="fr-table fr-mt-2w">
                 <table>
+                    <caption>Informations techniques</caption>
                     <tbody>
                         <tr><td><strong>Statut</strong></td><td>${statusBadge}</td></tr>
-                        <tr><td><strong>Adresse</strong></td><td><code>http://127.0.0.1:8090</code></td></tr>
+                        <tr><td><strong>Version</strong></td><td>v3.3.0</td></tr>
+                        <tr><td><strong>Adresse</strong></td><td><code>${window.location.origin}</code></td></tr>
+                        <tr><td><strong>Formats supportés</strong></td><td>JSON, CSV, TSV, XLSX, XLS, ODS, DOCX, ODT, PDF, TXT, MD</td></tr>
                         <tr><td><strong>Patronymes INSEE</strong></td><td>${(dict.patronymes || 0).toLocaleString('fr-FR')}</td></tr>
                         <tr><td><strong>Prénoms INSEE</strong></td><td>${(dict.prenoms || 0).toLocaleString('fr-FR')}</td></tr>
                         <tr><td><strong>Stopwords capitalisés</strong></td><td>${(dict.stopwords_cap || 0).toLocaleString('fr-FR')}</td></tr>
@@ -917,7 +913,7 @@ async function loadServerInfo() {
                     </tbody>
                 </table>
             </div>
-            <p class="fr-text--sm fr-mt-2w">Traitement 100% local. Le serveur écoute uniquement sur 127.0.0.1 (pas d'accès réseau).</p>
+            <p class="fr-text--sm fr-mt-2w">Traitement 100 % local. Aucune donnée ne quitte votre machine.</p>
         `;
     } catch (err) {
         container.innerHTML = '<div class="fr-alert fr-alert--error"><p>Impossible de contacter le serveur : ' + escapeHtml(err.message) + '</p></div>';

@@ -21,14 +21,14 @@ Outil de pseudonymisation/anonymisation de données personnelles, 100 % local. M
 pseudonymus-standalone/
 ├── pseudonymise.py        # Moteur principal (CLI + API)
 ├── depseudonymise.py      # Restauration des jetons
-├── formats.py             # Parseurs multi-format (CSV, XLSX, ODS, DOCX, PDF)
+├── formats.py             # Parseurs multi-format (CSV, XLSX, ODS, DOCX, PDF, TXT, MD)
 ├── serveur.py             # Serveur HTTP local (port 8090)
 ├── convertir-donnees.py   # Régénération des données statiques
 ├── data/                  # 9 fichiers JSON de référence (884k patronymes, 169k prénoms)
 ├── exemples/              # Mappings et données de test
 ├── confidentiel/          # Correspondances CSV (gitignoré, jamais versionné)
 ├── interface/             # Frontend DSFR
-│   ├── index.html         # 6 pages (pseudo, correspondances, restauration, import, scoring, doc)
+│   ├── index.html         # 6 pages (pseudo, import, scoring, correspondances, restauration, doc)
 │   ├── app.js             # Logique frontend
 │   ├── style.css          # Styles complémentaires
 │   └── dsfr/              # CSS, JS, polices DSFR embarqués
@@ -36,7 +36,7 @@ pseudonymus-standalone/
 │   └── done/              # PRD terminés + documentation
 ├── tests/
 │   ├── test-options.py    # 49 tests moteur
-│   └── test-v3.py         # 43 tests formats + serveur + API
+│   └── test-v3.py         # 117 tests formats + serveur + API
 ├── requirements.txt       # Dépendances optionnelles
 ├── CHANGELOG.md           # Historique des versions
 └── LICENSE                # GPL v3
@@ -66,8 +66,8 @@ python3 pseudonymise.py fichier.json --mapping mapping.json --score-only
 python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/correspondances.csv
 
 # Tests
-python3 tests/test-options.py    # 49 tests moteur
-python3 tests/test-v3.py         # 43 tests formats + API
+python3 tests/test-options.py         # 49 tests moteur
+.venv/bin/python3 tests/test-v3.py   # 117 tests formats + API + e2e
 ```
 
 ---
@@ -118,7 +118,8 @@ python3 tests/test-options.py    # Moteur : modes, options, formats, dépseudony
 python3 tests/test-v3.py         # Formats multi, serveur, API REST
 ```
 
-Seuil : **92/92 (49 + 43)**, 0 FAIL, 0 SKIP.
+Seuil : **166/166 (49 + 117)**, 0 FAIL, 0 SKIP.
+Exécuter avec le venv pour couvrir tous les formats : `.venv/bin/python3 tests/test-v3.py`
 
 ---
 

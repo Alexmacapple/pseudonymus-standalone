@@ -157,7 +157,7 @@ if os.path.exists(pseudo_path) and os.path.exists(csv_path):
         r0 = data[0]
         test('Prenom restaure', r0.get('prenom') == 'Marie',
              f'obtenu: {r0.get("prenom")}')
-        test('Email restaure', 'marie.dupont@gmail.com' in str(r0.get('email', '')),
+        test('Email restaure', 'marie.dupont@example.fr' in str(r0.get('email', '')),
              f'obtenu: {r0.get("email")}')
 else:
     print('  SKIP  Fichiers pseudo/csv manquants')

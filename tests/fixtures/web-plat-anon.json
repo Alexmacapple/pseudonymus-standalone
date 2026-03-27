@@ -100,23 +100,23 @@
       ],
       "email": [
         {
-          "original": "marie.dupont@gmail.com",
+          "original": "marie.dupont@example.fr",
           "remplacement": "anonyme@example.com"
         },
         {
-          "original": "pierre.martin@hotmail.fr",
+          "original": "pierre.martin@example.fr",
           "remplacement": "anonyme@example.com"
         },
         {
-          "original": "lea.petit@yahoo.fr",
+          "original": "lea.petit@example.fr",
           "remplacement": "anonyme@example.com"
         },
         {
-          "original": "ali.benahmed@free.fr",
+          "original": "ali.benahmed@example.fr",
           "remplacement": "anonyme@example.com"
         },
         {
-          "original": "eva.blanc@sfr.fr",
+          "original": "eva.blanc@example.fr",
           "remplacement": "anonyme@example.com"
         }
       ],

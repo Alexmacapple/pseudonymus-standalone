@@ -27,27 +27,27 @@
   {
     "type": "email",
     "jeton": "[EMAIL_1]",
-    "valeur": "marie.dupont@gmail.com"
+    "valeur": "marie.dupont@example.fr"
   },
   {
     "type": "email",
     "jeton": "[EMAIL_2]",
-    "valeur": "pierre.martin@hotmail.fr"
+    "valeur": "pierre.martin@example.fr"
   },
   {
     "type": "email",
     "jeton": "[EMAIL_3]",
-    "valeur": "lea.petit@yahoo.fr"
+    "valeur": "lea.petit@example.fr"
   },
   {
     "type": "email",
     "jeton": "[EMAIL_4]",
-    "valeur": "ali.benahmed@free.fr"
+    "valeur": "ali.benahmed@example.fr"
   },
   {
     "type": "email",
     "jeton": "[EMAIL_5]",
-    "valeur": "eva.blanc@sfr.fr"
+    "valeur": "eva.blanc@example.fr"
   },
   {
     "type": "iban_txt",

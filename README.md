@@ -1,6 +1,6 @@
 # Pseudonymus standalone — Pseudonymisation multi-format
 
-Script Python local de pseudonymisation/anonymisation de fichiers JSON, CSV, Excel, DOCX et PDF.
+Script Python local de pseudonymisation/anonymisation de fichiers JSON, CSV, Excel, DOCX, PDF, TXT et Markdown.
 Iso-périmètre fonctionnel avec Pseudonymus v2 + interface web locale DSFR.
 
 Traitement 100 % local. Aucune donnée ne transite vers un service externe.
@@ -46,6 +46,8 @@ python3 pseudonymise.py fichier.json --mapping mapping.json --pseudo
 | DOCX | Oui | Oui | `pip3 install python-docx` |
 | ODT | Oui | Oui | `pip3 install odfpy` |
 | PDF | Oui | Texte (.txt) | `pip3 install pdfplumber` |
+| TXT | Oui | Oui | Aucune |
+| MD | Oui | Oui | Aucune |
 
 Les dépendances sont optionnelles : le script fonctionne sans si le format n'est pas utilisé.
 
@@ -80,11 +82,11 @@ Serveur local sur http://127.0.0.1:8090 avec 6 pages :
 | Page | URL | Fonction |
 |------|-----|----------|
 | Pseudonymisation | `/#pseudonymisation` | Coller du texte et pseudonymiser |
-| Correspondances | `/#correspondances` | Table jeton/valeur avec recherche et export CSV |
-| Restauration | `/#restauration` | Dépseudonymiser avec les correspondances |
 | Import fichier | `/#import-fichier` | Traiter un fichier complet (upload ou chemin local) |
 | Scoring RGPD | `/#scoring-rgpd` | Évaluer le risque avant pseudonymisation |
-| Documentation | `/#documentation` | Glossaire, guide, FAQ, référence technique |
+| Correspondances | `/#correspondances` | Table jeton/valeur avec recherche et export CSV |
+| Restauration | `/#restauration` | Dépseudonymiser avec les correspondances |
+| Documentation | `/#documentation` | CLI, guide interface web, glossaire, FAQ |
 
 ### API
 
@@ -95,7 +97,8 @@ Serveur local sur http://127.0.0.1:8090 avec 6 pages :
 | `/api/pseudonymise-local` | POST | Pseudonymiser via chemin local (gros fichiers) |
 | `/api/depseudonymise` | POST | Restaurer les jetons |
 | `/api/score` | POST | Scoring RGPD |
-| `/api/mapping/generate` | POST | Génération automatique de mapping |
+| `/api/pseudonymise-batch` | POST | Traitement par lot (dossier entier) |
+| `/api/mapping/generate` | POST | Génération automatique de mapping (JSON ou upload) |
 | `/api/stats` | GET | Statistiques dictionnaires |
 | `/api/health` | GET | Santé du serveur |
 
@@ -198,11 +201,11 @@ Les dictionnaires sont livrés dans `data/` et prêts à l'emploi. Le script `co
 # Tests moteur : 49 tests
 python3 tests/test-options.py
 
-# Tests formats, serveur, API : 43 tests
+# Tests formats, serveur, API : 117 tests (avec venv)
 python3 tests/test-v3.py
 ```
 
-92 tests au total, zéro échec.
+166 tests au total (49 + 117), zéro échec. Utiliser le venv pour couvrir tous les formats : `.venv/bin/python3 tests/test-v3.py`
 
 ---
 
@@ -212,12 +215,12 @@ python3 tests/test-v3.py
 pseudonymus-standalone/
   pseudonymise.py        Moteur principal (CLI + API)
   depseudonymise.py      Restauration
-  formats.py             Parseurs multi-format (CSV, XLSX, ODS, DOCX, ODT, PDF)
+  formats.py             Parseurs multi-format (CSV, XLSX, ODS, DOCX, ODT, PDF, TXT, MD)
   serveur.py             Serveur web local (port 8090)
   convertir-donnees.py   Régénération des données statiques
   tests/
     test-options.py      Tests moteur (49 tests)
-    test-v3.py           Tests v3 (43 tests)
+    test-v3.py           Tests v3 (117 tests avec venv)
   requirements.txt       Dépendances optionnelles
   LICENSE                GPL v3
   CHANGELOG.md           Historique des versions
@@ -228,7 +231,7 @@ pseudonymus-standalone/
   exemples/              Exemples de mappings et données de test
   confidentiel/          Correspondances CSV (gitignoré)
   interface/             Frontend DSFR
-    index.html           6 pages (pseudo, correspondances, restauration, import, scoring, doc)
+    index.html           6 pages (pseudo, import, scoring, correspondances, restauration, doc)
     app.js               Logique frontend
     style.css            Styles complémentaires
     dsfr/                CSS, JS et polices DSFR en local
@@ -257,5 +260,5 @@ Pseudonymus standalone en reprend les dictionnaires (patronymes INSEE, prénoms)
 - Portage en **Python** avec CLI complète (modes pseudo, anon, dry-run, scoring, batch, streaming)
 - Interface web **DSFR** (Design System de l'État) avec serveur local
 - Gestion native du **JSON structuré** : notation pointée, unwrap de JSON imbriqué, mappings configurables
-- Support **multi-format** : CSV, XLSX, ODS, DOCX, ODT, PDF
+- Support **multi-format** : CSV, XLSX, ODS, DOCX, ODT, PDF, TXT, MD
 

@@ -5,6 +5,7 @@ confidentiel/
 __pycache__/
 *.pyc
 *.pyo
+.venv/
 
 # Fichiers temporaires de test
 _test_*.json

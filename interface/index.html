@@ -679,31 +679,8 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
                 </table>
             </div>
 
-            <h4><a href="#correspondances">Correspondances</a></h4>
-            <p><strong>A quoi ça sert :</strong> visualiser la table de correspondances entre les jetons et les valeurs originales après une pseudonymisation. Permet de vérifier ce qui a été détecté.</p>
-            <p><strong>Fonctionnalités :</strong> recherche par jeton ou valeur, pagination, export CSV.</p>
-
-            <h4><a href="#restauration">Restauration</a></h4>
-            <p><strong>A quoi ça sert :</strong> remettre les valeurs originales à la place des jetons (dépseudonymisation). Utile pour retrouver le texte original à partir d'un texte pseudonymisé.</p>
-            <div class="fr-table">
-                <table>
-                    <caption>Options de restauration</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Option</th>
-                            <th scope="col">Ce qu'elle fait</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>Restaurer</strong></td><td>Utilise les correspondances chargées depuis un fichier CSV</td></tr>
-                        <tr><td><strong>Utiliser les correspondances en mémoire</strong></td><td>Utilise les correspondances de la dernière pseudonymisation effectuée dans cette session</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>Le fichier CSV de correspondances est généré automatiquement lors de chaque pseudonymisation (dossier <code>confidentiel/correspondances.csv</code>).</p>
-
             <h4><a href="#import-fichier">Import fichier</a></h4>
-            <p><strong>A quoi ça sert :</strong> pseudonymiser un fichier JSON entier. C'est la page principale pour le traitement en masse.</p>
+            <p><strong>A quoi ça sert :</strong> pseudonymiser un fichier entier (JSON, CSV, XLSX, DOCX, PDF, TXT, MD...). C'est la page principale pour le traitement en masse.</p>
 
             <div class="fr-table">
                 <table>
@@ -784,6 +761,29 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
                 </table>
             </div>
             <p>Niveaux de risque : <strong>NUL</strong> (0), <strong>FAIBLE</strong> (&lt;10), <strong>MODERE</strong> (&lt;50), <strong>ELEVE</strong> (&lt;100), <strong>CRITIQUE</strong> (100 et plus).</p>
+
+            <h4><a href="#correspondances">Correspondances</a></h4>
+            <p><strong>A quoi ça sert :</strong> visualiser la table de correspondances entre les jetons et les valeurs originales après une pseudonymisation. Permet de vérifier ce qui a été détecté.</p>
+            <p><strong>Fonctionnalités :</strong> recherche par jeton ou valeur, pagination, export CSV.</p>
+
+            <h4><a href="#restauration">Restauration</a></h4>
+            <p><strong>A quoi ça sert :</strong> remettre les valeurs originales à la place des jetons (dépseudonymisation). Utile pour retrouver le texte original à partir d'un texte pseudonymisé.</p>
+            <div class="fr-table">
+                <table>
+                    <caption>Options de restauration</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Option</th>
+                            <th scope="col">Ce qu'elle fait</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Restaurer</strong></td><td>Utilise les correspondances chargées depuis un fichier CSV</td></tr>
+                        <tr><td><strong>Utiliser les correspondances en mémoire</strong></td><td>Utilise les correspondances de la dernière pseudonymisation effectuée dans cette session</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Le fichier CSV de correspondances est généré automatiquement lors de chaque pseudonymisation (dossier <code>confidentiel/correspondances.csv</code>).</p>
 
             <!-- ===== GLOSSAIRE ===== -->
             <h2 class="fr-mt-5w" id="doc-glossaire">Glossaire</h2>
@@ -1007,7 +1007,7 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
         <div class="fr-container">
             <div class="fr-footer__body">
                 <div class="fr-footer__brand fr-enlarge-link">
-                    <a href="/" title="Retour à l'accueil du site - Pseudonymisation">
+                    <a href="/" title="République Française - Retour à l'accueil du site Pseudonymisation">
                         <p class="fr-logo">République<br>Française</p>
                     </a>
                 </div>
@@ -1057,17 +1057,25 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
     </footer>
 
     <!-- Modale informations serveur -->
-    <div id="modal-serveur" class="modal-overlay" hidden>
-        <div class="modal-dialog" role="dialog" aria-labelledby="modal-serveur-title" aria-modal="true">
-            <div class="modal-header">
-                <h1 id="modal-serveur-title">Informations du serveur</h1>
-                <button class="fr-btn--close fr-btn" id="modal-serveur-close" title="Fermer la fenêtre">Fermer</button>
-            </div>
-            <div class="modal-content" id="modal-serveur-content">
-                <p>Chargement...</p>
+    <dialog id="modal-serveur" class="fr-modal" role="dialog" aria-labelledby="modal-serveur-title">
+        <div class="fr-container fr-container--fluid fr-container-md">
+            <div class="fr-grid-row fr-grid-row--center">
+                <div class="fr-col-12 fr-col-md-8">
+                    <div class="fr-modal__body">
+                        <div class="fr-modal__header">
+                            <button class="fr-btn--close fr-btn" id="modal-serveur-close" title="Fermer la fenêtre" aria-controls="modal-serveur">Fermer</button>
+                        </div>
+                        <div class="fr-modal__content">
+                            <h1 id="modal-serveur-title" class="fr-modal__title">Informations du serveur</h1>
+                            <div id="modal-serveur-content">
+                                <p>Chargement...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </dialog>
 
     <script src="dsfr/js/dsfr.module.min.js" type="module"></script>
     <script src="app.js"></script>

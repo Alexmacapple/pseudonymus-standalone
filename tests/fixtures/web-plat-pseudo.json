@@ -29,34 +29,29 @@
       "valeur": "59000"
     },
     {
-      "type": "cp_txt",
-      "jeton": "[CP_TXT_1]",
-      "valeur": "12345"
-    },
-    {
       "type": "email",
       "jeton": "[EMAIL_1]",
-      "valeur": "marie.dupont@gmail.com"
+      "valeur": "marie.dupont@example.fr"
     },
     {
       "type": "email",
       "jeton": "[EMAIL_2]",
-      "valeur": "pierre.martin@hotmail.fr"
+      "valeur": "pierre.martin@example.fr"
     },
     {
       "type": "email",
       "jeton": "[EMAIL_3]",
-      "valeur": "lea.petit@yahoo.fr"
+      "valeur": "lea.petit@example.fr"
     },
     {
       "type": "email",
       "jeton": "[EMAIL_4]",
-      "valeur": "ali.benahmed@free.fr"
+      "valeur": "ali.benahmed@example.fr"
     },
     {
       "type": "email",
       "jeton": "[EMAIL_5]",
-      "valeur": "eva.blanc@sfr.fr"
+      "valeur": "eva.blanc@example.fr"
     },
     {
       "type": "iban_txt",
@@ -146,16 +141,6 @@
     {
       "type": "personne",
       "jeton": "[PERSONNE_5]",
-      "valeur": "Victor Hugo"
-    },
-    {
-      "type": "personne",
-      "jeton": "[PERSONNE_6]",
-      "valeur": "ali"
-    },
-    {
-      "type": "personne",
-      "jeton": "[PERSONNE_7]",
       "valeur": "Eva Blanc"
     },
     {
@@ -234,12 +219,9 @@
       "orga_txt": 1,
       "nir_txt": 1,
       "ville_txt": 1,
-      "voie_txt": 1,
-      "prenom_nom": 1,
-      "prenom_isole_min": 1,
-      "cp_txt": 1
+      "voie_txt": 1
     },
-    "total": 43,
+    "total": 40,
     "erreurs": 0,
     "echantillons": {
       "nom": [
@@ -288,23 +270,23 @@
       ],
       "email": [
         {
-          "original": "marie.dupont@gmail.com",
+          "original": "marie.dupont@example.fr",
           "remplacement": "[EMAIL_1]"
         },
         {
-          "original": "pierre.martin@hotmail.fr",
+          "original": "pierre.martin@example.fr",
           "remplacement": "[EMAIL_2]"
         },
         {
-          "original": "lea.petit@yahoo.fr",
+          "original": "lea.petit@example.fr",
           "remplacement": "[EMAIL_3]"
         },
         {
-          "original": "ali.benahmed@free.fr",
+          "original": "ali.benahmed@example.fr",
           "remplacement": "[EMAIL_4]"
         },
         {
-          "original": "eva.blanc@sfr.fr",
+          "original": "eva.blanc@example.fr",
           "remplacement": "[EMAIL_5]"
         }
       ],
@@ -397,7 +379,7 @@
         },
         {
           "original": "Eva Blanc",
-          "remplacement": "[PERSONNE_7]"
+          "remplacement": "[PERSONNE_5]"
         }
       ],
       "iban_txt": [
@@ -429,32 +411,14 @@
           "original": "12 rue Victor Hugo a ",
           "remplacement": "[VOIE_1]"
         }
-      ],
-      "prenom_nom": [
-        {
-          "original": "Victor Hugo",
-          "remplacement": "[PERSONNE_5]"
-        }
-      ],
-      "prenom_isole_min": [
-        {
-          "original": "ali",
-          "remplacement": "[PERSONNE_6]"
-        }
-      ],
-      "cp_txt": [
-        {
-          "original": "12345",
-          "remplacement": "[CP_1]"
-        }
       ]
     }
   },
   "score": {
-    "total": 22,
+    "total": 16,
     "niveau": "MODÉRÉ",
     "details": {
-      "direct": 3,
+      "direct": 1,
       "finance": 2,
       "tech": 0,
       "indirect": 3

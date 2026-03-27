@@ -5,6 +5,40 @@ Issu de la branche `feature/alex-workflow` du depot `pseudonymus2`.
 
 ---
 
+## v3.3.0 — 2026-03-27
+
+Refonte UX de l'interface web, nouveaux formats, documentation restructurée.
+
+### Interface web
+
+- **Import fichier** : layout colonne unique (workflow séquentiel), tous formats supportés (JSON, CSV, TSV, XLSX, XLS, ODS, DOCX, ODT, PDF, TXT, MD)
+- **Prévisualisation** : cards DSFR par fiche (10 enregistrements) au lieu d'un tableau, badges par type de champ
+- **Mapping automatique** : fonctionne en mode upload (multipart) en plus du chemin local
+- **Progression** : élément `<progress>` natif HTML accessible (RGAA) au lieu d'une div custom
+- **Correspondances** : pagination DSFR conforme (`aria-current="page"`), compteur de résultats, callout vide avec liens, caption accessible
+- **Documentation** : restructurée (CLI, interface web, glossaire en accordéon, FAQ en accordéon), sommaire DSFR avec ancres, grille col-8
+- **Navigation** : menu réordonné par workflow (pseudo, import, scoring, correspondances, restauration, doc)
+- **Page virtuelle** `#import-local` : deep link vers le mode chemin local sans entrée de menu
+- **Tableaux** : `<caption>` sur tous les tableaux (RGAA 5.1), `fr-table--no-caption` pour éviter le chevauchement visuel
+- **Boutons** : ordre prévisualiser (secondaire) puis lancer (primaire), bouton export CSV avec icône DSFR
+- **DSFR** : `window.dsfr.start()` après chaque navigation pour initialiser les composants dans les pages masquées
+
+### Formats
+
+- **TXT** et **MD** : nouveaux formats en lecture et écriture (chargés comme un dict `{"texte": "..."}`)
+
+### Serveur
+
+- `/api/mapping/generate` accepte le multipart (upload de fichier) en plus du JSON (chemin local)
+- `/api/pseudonymise` retourne `apercu_fiches` en mode dry-run (groupé par enregistrement)
+- `deepcopy` des données avant traitement pour le dry-run upload (corrige l'aperçu vide)
+
+### PRD
+
+- Nouveau PRD : analyse de fichier avant traitement (`prd/PRD-analyse-fichier.md`)
+
+---
+
 ## v3.2.1 — 2026-03-27
 
 Correction prévisualisation et mapping automatique.

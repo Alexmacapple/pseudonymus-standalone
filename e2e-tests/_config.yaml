@@ -1,0 +1,4 @@
+base_url: "http://127.0.0.1:8090"
+screenshots_dir: "e2e-tests/_results/screenshots"
+report_path: "e2e-tests/_results/report.md"
+agent_browser_path: "agent-browser"

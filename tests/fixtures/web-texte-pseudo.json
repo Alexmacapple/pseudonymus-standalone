@@ -1,11 +1,11 @@
 {
-  "texte_original": "Bonjour Marie Dupont, votre email est marie.dupont@gmail.com et votre numero 06 12 34 56 78. IBAN FR76 1234 5678 9012 3456 7890 123.",
+  "texte_original": "Bonjour Marie Dupont, votre email est marie.dupont@example.fr et votre numero 06 12 34 56 78. IBAN FR76 1234 5678 9012 3456 7890 123.",
   "texte_pseudonymise": "Bonjour [PERSONNE_1], votre email est [EMAIL_1] et votre numero [TEL_1]. IBAN [IBAN_1].",
   "correspondances": [
     {
       "type": "email_txt",
       "jeton": "[EMAIL_1]",
-      "valeur": "marie.dupont@gmail.com"
+      "valeur": "marie.dupont@example.fr"
     },
     {
       "type": "iban_txt",
@@ -41,7 +41,7 @@
       ],
       "email_txt": [
         {
-          "original": "marie.dupont@gmail.com",
+          "original": "marie.dupont@example.fr",
           "remplacement": "[EMAIL_1]"
         }
       ],
