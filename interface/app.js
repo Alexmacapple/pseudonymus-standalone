@@ -22,36 +22,72 @@ const PAGE_TITLES = {
 
 const DEFAULT_PAGE = 'pseudonymisation';
 
+const VIRTUAL_PAGES = {
+    'import-local': {
+        physicalPage: 'import-fichier',
+        title: 'Import local',
+        onActivate: () => {
+            document.getElementById('import-source-local').checked = true;
+            document.getElementById('import-upload-zone').hidden = true;
+            document.getElementById('import-local-zone').hidden = false;
+        }
+    }
+};
+
 function navigateTo(pageId) {
-    if (!PAGE_TITLES[pageId]) pageId = DEFAULT_PAGE;
+    const virtual = VIRTUAL_PAGES[pageId];
+    const realPageId = virtual ? virtual.physicalPage : pageId;
+
+    if (!PAGE_TITLES[realPageId]) {
+        pageId = DEFAULT_PAGE;
+        return navigateTo(pageId);
+    }
 
     // Masquer toutes les pages
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('[data-page]').forEach(l => l.removeAttribute('aria-current'));
 
-    // Afficher la page demandee
-    const target = document.getElementById('page-' + pageId);
+    // Afficher la page physique
+    const target = document.getElementById('page-' + realPageId);
     if (target) target.classList.add('active');
 
     // Mettre a jour la nav
-    const navLink = document.querySelector(`[data-page="${pageId}"]`);
+    const navLink = document.querySelector(`[data-page="${pageId}"]`)
+                 || document.querySelector(`[data-page="${realPageId}"]`);
     if (navLink) navLink.setAttribute('aria-current', 'page');
 
     // Mettre a jour le title
-    const pageName = PAGE_TITLES[pageId];
-    document.title = pageId === DEFAULT_PAGE
+    const pageName = virtual ? virtual.title : PAGE_TITLES[realPageId];
+    document.title = realPageId === DEFAULT_PAGE
         ? 'Pseudonymisation - Outil local'
         : pageName + ' - Pseudonymisation';
 
     // Mettre a jour le fil d'Ariane
     const breadcrumbList = document.getElementById('breadcrumb-list');
-    if (pageId === DEFAULT_PAGE) {
+    if (realPageId === DEFAULT_PAGE) {
         breadcrumbList.innerHTML =
             '<li><a class="fr-breadcrumb__link" aria-current="page">Accueil</a></li>';
     } else {
         breadcrumbList.innerHTML =
             '<li><a class="fr-breadcrumb__link" href="#pseudonymisation">Accueil</a></li>' +
             '<li><a class="fr-breadcrumb__link" aria-current="page">' + escapeHtml(pageName) + '</a></li>';
+    }
+
+    // Activer le callback de la page virtuelle
+    if (virtual && virtual.onActivate) {
+        virtual.onActivate();
+    }
+
+    // Si navigation explicite vers import-fichier, remettre le mode upload
+    if (pageId === 'import-fichier') {
+        document.getElementById('import-source-upload').checked = true;
+        document.getElementById('import-upload-zone').hidden = false;
+        document.getElementById('import-local-zone').hidden = true;
+    }
+
+    // Reinitialiser les composants DSFR sur la page nouvellement visible
+    if (window.dsfr) {
+        window.dsfr.start();
     }
 }
 
@@ -169,6 +205,10 @@ function renderCorrespondancesTable() {
         '<td>' + escapeHtml(c.valeur) + '</td></tr>'
     ).join('');
 
+    // Compteur de resultats
+    document.getElementById('correspondances-count').textContent =
+        filtered.length + ' correspondance' + (filtered.length > 1 ? 's' : '');
+
     renderPagination(totalPages, filtered.length);
 }
 
@@ -181,10 +221,10 @@ function renderPagination(totalPages, totalItems) {
 
     let html = '';
     // Precedent
-    html += '<li><a class="fr-pagination__link fr-pagination__link--prev' +
-        (correspondancesPage <= 1 ? ' fr-pagination__link--disabled' : '') +
-        '" href="#" data-page-num="' + (correspondancesPage - 1) +
-        '" aria-label="Page précédente">Précédent</a></li>';
+    if (correspondancesPage > 1) {
+        html += '<li><a class="fr-pagination__link fr-pagination__link--prev" href="#" data-page-num="' +
+            (correspondancesPage - 1) + '" aria-label="Page précédente">Précédent</a></li>';
+    }
 
     // Pages
     for (let i = 1; i <= totalPages; i++) {
@@ -194,16 +234,20 @@ function renderPagination(totalPages, totalItems) {
             }
             continue;
         }
-        html += '<li><a class="fr-pagination__link' +
-            (i === correspondancesPage ? ' fr-pagination__link--active' : '') +
-            '" href="#" data-page-num="' + i + '" aria-label="Page ' + i + '">' + i + '</a></li>';
+        if (i === correspondancesPage) {
+            html += '<li><a class="fr-pagination__link" href="#" data-page-num="' + i +
+                '" aria-current="page" aria-label="Page ' + i + '">' + i + '</a></li>';
+        } else {
+            html += '<li><a class="fr-pagination__link" href="#" data-page-num="' + i +
+                '" aria-label="Page ' + i + '">' + i + '</a></li>';
+        }
     }
 
     // Suivant
-    html += '<li><a class="fr-pagination__link fr-pagination__link--next' +
-        (correspondancesPage >= totalPages ? ' fr-pagination__link--disabled' : '') +
-        '" href="#" data-page-num="' + (correspondancesPage + 1) +
-        '" aria-label="Page suivante">Suivant</a></li>';
+    if (correspondancesPage < totalPages) {
+        html += '<li><a class="fr-pagination__link fr-pagination__link--next" href="#" data-page-num="' +
+            (correspondancesPage + 1) + '" aria-label="Page suivante">Suivant</a></li>';
+    }
 
     ul.innerHTML = html;
 
@@ -297,32 +341,55 @@ document.querySelectorAll('input[name="import-source"]').forEach(radio => {
         const isLocal = document.getElementById('import-source-local').checked;
         document.getElementById('import-upload-zone').hidden = isLocal;
         document.getElementById('import-local-zone').hidden = !isLocal;
+        const newPage = isLocal ? 'import-local' : 'import-fichier';
+        history.replaceState(null, '', '#' + newPage);
+        // Synchroniser la nav active
+        document.querySelectorAll('[data-page]').forEach(l => l.removeAttribute('aria-current'));
+        const navLink = document.querySelector(`[data-page="${newPage}"]`);
+        if (navLink) navLink.setAttribute('aria-current', 'page');
+        // Synchroniser le titre et fil d'Ariane
+        const virtual = VIRTUAL_PAGES[newPage];
+        const pageName = virtual ? virtual.title : PAGE_TITLES[newPage];
+        document.title = pageName + ' - Pseudonymisation';
+        const breadcrumbList = document.getElementById('breadcrumb-list');
+        breadcrumbList.innerHTML =
+            '<li><a class="fr-breadcrumb__link" href="#pseudonymisation">Accueil</a></li>' +
+            '<li><a class="fr-breadcrumb__link" aria-current="page">' + escapeHtml(pageName) + '</a></li>';
     });
 });
 
-// Bouton "Analyser la structure"
+// Bouton "Proposition de mapping automatique"
 document.getElementById('btn-analyze').addEventListener('click', async () => {
     const isLocal = document.getElementById('import-source-local').checked;
     let filepath = '';
 
+    let fetchOptions;
+
     if (isLocal) {
         filepath = document.getElementById('input-filepath').value.trim();
+        if (!filepath) {
+            showAlert('alert-import', 'Veuillez saisir le chemin du fichier à analyser.', 'warning');
+            return;
+        }
+        fetchOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({path: filepath}),
+        };
     } else {
-        // En mode upload, il faut un fichier uploade — on ne peut pas analyser sans chemin
         const fileInput = document.getElementById('upload-fichier');
         const file = fileInput.files[0];
         if (!file) {
-            showAlert('alert-import', 'Veuillez sélectionner un fichier ou passer en mode chemin local.', 'warning');
+            showAlert('alert-import', 'Veuillez sélectionner un fichier à analyser.', 'warning');
             return;
         }
-        // Envoyer le fichier en upload pour analyse? Non — on conseille le mode local
-        showAlert('alert-import', 'L\'analyse automatique nécessite le mode « Chemin local ». Saisissez le chemin du fichier sur le disque.', 'info');
-        return;
-    }
-
-    if (!filepath) {
-        showAlert('alert-import', 'Veuillez saisir le chemin du fichier à analyser.', 'warning');
-        return;
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+        formData.append('filename', file.name);
+        fetchOptions = {
+            method: 'POST',
+            body: formData,
+        };
     }
 
     const btn = document.getElementById('btn-analyze');
@@ -330,11 +397,7 @@ document.getElementById('btn-analyze').addEventListener('click', async () => {
     btn.textContent = 'Analyse...';
 
     try {
-        const res = await fetch(API + '/api/mapping/generate', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({path: filepath}),
-        });
+        const res = await fetch(API + '/api/mapping/generate', fetchOptions);
         const data = await res.json();
 
         if (data.erreur) {
@@ -357,7 +420,7 @@ document.getElementById('btn-analyze').addEventListener('click', async () => {
         showAlert('alert-import', 'Erreur : ' + err.message, 'error');
     } finally {
         btn.disabled = false;
-        btn.textContent = 'Analyser la structure';
+        btn.textContent = 'Proposition de mapping automatique';
     }
 });
 
@@ -416,8 +479,8 @@ document.getElementById('btn-import').addEventListener('click', async () => {
             const mappingPath = document.getElementById('input-mappingpath').value.trim();
             const isBatch = document.getElementById('import-batch') && document.getElementById('import-batch').checked;
 
-            document.getElementById('import-progress-text').textContent = isBatch ? 'Traitement du dossier...' : 'Traitement en cours sur le serveur...';
-            document.getElementById('import-progress-bar').style.width = '50%';
+            document.getElementById('import-progress-text').textContent = isBatch ? 'Traitement du dossier...' : 'Traitement en cours...';
+            document.getElementById('import-progress-bar').removeAttribute('value');
 
             const nlp = document.getElementById('import-nlp').checked;
             const tech = document.getElementById('import-tech').checked;
@@ -438,7 +501,8 @@ document.getElementById('btn-import').addEventListener('click', async () => {
 
             // Affichage batch
             if (isBatch && data.fichiers) {
-                document.getElementById('import-progress-bar').style.width = '100%';
+                document.getElementById('import-progress-bar').value = 100;
+                document.getElementById('import-progress-bar').max = 100;
                 document.getElementById('import-progress-text').textContent = 'Terminé.';
 
                 if (data.erreur) {
@@ -478,7 +542,7 @@ document.getElementById('btn-import').addEventListener('click', async () => {
             }
 
             document.getElementById('import-progress-text').textContent = 'Envoi du fichier...';
-            document.getElementById('import-progress-bar').style.width = '30%';
+            document.getElementById('import-progress-bar').removeAttribute('value');
 
             const formData = new FormData();
             formData.append('file', file, file.name);
@@ -489,8 +553,7 @@ document.getElementById('btn-import').addEventListener('click', async () => {
             formData.append('tech', document.getElementById('import-tech').checked);
             formData.append('filename', file.name);
 
-            document.getElementById('import-progress-text').textContent = 'Pseudonymisation...';
-            document.getElementById('import-progress-bar').style.width = '60%';
+            document.getElementById('import-progress-text').textContent = 'Traitement en cours...';
 
             const res = await fetch(API + '/api/pseudonymise', {
                 method: 'POST',
@@ -499,7 +562,8 @@ document.getElementById('btn-import').addEventListener('click', async () => {
             data = await res.json();
         }
 
-        document.getElementById('import-progress-bar').style.width = '100%';
+        document.getElementById('import-progress-bar').value = 100;
+        document.getElementById('import-progress-bar').max = 100;
 
         if (data.erreur) {
             showAlert('alert-import', 'Erreur : ' + data.erreur, 'error');
@@ -658,47 +722,41 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
             traites + ' enregistrements testés (sur ' + (data.total || '?') + '), ' +
             totalRemp + ' remplacements détectés. Score RGPD : ' + score + ' (' + niveau + ')';
 
-        // Apercu structure par champ du mapping
-        const champsApercu = data.apercu_champs || [];
+        // Apercu par fiche (cards DSFR)
+        const fiches = data.apercu_fiches || [];
         const recordsDiv = document.getElementById('preview-records');
 
-        if (champsApercu.length > 0) {
-            let html = '<div class="fr-table"><table><thead><tr>' +
-                '<th scope="col">Champ</th><th scope="col">Type</th><th scope="col">Jeton</th>' +
-                '<th scope="col">Avant</th><th scope="col">Après</th><th scope="col">Fiche</th></tr></thead><tbody>';
-
-            for (const c of champsApercu) {
-                if (c.exemples && c.exemples.length > 0) {
-                    for (let j = 0; j < c.exemples.length; j++) {
-                        const ex = c.exemples[j];
-                        const bg = j % 2 === 0 ? '#fff3cd' : '#fff9e6';
-                        if (j === 0) {
-                            html += '<tr style="background:' + bg + '">' +
-                                '<td rowspan="' + c.exemples.length + '"><strong>' + escapeHtml(c.champ) + '</strong></td>' +
-                                '<td rowspan="' + c.exemples.length + '">' + escapeHtml(c.type) + '</td>' +
-                                '<td rowspan="' + c.exemples.length + '"><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
-                                '<td>' + escapeHtml(ex.avant) + '</td>' +
-                                '<td>' + escapeHtml(ex.apres) + '</td>' +
-                                '<td style="color:#666;font-size:0.85em">Fiche ' + ex.enregistrement + '</td></tr>';
-                        } else {
-                            html += '<tr style="background:' + bg + '">' +
-                                '<td>' + escapeHtml(ex.avant) + '</td>' +
-                                '<td>' + escapeHtml(ex.apres) + '</td>' +
-                                '<td style="color:#666;font-size:0.85em">Fiche ' + ex.enregistrement + '</td></tr>';
-                        }
+        if (fiches.length > 0) {
+            let html = '<div class="fr-grid-row fr-grid-row--gutters">';
+            for (const fiche of fiches) {
+                const modifies = fiche.champs.filter(c => c.modifie);
+                if (modifies.length === 0) continue;
+                html += '<div class="fr-col-12 fr-col-md-6">';
+                html += '<div class="fr-card fr-card--no-arrow">';
+                html += '<div class="fr-card__body">';
+                html += '<div class="fr-card__content">';
+                html += '<h4 class="fr-card__title">Fiche ' + fiche.index + '</h4>';
+                html += '<div class="fr-card__desc">';
+                for (const c of modifies) {
+                    const label = c.jeton ? c.jeton : c.type;
+                    if (c.type === 'texte_libre') {
+                        html += '<p class="fr-mb-1w"><strong>' + escapeHtml(c.champ) + '</strong> ' +
+                            '<span class="fr-badge fr-badge--sm fr-badge--purple-glycine">texte libre</span><br>' +
+                            '<span style="color:var(--text-mention-grey)">' + escapeHtml(c.avant) + '</span><br>' +
+                            '→ <code>' + escapeHtml(c.apres) + '</code></p>';
+                    } else {
+                        html += '<p class="fr-mb-1w"><strong>' + escapeHtml(c.champ) + '</strong> ' +
+                            '<span class="fr-badge fr-badge--sm fr-badge--blue-cumulus">' + escapeHtml(label) + '</span><br>' +
+                            '<span style="color:var(--text-mention-grey)">' + escapeHtml(c.avant) + '</span>' +
+                            ' → <code>' + escapeHtml(c.apres) + '</code></p>';
                     }
-                } else {
-                    html += '<tr>' +
-                        '<td>' + escapeHtml(c.champ) + '</td>' +
-                        '<td>' + escapeHtml(c.type) + '</td>' +
-                        '<td><code>' + escapeHtml(c.jeton || '—') + '</code></td>' +
-                        '<td colspan="3" style="color:#999">Aucune modification détectée</td></tr>';
                 }
+                html += '</div></div></div></div></div>';
             }
-            html += '</tbody></table></div>';
+            html += '</div>';
             recordsDiv.innerHTML = html;
         } else {
-            recordsDiv.innerHTML = '';
+            recordsDiv.innerHTML = '<p class="fr-text--sm" style="color:var(--text-mention-grey)">Aucune modification détectée dans les 5 premiers enregistrements.</p>';
         }
 
 
@@ -709,7 +767,7 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
         showAlert('alert-import', 'Erreur : ' + err.message, 'error');
     } finally {
         btn.disabled = false;
-        btn.textContent = 'Prévisualiser';
+        btn.textContent = 'Prévisualiser 10 fiches';
     }
 });
 

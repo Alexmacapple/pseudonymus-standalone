@@ -174,6 +174,8 @@ class APIHandler(SimpleHTTPRequestHandler):
             # Dry-run : limiter a 100 enregistrements
             if dry_run and isinstance(data, list):
                 data = data[:100]
+                import copy
+                apercu_avant = copy.deepcopy(data[:10])
 
             # Traitement
             tokens = engine.TokenTable()
@@ -211,6 +213,9 @@ class APIHandler(SimpleHTTPRequestHandler):
             }
             if dry_run:
                 response['dry_run'] = True
+                response['apercu_fiches'] = self._build_apercu_fiches(
+                    apercu_avant, output[:10], mapping
+                )
             self._json_response(response)
         except Exception as e:
             traceback.print_exc()
@@ -264,7 +269,7 @@ class APIHandler(SimpleHTTPRequestHandler):
             if dry_run:
                 data = data[:100]
                 import copy
-                apercu_avant = copy.deepcopy(data[:5])
+                apercu_avant = copy.deepcopy(data[:10])
             print(f'[serveur] {total} enregistrements charges{" (dry-run: 100 max)" if dry_run else ""}.', file=sys.stderr)
 
             # Traitement
@@ -301,7 +306,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                     'correspondances': correspondances,
                     'apercu_avant': apercu_avant,
                     'apercu_apres': output[:5],
-                    'apercu_champs': self._build_apercu_champs(apercu_avant, output[:5], mapping),
+                    'apercu_fiches': self._build_apercu_fiches(apercu_avant, output[:10], mapping),
                     'stats': self._stats_to_dict(stats),
                     'score': {
                         'total': scorer.score,
@@ -582,24 +587,47 @@ class APIHandler(SimpleHTTPRequestHandler):
     def _handle_mapping_generate_post(self):
         """Analyse un fichier et propose un mapping squelette."""
         try:
-            body = self._read_json_body()
-            file_path = body.get('path', '')
+            content_type = self.headers.get('Content-Type', '')
 
-            if not file_path:
-                self._json_error(400, 'Chemin de fichier requis (champ "path")')
-                return
-
-            if not os.path.isfile(file_path):
-                self._json_error(404, f'Fichier introuvable : {file_path}')
-                return
-
-            # Charger un echantillon (5 premiers enregistrements)
-            ext = os.path.splitext(file_path)[1].lower()
-            if ext == '.json':
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
+            if 'multipart/form-data' in content_type:
+                # Mode upload : fichier envoye par le navigateur
+                file_data, params = self._read_multipart()
+                if not file_data:
+                    self._json_error(400, 'Aucun fichier reçu')
+                    return
+                filename = params.get('filename', 'upload.json')
+                ext = os.path.splitext(filename)[1].lower()
+                tmp_path = tempfile.mktemp(suffix=ext)
+                with open(tmp_path, 'wb') as tmp:
+                    tmp.write(file_data)
+                try:
+                    if ext == '.json':
+                        with open(tmp_path, 'r', encoding='utf-8') as f:
+                            data = json.load(f)
+                    else:
+                        data = load_file(tmp_path, {})
+                finally:
+                    os.unlink(tmp_path)
+                file_path = filename
             else:
-                data = load_file(file_path, {})
+                # Mode chemin local
+                body = self._read_json_body()
+                file_path = body.get('path', '')
+
+                if not file_path:
+                    self._json_error(400, 'Chemin de fichier requis (champ "path")')
+                    return
+
+                if not os.path.isfile(file_path):
+                    self._json_error(404, f'Fichier introuvable : {file_path}')
+                    return
+
+                ext = os.path.splitext(file_path)[1].lower()
+                if ext == '.json':
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                else:
+                    data = load_file(file_path, {})
 
             if not isinstance(data, list) or len(data) == 0:
                 self._json_error(400, 'Le fichier doit contenir un array JSON non vide')
@@ -758,6 +786,45 @@ class APIHandler(SimpleHTTPRequestHandler):
                     self._analyze_nested(val[0], f'{full_key}[]', champs, texte_libre, seen)
                 elif isinstance(val[0], str):
                     self._classify_field(f'{full_key}[]', val[0], champs, texte_libre)
+
+    def _build_apercu_fiches(self, avant_list, apres_list, mapping):
+        """Construit un apercu par fiche (enregistrement) pour la previsualisation."""
+        champs_sensibles = mapping.get('champs_sensibles', {})
+        texte_libre = mapping.get('texte_libre', [])
+        unwrap_config = (mapping.get('structure', {}) or {}).get('unwrap')
+
+        fiches = []
+        for i, (av, ap) in enumerate(zip(avant_list, apres_list)):
+            champs = []
+            for champ, config in champs_sensibles.items():
+                val_avant = self._resolve_dotted(av, champ, unwrap_config)
+                val_apres = self._resolve_dotted(ap, champ, unwrap_config)
+                if val_avant is not None:
+                    champs.append({
+                        'champ': champ,
+                        'type': config.get('type', ''),
+                        'jeton': config.get('jeton', ''),
+                        'avant': str(val_avant)[:150],
+                        'apres': str(val_apres)[:150],
+                        'modifie': val_avant != val_apres,
+                    })
+            for champ in texte_libre:
+                val_avant = self._resolve_dotted(av, champ, unwrap_config)
+                val_apres = self._resolve_dotted(ap, champ, unwrap_config)
+                if val_avant is not None:
+                    champs.append({
+                        'champ': champ,
+                        'type': 'texte_libre',
+                        'jeton': '',
+                        'avant': str(val_avant)[:200],
+                        'apres': str(val_apres)[:200],
+                        'modifie': val_avant != val_apres,
+                    })
+            fiches.append({
+                'index': i + 1,
+                'champs': champs,
+            })
+        return fiches
 
     # ----- API : telechargement de fichier -----
 

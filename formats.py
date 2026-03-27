@@ -287,6 +287,25 @@ def load_pdf(path, mapping):
 
 
 # =============================================================
+#  TXT / MD
+# =============================================================
+
+def load_txt(path, mapping):
+    """Charge un fichier texte brut en liste de dicts avec un champ 'texte'."""
+    with open(path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    return [{'texte': content, '_source': os.path.basename(path)}]
+
+
+def save_txt(data, path, mapping):
+    """Écrit une liste de dicts en fichier texte."""
+    with open(path, 'w', encoding='utf-8') as f:
+        for record in data:
+            f.write(record.get('texte', '') + '\n')
+    print(f'Texte ecrit : {path}', file=sys.stderr)
+
+
+# =============================================================
 #  DISPATCH
 # =============================================================
 
@@ -300,6 +319,8 @@ FORMAT_LOADERS = {
     '.docx': load_docx,
     '.odt': load_odt,
     '.pdf': load_pdf,
+    '.txt': load_txt,
+    '.md': load_txt,
 }
 
 FORMAT_SAVERS = {
@@ -312,6 +333,8 @@ FORMAT_SAVERS = {
     '.docx': save_docx,
     '.odt': save_odt,
     '.pdf': None,  # Pas de réécriture PDF — export texte uniquement
+    '.txt': save_txt,
+    '.md': save_txt,
 }
 
 
