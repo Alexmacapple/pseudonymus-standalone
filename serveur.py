@@ -290,13 +290,15 @@ class APIHandler(SimpleHTTPRequestHandler):
                   f'{sum(stats.counts.values())} remplacements.', file=sys.stderr)
 
             if dry_run:
-                # Dry-run : pas d'ecriture, retour du rapport uniquement
+                # Dry-run : pas d'ecriture, retour du rapport + apercu avant/apres
                 self._json_response({
                     'dry_run': True,
                     'output_path': None,
                     'csv_path': None,
                     'zip_path': None,
                     'correspondances': correspondances,
+                    'apercu_avant': data[:5],
+                    'apercu_apres': output[:5],
                     'stats': self._stats_to_dict(stats),
                     'score': {
                         'total': scorer.score,

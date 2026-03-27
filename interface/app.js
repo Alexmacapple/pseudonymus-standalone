@@ -655,16 +655,57 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
         const niveau = data.score ? data.score.niveau : '';
 
         document.getElementById('preview-summary').textContent =
-            traites + ' enregistrements testés, ' + totalRemp + ' remplacements détectés. Score RGPD : ' + score + ' (' + niveau + ')';
+            traites + ' enregistrements testés (sur ' + (data.total || '?') + '), ' +
+            totalRemp + ' remplacements détectés. Score RGPD : ' + score + ' (' + niveau + ')';
 
-        // Tableau des 10 premiers remplacements
+        // Apercu avant/apres
+        const avant = data.apercu_avant || [];
+        const apres = data.apercu_apres || [];
+        const recordsDiv = document.getElementById('preview-records');
+
+        if (avant.length > 0) {
+            let html = '';
+            for (let i = 0; i < avant.length; i++) {
+                const av = avant[i];
+                const ap = apres[i] || {};
+                const keys = Object.keys(av);
+                const diffs = keys.filter(k => JSON.stringify(av[k]) !== JSON.stringify(ap[k]));
+
+                if (diffs.length === 0) continue;
+
+                html += '<details class="fr-mb-2w"><summary class="fr-text--bold">Enregistrement ' + (i + 1) + ' — ' + diffs.length + ' champ(s) modifié(s)</summary>';
+                html += '<div class="fr-table fr-table--no-caption"><table><thead><tr><th>Champ</th><th>Avant</th><th>Après</th></tr></thead><tbody>';
+                for (const k of keys) {
+                    const changed = JSON.stringify(av[k]) !== JSON.stringify(ap[k]);
+                    const avVal = typeof av[k] === 'string' ? av[k] : JSON.stringify(av[k]);
+                    const apVal = typeof ap[k] === 'string' ? (ap[k] || '') : JSON.stringify(ap[k] || '');
+                    if (changed) {
+                        html += '<tr style="background:#fff3cd"><td><strong>' + escapeHtml(k) + '</strong></td>' +
+                            '<td>' + escapeHtml((avVal || '').substring(0, 200)) + '</td>' +
+                            '<td>' + escapeHtml((apVal || '').substring(0, 200)) + '</td></tr>';
+                    }
+                }
+                html += '</tbody></table></div></details>';
+            }
+            recordsDiv.innerHTML = html || '<p>Aucune modification détectée sur les 5 premiers enregistrements.</p>';
+        } else {
+            recordsDiv.innerHTML = '';
+        }
+
+        // Resume par type
         const correspondances = data.correspondances || [];
+        const parType = {};
+        for (const c of correspondances) {
+            if (!parType[c.type]) parType[c.type] = [];
+            parType[c.type].push(c);
+        }
+
         const tbody = document.getElementById('tbody-preview');
-        tbody.innerHTML = correspondances.slice(0, 10).map(c =>
-            '<tr><td>' + escapeHtml(c.type) + '</td>' +
-            '<td>' + escapeHtml(c.valeur) + '</td>' +
-            '<td><code>' + escapeHtml(c.jeton) + '</code></td></tr>'
-        ).join('');
+        tbody.innerHTML = Object.entries(parType).map(([type, items]) => {
+            const exemples = items.slice(0, 3).map(c => escapeHtml(c.valeur)).join(', ');
+            return '<tr><td>' + escapeHtml(type) + '</td><td>' + items.length + '</td>' +
+                '<td>' + exemples + (items.length > 3 ? ', ...' : '') + '</td></tr>';
+        }).join('');
 
         showAlert('alert-import',
             'Prévisualisation terminée (dry-run). Aucun fichier écrit. Cliquez sur « Lancer le traitement » pour tout traiter.',

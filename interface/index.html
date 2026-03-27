@@ -385,16 +385,24 @@
 
             <!-- Resultat previsualisation -->
             <div id="preview-result" class="fr-my-2w" hidden>
-                <h2>Prévisualisation</h2>
+                <h2>Prévisualisation (dry-run)</h2>
                 <p id="preview-summary" class="fr-text--bold"></p>
+
+                <!-- Apercu avant/apres -->
+                <div id="preview-avant-apres" class="fr-mt-2w">
+                    <h3>Aperçu avant / après (5 premiers enregistrements)</h3>
+                    <div id="preview-records"></div>
+                </div>
+
+                <!-- Resume par type -->
                 <div class="fr-table fr-mt-2w">
                     <table>
-                        <caption>10 premiers remplacements détectés</caption>
+                        <caption>Remplacements détectés par type</caption>
                         <thead>
                             <tr>
                                 <th scope="col">Type</th>
-                                <th scope="col">Original</th>
-                                <th scope="col">Jeton</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Exemples</th>
                             </tr>
                         </thead>
                         <tbody id="tbody-preview"></tbody>
