@@ -223,6 +223,11 @@ def api_get(path):
         req = urllib.request.Request(f'{SERVER_URL}{path}')
         with urllib.request.urlopen(req, timeout=5) as resp:
             return json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        try:
+            return json.loads(e.read())
+        except Exception:
+            return {'erreur': str(e)}
     except Exception as e:
         return {'erreur': str(e)}
 
@@ -547,22 +552,99 @@ if server_ok:
     #  TESTS API : DOWNLOAD
     # =============================================================
 
-    print('\n=== Tests download ===\n')
+    print('\n=== Tests securite ===\n')
 
-    # Créer un fichier temporaire et tester le téléchargement
+    import http.client
+
+    # --- Download : path traversal bloque ---
+    r = api_get('/api/download?path=/etc/passwd')
+    test('Download /etc/passwd bloque', 'refuse' in r.get('erreur', '').lower() or r.get('erreur') == 'Acces refuse')
+
+    r = api_get('/api/download?path=../../serveur.py')
+    test('Download traversal relatif bloque', 'refuse' in r.get('erreur', '').lower())
+
+    # Tester un fichier sensible NON genere par cette session
+    r = api_get('/api/download?path=' + os.path.join(PROJECT_DIR, 'CLAUDE.md'))
+    test('Download fichier non whiteliste bloque', 'refuse' in r.get('erreur', '').lower())
+
+    # --- Download : fichier whiteliste apres traitement ---
     with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
-        dl_path = f.name
-        f.write('{"test": true}')
+        dl_test_path = f.name
+        json.dump([{'nom': 'Dupont', 'email': 'test@example.fr'}], f)
+    with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
+        dl_mapping_path = f.name
+        json.dump({'champs_sensibles': {'nom': {'type': 'nom', 'jeton': 'NOM'}}, 'texte_libre': [], 'whitelist': [], 'blacklist': []}, f)
 
+    r_local = api_post('/api/pseudonymise-local', {
+        'path': dl_test_path, 'mapping_path': dl_mapping_path,
+        'mode': 'pseudo', 'fort': False, 'nlp': False, 'tech': False
+    })
+    zip_path = r_local.get('zip_path', '')
+    if zip_path:
+        try:
+            req = urllib.request.Request(f'{SERVER_URL}/api/download?path={zip_path}')
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                test('Download zip whiteliste', resp.status == 200)
+        except Exception as e:
+            test('Download zip whiteliste', False, str(e))
+        if os.path.exists(zip_path):
+            os.unlink(zip_path)
+    else:
+        test('Download zip whiteliste', False, 'pas de zip_path')
+
+    # Nettoyage
+    out_path = r_local.get('output_path', '')
+    csv_path_dl = r_local.get('csv_path', '')
+    for p in [dl_test_path, dl_mapping_path, out_path, csv_path_dl]:
+        if p and os.path.exists(p):
+            os.unlink(p)
+
+    # --- CORS ---
+    def get_cors_header(path, origin=None):
+        conn = http.client.HTTPConnection('127.0.0.1', 8090, timeout=5)
+        headers = {'Origin': origin} if origin else {}
+        conn.request('GET', path, headers=headers)
+        resp = conn.getresponse()
+        cors = resp.getheader('Access-Control-Allow-Origin')
+        resp.read()
+        return cors
+
+    cors_ok = get_cors_header('/api/health', 'http://127.0.0.1:8090')
+    test('CORS localhost autorise', cors_ok == 'http://127.0.0.1:8090')
+
+    cors_evil = get_cors_header('/api/health', 'https://evil.com')
+    test('CORS evil.com bloque', cors_evil is None)
+
+    cors_none = get_cors_header('/api/health', None)
+    test('CORS sans origin', cors_none is None)
+
+    # --- Content-Length excessif ---
     try:
-        req = urllib.request.Request(f'{SERVER_URL}/api/download?path={dl_path}')
-        with urllib.request.urlopen(req, timeout=5) as resp:
-            dl_content = resp.read().decode()
-            test('API download status', resp.status == 200)
-            test('API download contenu', 'test' in dl_content)
+        conn = http.client.HTTPConnection('127.0.0.1', 8090, timeout=5)
+        conn.request('POST', '/api/pseudonymise-texte', b'{}',
+            {'Content-Type': 'application/json', 'Content-Length': '500000000'})
+        resp = conn.getresponse()
+        test('Content-Length excessif rejete', resp.status == 413)
+        resp.read()
     except Exception as e:
-        test('API download', False, str(e))
-    os.unlink(dl_path)
+        test('Content-Length excessif rejete', False, str(e))
+
+    # --- Erreurs masquees ---
+    r = api_post('/api/pseudonymise-local', {
+        'path': '/tmp/fichier-inexistant-xyz-abc.json',
+        'mapping': {}, 'mode': 'pseudo', 'fort': False, 'nlp': False, 'tech': False
+    })
+    err_msg = r.get('erreur', '')
+    test('Erreur 500 sans chemin systeme', '/tmp/' not in err_msg and '/Users/' not in err_msg)
+
+    r = api_post('/api/pseudonymise-local', {
+        'path': '/chemin/tres/long/vers/fichier.json',
+        'mapping': {}, 'mode': 'pseudo', 'fort': False, 'nlp': False, 'tech': False
+    })
+    test('Erreur 404 sans chemin absolu', '/chemin/tres' not in r.get('erreur', ''))
+
+    r = api_post('/api/pseudonymise-local', {'path': '', 'mapping': {}})
+    test('Erreur 400 message clair', 'requis' in r.get('erreur', '').lower())
 
     # =============================================================
     #  TESTS MOTEUR : REGEX TECHNIQUES (--tech)

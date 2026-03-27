@@ -19,6 +19,8 @@ import traceback
 from http.server import HTTPServer, SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
+MAX_BODY_SIZE = 400 * 1024 * 1024  # 400 Mo
+
 # Ajouter le dossier courant au path pour les imports
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if SCRIPT_DIR not in sys.path:
@@ -118,7 +120,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                 },
             })
         except Exception as e:
-            self._json_error(500, str(e))
+            self._json_error(500, 'Erreur interne du serveur')
 
     # ----- API : pseudonymiser un fichier (JSON, CSV, etc.) -----
 
@@ -219,7 +221,7 @@ class APIHandler(SimpleHTTPRequestHandler):
             self._json_response(response)
         except Exception as e:
             traceback.print_exc()
-            self._json_error(500, str(e))
+            self._json_error(500, 'Erreur interne du serveur')
 
     # ----- API : pseudonymiser un fichier local (gros fichiers) -----
 
@@ -241,7 +243,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                 return
 
             if not os.path.isfile(file_path):
-                self._json_error(404, f'Fichier introuvable : {file_path}')
+                self._json_error(404, f'Fichier introuvable : {os.path.basename(file_path)}')
                 return
 
             # Charger le mapping depuis un chemin si fourni
@@ -345,6 +347,11 @@ class APIHandler(SimpleHTTPRequestHandler):
                         zf.write(csv_path, f'confidentiel/{os.path.basename(csv_path)}')
                 print(f'[serveur] Zip cree : {zip_path}', file=sys.stderr)
 
+            # Ajouter les fichiers generes a la whitelist de telechargement
+            for p in [output_path, csv_path, zip_path]:
+                if p and os.path.exists(p):
+                    self.server._download_whitelist.add(os.path.realpath(p))
+
             self._json_response({
                 'output_path': output_path,
                 'csv_path': csv_path,
@@ -362,7 +369,7 @@ class APIHandler(SimpleHTTPRequestHandler):
             })
         except Exception as e:
             traceback.print_exc()
-            self._json_error(500, str(e))
+            self._json_error(500, 'Erreur interne du serveur')
 
     # ----- API : traitement batch (dossier) -----
 
@@ -486,6 +493,11 @@ class APIHandler(SimpleHTTPRequestHandler):
                             tokens.export_csv(csv_path)
                         resultat['csv_path'] = csv_path
 
+                        # Whitelist telechargement
+                        for p in [output_path, csv_path]:
+                            if p and os.path.exists(p):
+                                self.server._download_whitelist.add(os.path.realpath(p))
+
                     resultats.append(resultat)
 
                 except Exception as e:
@@ -516,7 +528,7 @@ class APIHandler(SimpleHTTPRequestHandler):
             self._json_response(response)
         except Exception as e:
             traceback.print_exc()
-            self._json_error(500, str(e))
+            self._json_error(500, 'Erreur interne du serveur')
 
     # ----- API : depseudonymiser -----
 
@@ -545,7 +557,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                 'remplacements': len(reverse_map),
             })
         except Exception as e:
-            self._json_error(500, str(e))
+            self._json_error(500, 'Erreur interne du serveur')
 
     # ----- API : scoring RGPD -----
 
@@ -574,7 +586,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                 'stats': self._stats_to_dict(stats),
             })
         except Exception as e:
-            self._json_error(500, str(e))
+            self._json_error(500, 'Erreur interne du serveur')
 
     # ----- API : generation de mapping -----
 
@@ -597,9 +609,10 @@ class APIHandler(SimpleHTTPRequestHandler):
                     return
                 filename = params.get('filename', 'upload.json')
                 ext = os.path.splitext(filename)[1].lower()
-                tmp_path = tempfile.mktemp(suffix=ext)
-                with open(tmp_path, 'wb') as tmp:
-                    tmp.write(file_data)
+                tmp = tempfile.NamedTemporaryFile(suffix=ext, delete=False)
+                tmp.write(file_data)
+                tmp.close()
+                tmp_path = tmp.name
                 try:
                     if ext == '.json':
                         with open(tmp_path, 'r', encoding='utf-8') as f:
@@ -619,7 +632,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                     return
 
                 if not os.path.isfile(file_path):
-                    self._json_error(404, f'Fichier introuvable : {file_path}')
+                    self._json_error(404, f'Fichier introuvable : {os.path.basename(file_path)}')
                     return
 
                 ext = os.path.splitext(file_path)[1].lower()
@@ -713,7 +726,7 @@ class APIHandler(SimpleHTTPRequestHandler):
             })
         except Exception as e:
             traceback.print_exc()
-            self._json_error(500, str(e))
+            self._json_error(500, 'Erreur interne du serveur')
 
     def _classify_field(self, key, sample_val, champs, texte_libre):
         """Classifie un champ par heuristique (nom de cle prioritaire, puis valeur)."""
@@ -905,27 +918,39 @@ class APIHandler(SimpleHTTPRequestHandler):
         return obj
 
     def _handle_download(self, parsed):
-        """Sert un fichier local en telechargement."""
+        """Sert un fichier local en telechargement (whitelist uniquement)."""
         try:
             qs = parse_qs(parsed.query)
             file_path = qs.get('path', [''])[0]
 
-            if not file_path or not os.path.isfile(file_path):
+            if not file_path:
+                self._json_error(400, 'Chemin requis')
+                return
+
+            real_path = os.path.realpath(file_path)
+
+            if real_path not in self.server._download_whitelist:
+                self._json_error(403, 'Acces refuse')
+                return
+
+            if not os.path.isfile(real_path):
                 self._json_error(404, 'Fichier introuvable')
                 return
 
-            filename = os.path.basename(file_path)
-            with open(file_path, 'rb') as f:
+            filename = os.path.basename(real_path)
+            with open(real_path, 'rb') as f:
                 data = f.read()
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/octet-stream')
             self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
             self.send_header('Content-Length', str(len(data)))
+            self._send_cors_headers()
             self.end_headers()
             self.wfile.write(data)
         except Exception as e:
-            self._json_error(500, str(e))
+            traceback.print_exc()
+            self._json_error(500, 'Erreur interne du serveur')
 
     # ----- API : statistiques serveur -----
 
@@ -943,16 +968,28 @@ class APIHandler(SimpleHTTPRequestHandler):
 
     # ----- Helpers -----
 
-    def _read_json_body(self):
+    def _read_body(self):
+        """Lit le body HTTP avec limite de taille."""
         length = int(self.headers.get('Content-Length', 0))
-        raw = self.rfile.read(length)
+        if length > MAX_BODY_SIZE:
+            self._json_error(413, 'Contenu trop volumineux (limite : 400 Mo)')
+            return None
+        if length == 0:
+            return b''
+        return self.rfile.read(length)
+
+    def _read_json_body(self):
+        raw = self._read_body()
+        if raw is None:
+            return None
         return json.loads(raw.decode('utf-8'))
 
     def _read_multipart(self):
         """Parse multipart/form-data basique."""
         content_type = self.headers.get('Content-Type', '')
-        length = int(self.headers.get('Content-Length', 0))
-        raw = self.rfile.read(length)
+        raw = self._read_body()
+        if raw is None:
+            return None, {}
 
         # Extraire le boundary
         boundary = None
@@ -1038,12 +1075,29 @@ class APIHandler(SimpleHTTPRequestHandler):
             },
         }
 
+    def _send_cors_headers(self):
+        """Envoie les headers CORS uniquement pour les origines autorisees."""
+        origin = self.headers.get('Origin', '')
+        if not origin:
+            return
+        allowed = [
+            f'http://127.0.0.1:{self.server.server_address[1]}',
+            f'http://localhost:{self.server.server_address[1]}',
+        ]
+        tailscale_origin = os.environ.get('PSEUDONYMUS_ALLOWED_ORIGIN', '')
+        if tailscale_origin:
+            allowed.append(tailscale_origin)
+        if origin in allowed:
+            self.send_header('Access-Control-Allow-Origin', origin)
+            self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+            self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+
     def _json_response(self, data, status=200):
         body = json.dumps(data, ensure_ascii=False, indent=2).encode('utf-8')
         self.send_response(status)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Content-Length', str(len(body)))
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self._send_cors_headers()
         self.end_headers()
         self.wfile.write(body)
 
@@ -1053,9 +1107,7 @@ class APIHandler(SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         """CORS preflight."""
         self.send_response(204)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self._send_cors_headers()
         self.end_headers()
 
     def log_message(self, format, *args):
@@ -1075,6 +1127,7 @@ def main():
         os.makedirs(INTERFACE_DIR, exist_ok=True)
 
     server = ThreadingHTTPServer((args.host, args.port), APIHandler)
+    server._download_whitelist = set()
     print(f'\nServeur de pseudonymisation demarre', file=sys.stderr)
     print(f'  Interface : http://{args.host}:{args.port}/', file=sys.stderr)
     print(f'  API       : http://{args.host}:{args.port}/api/', file=sys.stderr)
