@@ -227,6 +227,26 @@ Cordialement, Svetlana Novikova</pre>
                             </table>
                         </div>
                         <p class="fr-text--sm fr-mt-1w"><strong>NLP (spaCy)</strong> : ajoute la détection par intelligence artificielle pour les noms étrangers ou rares absents des dictionnaires.</p>
+
+                        <h3 class="fr-mt-3w">Pseudonymisation ou Anonymisation ?</h3>
+                        <div class="fr-table">
+                            <table>
+                                <caption>Comparaison des modes de sortie</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Pseudonymisation</th>
+                                        <th scope="col">Anonymisation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>Résultat</strong></td><td>Jetons réversibles : <code>[PERSONNE_1]</code>, <code>[EMAIL_1]</code></td><td>Remplacement irréversible : <code>***</code></td></tr>
+                                    <tr><td><strong>Correspondances</strong></td><td>Fichier CSV généré (permet de restaurer)</td><td>Aucune correspondance</td></tr>
+                                    <tr><td><strong>Retour possible ?</strong></td><td>Oui (onglet Restauration)</td><td>Non, définitif</td></tr>
+                                    <tr><td><strong>Cas d'usage</strong></td><td>Partager un fichier en gardant la possibilité de revenir aux données originales</td><td>Supprimer définitivement les données personnelles</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
             </div>
