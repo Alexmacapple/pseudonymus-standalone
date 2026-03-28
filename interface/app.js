@@ -143,7 +143,8 @@ document.getElementById('btn-pseudonymise').addEventListener('click', async () =
         return;
     }
 
-    const fort = document.getElementById('mode-fort').checked;
+    const mode = document.getElementById('mode-anon').checked ? 'anon' : 'pseudo';
+    const fort = document.getElementById('opt-fort').checked;
     const tech = document.getElementById('opt-tech').checked;
     const nlp = document.getElementById('opt-nlp').checked;
     const whitelist = parseList(document.getElementById('input-whitelist').value);
@@ -157,7 +158,7 @@ document.getElementById('btn-pseudonymise').addEventListener('click', async () =
         const res = await fetch(API + '/api/pseudonymise-texte', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({texte, mode: 'pseudo', fort, tech, nlp, whitelist, blacklist}),
+            body: JSON.stringify({texte, mode, fort, tech, nlp, whitelist, blacklist}),
         });
         const data = await res.json();
 

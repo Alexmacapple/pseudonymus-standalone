@@ -120,29 +120,39 @@
             <!-- Options -->
             <fieldset class="fr-fieldset fr-my-2w" aria-label="Options de pseudonymisation">
                 <legend class="fr-fieldset__legend">Options</legend>
-                <div class="fr-fieldset__content fr-grid-row fr-grid-row--gutters">
-                    <div class="fr-col-auto">
-                        <div class="fr-radio-group">
-                            <input type="radio" id="mode-standard" name="mode-detection" value="standard" checked>
-                            <label class="fr-label" for="mode-standard">Standard</label>
+                <div class="fr-fieldset__content">
+                    <div class="fr-grid-row fr-grid-row--gutters">
+                        <div class="fr-col-auto">
+                            <div class="fr-radio-group">
+                                <input type="radio" id="mode-pseudo" name="mode-sortie" value="pseudo" checked>
+                                <label class="fr-label" for="mode-pseudo">Pseudonymisation</label>
+                            </div>
+                        </div>
+                        <div class="fr-col-auto">
+                            <div class="fr-radio-group">
+                                <input type="radio" id="mode-anon" name="mode-sortie" value="anon">
+                                <label class="fr-label" for="mode-anon">Anonymisation</label>
+                            </div>
                         </div>
                     </div>
-                    <div class="fr-col-auto">
-                        <div class="fr-radio-group">
-                            <input type="radio" id="mode-fort" name="mode-detection" value="fort">
-                            <label class="fr-label" for="mode-fort">Fort (pipeline complet)</label>
+                    <div class="fr-grid-row fr-grid-row--gutters fr-mt-1w">
+                        <div class="fr-col-auto">
+                            <div class="fr-checkbox-group">
+                                <input type="checkbox" id="opt-fort">
+                                <label class="fr-label" for="opt-fort">Mode fort</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="fr-col-auto">
-                        <div class="fr-checkbox-group">
-                            <input type="checkbox" id="opt-tech">
-                            <label class="fr-label" for="opt-tech">Tech (IP, JWT, MAC)</label>
+                        <div class="fr-col-auto">
+                            <div class="fr-checkbox-group">
+                                <input type="checkbox" id="opt-tech">
+                                <label class="fr-label" for="opt-tech">Tech (IP, JWT, MAC)</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="fr-col-auto">
-                        <div class="fr-checkbox-group">
-                            <input type="checkbox" id="opt-nlp">
-                            <label class="fr-label" for="opt-nlp">NLP (spaCy)</label>
+                        <div class="fr-col-auto">
+                            <div class="fr-checkbox-group">
+                                <input type="checkbox" id="opt-nlp">
+                                <label class="fr-label" for="opt-nlp">NLP (spaCy)</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -460,6 +470,40 @@ Cordialement, Svetlana Novikova</pre>
                         <button class="fr-btn" id="btn-import" type="button">Lancer le traitement</button>
                     </div>
                 </div>
+            </div>
+
+            <!-- Exemple pedagogique Import -->
+            <div class="fr-accordions-group fr-mb-2w">
+                <section class="fr-accordion">
+                    <h3 class="fr-accordion__title">
+                        <button class="fr-accordion__btn" aria-expanded="false" aria-controls="exemple-import">Comprendre les options de détection</button>
+                    </h3>
+                    <div class="fr-collapse" id="exemple-import">
+                        <div class="fr-table">
+                            <table>
+                                <caption>Ce que chaque option détecte en plus</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Donnée</th>
+                                        <th scope="col">Standard</th>
+                                        <th scope="col">+ Fort</th>
+                                        <th scope="col">+ Tech</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Noms avec contexte, emails, téléphones</td><td>Détecté</td><td>idem</td><td>idem</td></tr>
+                                    <tr><td>IBAN, NIR, adresses</td><td>Détecté</td><td>idem</td><td>idem</td></tr>
+                                    <tr><td><strong>Patronymes majuscules</strong> (MARTINEZ)</td><td>Non détecté</td><td><strong>Détecté</strong></td><td>idem</td></tr>
+                                    <tr><td><strong>Codes postaux, dates de naissance</strong></td><td>Non détecté</td><td><strong>Détecté</strong></td><td>idem</td></tr>
+                                    <tr><td><strong>Noms sans contexte</strong> (Svetlana Novikova)</td><td>Non détecté</td><td><strong>Détecté</strong></td><td>idem</td></tr>
+                                    <tr><td><strong>Adresses IP, MAC</strong></td><td>Non détecté</td><td>Non détecté</td><td><strong>Détecté</strong></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="fr-text--sm fr-mt-1w"><strong>NLP (spaCy)</strong> : détection par intelligence artificielle pour les noms étrangers ou rares absents des dictionnaires.</p>
+                        <p class="fr-text--sm"><strong>Pseudonymisation</strong> : jetons réversibles ([PERSONNE_1]) + correspondances CSV. <strong>Anonymisation</strong> : irréversible, pas de retour possible.</p>
+                    </div>
+                </section>
             </div>
 
             <!-- Progression -->
