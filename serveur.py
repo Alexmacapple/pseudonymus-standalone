@@ -16,8 +16,17 @@ import re
 import sys
 import tempfile
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 from http.server import HTTPServer, SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
+
+
+class PooledHTTPServer(ThreadingHTTPServer):
+    """ThreadingHTTPServer avec un pool de threads limite."""
+    pool = ThreadPoolExecutor(max_workers=8)
+
+    def process_request(self, request, client_address):
+        self.pool.submit(self.process_request_thread, request, client_address)
 
 MAX_BODY_SIZE = 400 * 1024 * 1024  # 400 Mo
 
@@ -1303,7 +1312,7 @@ def main():
     if os.path.isdir(confidentiel_dir):
         os.chmod(confidentiel_dir, 0o700)
 
-    server = ThreadingHTTPServer((args.host, args.port), APIHandler)
+    server = PooledHTTPServer((args.host, args.port), APIHandler)
     server._download_whitelist = set()
     print(f'\nServeur de pseudonymisation demarre', file=sys.stderr)
     print(f'  Interface : http://{args.host}:{args.port}/', file=sys.stderr)
