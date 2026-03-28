@@ -929,6 +929,95 @@ if server_ok:
     test('API local MD remplacements', r.get('stats', {}).get('total', 0) >= 1)
     os.unlink(int_md_path)
 
+    # =============================================================
+    #  TESTS CLI : --nlp (spaCy)
+    # =============================================================
+
+    print('\n=== Tests CLI --nlp ===\n')
+
+    try:
+        import spacy
+        spacy.load('fr_core_news_sm')
+
+        with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
+            nlp_path = f.name
+            json.dump([{'nom': 'Dupont', 'commentaire': 'Contacter Christophe Blanchard pour le dossier'}], f)
+        with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
+            nlp_mapping = f.name
+            json.dump({'champs_sensibles': {'nom': {'type': 'nom', 'jeton': 'NOM'}}, 'texte_libre': ['commentaire'], 'whitelist': [], 'blacklist': []}, f)
+
+        result = subprocess.run(
+            [sys.executable, os.path.join(PROJECT_DIR, 'pseudonymise.py'),
+             nlp_path, '--mapping', nlp_mapping, '--nlp', '--pseudo'],
+            capture_output=True, text=True
+        )
+        test('CLI --nlp retour 0', result.returncode == 0)
+        out_nlp = nlp_path.replace('.json', '_PSEUDO.json')
+        if os.path.exists(out_nlp):
+            with open(out_nlp) as f:
+                nlp_data = json.load(f)
+            test('CLI --nlp traitement', len(nlp_data) == 1)
+            os.unlink(out_nlp)
+        else:
+            test('CLI --nlp output', False, 'fichier _PSEUDO absent')
+        os.unlink(nlp_path)
+        os.unlink(nlp_mapping)
+
+        # Test NLP via API
+        r = api_post('/api/pseudonymise-texte', {
+            'texte': 'Contacter Christophe Blanchard pour le dossier',
+            'mode': 'pseudo', 'nlp': True
+        })
+        test('API --nlp texte', 'texte_pseudonymise' in r)
+
+    except (ImportError, OSError):
+        print('SKIP --nlp (spaCy non installe)')
+
+    # =============================================================
+    #  TESTS CLI : --chunk-size
+    # =============================================================
+
+    print('\n=== Tests CLI --chunk-size ===\n')
+
+    with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
+        chunk_path = f.name
+        json.dump([{'nom': f'Test{i}', 'email': f'test{i}@example.fr'} for i in range(20)], f)
+    with tempfile.NamedTemporaryFile(suffix='.json', mode='w', delete=False) as f:
+        chunk_mapping = f.name
+        json.dump({'champs_sensibles': {'nom': {'type': 'nom', 'jeton': 'NOM'}, 'email': {'type': 'email', 'jeton': 'EMAIL'}}, 'texte_libre': [], 'whitelist': [], 'blacklist': []}, f)
+
+    result = subprocess.run(
+        [sys.executable, os.path.join(PROJECT_DIR, 'pseudonymise.py'),
+         chunk_path, '--mapping', chunk_mapping, '--chunk-size', '5', '--pseudo'],
+        capture_output=True, text=True
+    )
+    test('CLI --chunk-size retour 0', result.returncode == 0)
+    out_chunk = chunk_path.replace('.json', '_PSEUDO.json')
+    if os.path.exists(out_chunk):
+        with open(out_chunk) as f:
+            chunk_data = json.load(f)
+        test('CLI --chunk-size 20 enregistrements', len(chunk_data) == 20)
+        test('CLI --chunk-size pseudonymise', '[NOM_' in str(chunk_data[0]))
+        os.unlink(out_chunk)
+    else:
+        test('CLI --chunk-size output', False, 'fichier _PSEUDO absent')
+    os.unlink(chunk_path)
+    os.unlink(chunk_mapping)
+
+    # =============================================================
+    #  TESTS SECURITE : validation extension upload
+    # =============================================================
+
+    print('\n=== Tests validation extension ===\n')
+
+    r = api_multipart('/api/pseudonymise', b'malicious content', 'virus.exe', {
+        'mapping': '{}', 'mode': 'pseudo', 'filename': 'virus.exe'
+    })
+    test('Upload .exe rejete', 'non support' in r.get('erreur', '').lower() or 'format' in r.get('erreur', '').lower())
+
+    r = api_multipart('/api/mapping/generate', b'malicious', 'hack.php', {})
+    test('Mapping .php rejete', 'non support' in r.get('erreur', '').lower() or 'format' in r.get('erreur', '').lower())
+
 
 # =============================================================
 #  RESULTATS
