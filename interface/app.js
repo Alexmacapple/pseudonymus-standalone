@@ -16,6 +16,7 @@ const PAGE_TITLES = {
     'correspondances': 'Correspondances',
     'restauration': 'Restauration',
     'import-fichier': 'Import fichier',
+    'analyse': 'Analyse fichier',
     'scoring-rgpd': 'Scoring RGPD',
     'documentation': 'Documentation',
 };
@@ -820,6 +821,130 @@ document.getElementById('btn-download-result').addEventListener('click', () => {
 document.getElementById('btn-download-correspondances').addEventListener('click', () => {
     if (!correspondancesEnMemoire.length) return;
     document.getElementById('btn-export-csv').click();
+});
+
+// --- Page Analyse fichier ---
+
+// Bascule upload / chemin local
+document.querySelectorAll('input[name="analyse-source"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        const isLocal = document.getElementById('analyse-source-local').checked;
+        document.getElementById('analyse-upload-zone').hidden = isLocal;
+        document.getElementById('analyse-local-zone').hidden = !isLocal;
+    });
+});
+
+function badgeClass(niveau) {
+    switch (niveau) {
+        case 'NUL': return 'fr-badge--success';
+        case 'FAIBLE': return 'fr-badge--info';
+        case 'MODERE': return 'fr-badge--warning';
+        case 'ELEVE': case 'CRITIQUE': return 'fr-badge--error';
+        default: return '';
+    }
+}
+
+document.getElementById('btn-analyse').addEventListener('click', async () => {
+    const isLocal = document.getElementById('analyse-source-local').checked;
+    const fort = document.getElementById('analyse-fort').checked;
+
+    const btn = document.getElementById('btn-analyse');
+    btn.disabled = true;
+    btn.textContent = 'Analyse...';
+
+    document.getElementById('analyse-progress').hidden = false;
+    document.getElementById('analyse-resume').hidden = true;
+    document.getElementById('analyse-fiches').hidden = true;
+
+    try {
+        let fetchOptions;
+
+        if (isLocal) {
+            const filepath = document.getElementById('analyse-filepath').value.trim();
+            if (!filepath) {
+                showAlert('alert-analyse', 'Veuillez saisir le chemin du fichier.', 'warning');
+                return;
+            }
+            fetchOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({path: filepath, fort, limit: 20}),
+            };
+        } else {
+            const fileInput = document.getElementById('analyse-upload-fichier');
+            const file = fileInput.files[0];
+            if (!file) {
+                showAlert('alert-analyse', 'Veuillez sélectionner un fichier.', 'warning');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append('filename', file.name);
+            formData.append('fort', fort);
+            formData.append('limit', '20');
+            fetchOptions = {
+                method: 'POST',
+                body: formData,
+            };
+        }
+
+        const res = await fetch(API + '/api/analyze', fetchOptions);
+        const data = await res.json();
+
+        if (data.erreur) {
+            showAlert('alert-analyse', 'Erreur : ' + data.erreur, 'error');
+            return;
+        }
+
+        // Resume
+        const r = data.resume;
+        document.getElementById('analyse-resume').hidden = false;
+        document.getElementById('analyse-stat-total').textContent = r.total_enregistrements.toLocaleString('fr-FR');
+        document.getElementById('analyse-stat-echantillon').textContent = r.echantillon;
+        document.getElementById('analyse-stat-moyen').textContent = r.score_moyen + ' (' + (r.score_moyen >= 100 ? 'CRITIQUE' : r.score_moyen >= 50 ? 'ELEVE' : r.score_moyen >= 10 ? 'MODERE' : r.score_moyen >= 1 ? 'FAIBLE' : 'NUL') + ')';
+        document.getElementById('analyse-stat-max').textContent = r.score_max + ' (' + r.niveau_max + ')';
+
+        // Cards
+        const fiches = data.fiches || [];
+        const cardsDiv = document.getElementById('analyse-cards');
+        document.getElementById('analyse-fiches').hidden = false;
+
+        let html = '<div class="fr-grid-row fr-grid-row--gutters">';
+        for (const fiche of fiches) {
+            const badge = badgeClass(fiche.score.niveau);
+            html += '<div class="fr-col-12 fr-col-md-6">';
+            html += '<div class="fr-card fr-card--no-arrow">';
+            html += '<div class="fr-card__body">';
+            html += '<div class="fr-card__content">';
+            html += '<h3 class="fr-card__title">Fiche ' + fiche.index +
+                ' <span class="fr-badge ' + badge + '">' + escapeHtml(fiche.score.niveau) + ' (' + fiche.score.total + ')</span></h3>';
+            html += '<div class="fr-card__desc">';
+            for (const c of fiche.champs) {
+                const val = c.valeur.length > 200 ? c.valeur.substring(0, 200) + '...' : c.valeur;
+                html += '<p class="fr-mb-1w"><strong>' + escapeHtml(c.cle) + '</strong> : ' + escapeHtml(val) + '</p>';
+            }
+            html += '</div>';
+            // Bouton copier
+            const copyData = '--- Fiche ' + fiche.index + ' --- Score RGPD : ' + fiche.score.total + ' (' + fiche.score.niveau + ')\\n' +
+                fiche.champs.map(c => c.cle + ' : ' + c.valeur).join('\\n');
+            html += '<div class="fr-card__end">';
+            html += '<button class="fr-btn fr-btn--sm fr-btn--tertiary" onclick="navigator.clipboard.writeText(\'' +
+                copyData.replace(/'/g, "\\'") + '\').then(() => this.textContent = \'Copié !\').catch(() => {})">Copier</button>';
+            html += '</div>';
+            html += '</div></div></div></div>';
+        }
+        html += '</div>';
+        cardsDiv.innerHTML = html;
+
+        showAlert('alert-analyse', r.echantillon + ' enregistrements analysés sur ' + r.total_enregistrements.toLocaleString('fr-FR') + '. Score max : ' + r.score_max + ' (' + r.niveau_max + ').', 'info');
+
+    } catch (err) {
+        showAlert('alert-analyse', 'Erreur : ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Analyser';
+        document.getElementById('analyse-progress').hidden = true;
+    }
 });
 
 // --- Page Scoring RGPD ---

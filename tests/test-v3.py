@@ -1008,6 +1008,51 @@ if server_ok:
     #  TESTS SECURITE : validation extension upload
     # =============================================================
 
+    # =============================================================
+    #  TESTS API : /api/analyze
+    # =============================================================
+
+    print('\n=== Tests API analyze ===\n')
+
+    # Analyse JSON via chemin local
+    r = api_post('/api/analyze', {
+        'path': os.path.join(PROJECT_DIR, 'exemples', 'donnees-json-plat.json'),
+        'fort': False, 'limit': 5
+    })
+    test('Analyze JSON fiches', len(r.get('fiches', [])) == 5)
+    test('Analyze JSON resume', r.get('resume', {}).get('total_enregistrements', 0) == 5)
+    test('Analyze JSON score', r.get('resume', {}).get('score_max', 0) > 0)
+    if r.get('fiches'):
+        f1 = r['fiches'][0]
+        test('Analyze fiche champs', len(f1.get('champs', [])) > 0)
+        test('Analyze fiche score', f1.get('score', {}).get('niveau', '') != '')
+
+    # Analyse JSON imbrique (unwrap auto)
+    r = api_post('/api/analyze', {
+        'path': os.path.join(PROJECT_DIR, 'exemples', 'donnees-json-imbrique.json'),
+        'fort': False, 'limit': 3
+    })
+    test('Analyze imbrique fiches', len(r.get('fiches', [])) >= 1)
+    if r.get('fiches'):
+        cles = [c['cle'] for c in r['fiches'][0].get('champs', [])]
+        test('Analyze imbrique unwrap', any('Report.' in c or 'Firstname' in c for c in cles))
+
+    # Analyse via upload multipart
+    json_data = json.dumps([
+        {'nom': 'Test', 'email': 'test@example.fr', 'tel': '06 12 34 56 78'}
+    ]).encode()
+    r = api_multipart('/api/analyze', json_data, 'test.json', {'fort': 'false', 'limit': '5'})
+    test('Analyze upload JSON', len(r.get('fiches', [])) >= 1)
+    test('Analyze upload score', r.get('resume', {}).get('score_max', 0) > 0)
+
+    # Erreur 404
+    r = api_post('/api/analyze', {'path': '/inexistant.json'})
+    test('Analyze erreur 404', 'introuvable' in r.get('erreur', '').lower())
+
+    # Erreur 400
+    r = api_post('/api/analyze', {'path': ''})
+    test('Analyze erreur 400', 'requis' in r.get('erreur', '').lower())
+
     print('\n=== Tests validation extension ===\n')
 
     r = api_multipart('/api/pseudonymise', b'malicious content', 'virus.exe', {

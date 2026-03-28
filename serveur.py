@@ -81,6 +81,8 @@ class APIHandler(SimpleHTTPRequestHandler):
             self._handle_mapping_generate_post()
         elif path == '/api/pseudonymise-batch':
             self._handle_pseudonymise_batch()
+        elif path == '/api/analyze':
+            self._handle_analyze()
         else:
             self._json_error(404, 'Route non trouvee')
 
@@ -924,6 +926,156 @@ class APIHandler(SimpleHTTPRequestHandler):
             if obj is None:
                 return None
         return obj
+
+    # ----- API : analyse de fichier (scoring sans mapping) -----
+
+    def _handle_analyze(self):
+        """Analyse un fichier : affiche les premiers enregistrements avec scoring RGPD."""
+        try:
+            content_type = self.headers.get('Content-Type', '')
+
+            if 'multipart/form-data' in content_type:
+                file_data, params = self._read_multipart()
+                if not file_data:
+                    self._json_error(400, 'Aucun fichier reçu')
+                    return
+                filename = params.get('filename', 'upload.json')
+                ext = os.path.splitext(filename)[1].lower()
+                if ext not in SUPPORTED_EXTENSIONS:
+                    self._json_error(400, f'Format non supporté : {ext}')
+                    return
+                tmp = tempfile.NamedTemporaryFile(suffix=ext, delete=False)
+                tmp.write(file_data)
+                tmp.close()
+                try:
+                    if ext == '.json':
+                        with open(tmp.name, 'r', encoding='utf-8') as f:
+                            data = json.load(f)
+                    else:
+                        data = load_file(tmp.name, {})
+                finally:
+                    os.unlink(tmp.name)
+                fort = params.get('fort', 'false').lower() in ('true', '1', 'oui')
+                limit = int(params.get('limit', '20'))
+            else:
+                body = self._read_json_body()
+                if body is None:
+                    return
+                file_path = body.get('path', '')
+                if not file_path:
+                    self._json_error(400, 'Chemin de fichier requis')
+                    return
+                if not os.path.isfile(file_path):
+                    self._json_error(404, f'Fichier introuvable : {os.path.basename(file_path)}')
+                    return
+                ext = os.path.splitext(file_path)[1].lower()
+                if ext == '.json':
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                else:
+                    data = load_file(file_path, {})
+                fort = body.get('fort', False)
+                limit = body.get('limit', 20)
+
+            if not isinstance(data, list):
+                data = [data]
+
+            total = len(data)
+            sample = data[:limit]
+
+            # Scorer chaque enregistrement
+            fiches = []
+            score_total = 0
+            score_max = 0
+
+            for i, record in enumerate(sample):
+                # Concatener toutes les valeurs texte
+                texte_parts = []
+                champs = []
+                if isinstance(record, dict):
+                    for key, val in record.items():
+                        if key.startswith('_'):
+                            continue
+                        val_str = str(val) if val is not None else ''
+                        # Detecter JSON stringifie et le deplier
+                        if isinstance(val, str) and len(val) > 10 and val.strip()[:1] in ('{', '['):
+                            try:
+                                parsed_json = json.loads(val)
+                                if isinstance(parsed_json, dict):
+                                    for sub_key, sub_val in parsed_json.items():
+                                        if isinstance(sub_val, dict):
+                                            for sub2_key, sub2_val in sub_val.items():
+                                                if isinstance(sub2_val, str):
+                                                    texte_parts.append(sub2_val)
+                                                    champs.append({'cle': f'{sub_key}.{sub2_key}', 'valeur': sub2_val[:200]})
+                                                elif isinstance(sub2_val, list):
+                                                    for item in sub2_val:
+                                                        if isinstance(item, str):
+                                                            texte_parts.append(item)
+                                                        elif isinstance(item, dict):
+                                                            for dk, dv in item.items():
+                                                                if isinstance(dv, str):
+                                                                    texte_parts.append(dv)
+                                                elif sub2_val is not None:
+                                                    champs.append({'cle': f'{sub_key}.{sub2_key}', 'valeur': str(sub2_val)[:200]})
+                                        elif isinstance(sub_val, str):
+                                            texte_parts.append(sub_val)
+                                            champs.append({'cle': sub_key, 'valeur': sub_val[:200]})
+                                    continue
+                            except (json.JSONDecodeError, ValueError):
+                                pass
+                        if isinstance(val, str):
+                            texte_parts.append(val)
+                        champs.append({'cle': key, 'valeur': val_str[:200]})
+                else:
+                    champs.append({'cle': 'valeur', 'valeur': str(record)[:200]})
+                    texte_parts.append(str(record))
+
+                # Scoring
+                texte = '\n'.join(texte_parts)
+                tokens = engine.TokenTable()
+                stats = engine.Stats()
+                scorer = engine.RiskScorer()
+                engine.pseudonymise_texte(texte, 'pseudo', fort, False, False,
+                                         tokens, stats, scorer)
+
+                score = scorer.score
+                score_total += score
+                if score > score_max:
+                    score_max = score
+
+                fiches.append({
+                    'index': i + 1,
+                    'champs': champs,
+                    'score': {
+                        'total': score,
+                        'niveau': scorer.level(),
+                        'details': scorer.details,
+                    },
+                })
+
+            score_moyen = round(score_total / len(fiches)) if fiches else 0
+            niveau_max = 'NUL'
+            for seuil, nom in [(100, 'CRITIQUE'), (50, 'ELEVE'), (10, 'MODERE'), (1, 'FAIBLE')]:
+                if score_max >= seuil:
+                    niveau_max = nom
+                    break
+
+            self._json_response({
+                'fiches': fiches,
+                'resume': {
+                    'total_enregistrements': total,
+                    'echantillon': len(fiches),
+                    'score_moyen': score_moyen,
+                    'score_max': score_max,
+                    'niveau_max': niveau_max,
+                },
+            })
+        except Exception as e:
+            traceback.print_exc()
+            self._json_error(500, 'Erreur interne du serveur')
+
+    # ----- API : telechargement de fichier -----
 
     def _handle_download(self, parsed):
         """Sert un fichier local en telechargement (whitelist uniquement)."""

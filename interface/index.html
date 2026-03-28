@@ -54,6 +54,9 @@
                             <a class="fr-nav__link" href="#import-fichier" data-page="import-fichier">Import fichier</a>
                         </li>
                         <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="#analyse" data-page="analyse">Analyse fichier</a>
+                        </li>
+                        <li class="fr-nav__item">
                             <a class="fr-nav__link" href="#scoring-rgpd" data-page="scoring-rgpd">Scoring RGPD</a>
                         </li>
                         <li class="fr-nav__item">
@@ -473,6 +476,122 @@
                     <button class="fr-btn" id="btn-download-result" type="button">Télécharger le résultat</button>
                     <button class="fr-btn fr-btn--secondary" id="btn-download-correspondances" type="button">Télécharger les correspondances</button>
                 </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE : Analyse fichier                       -->
+        <!-- ============================================ -->
+        <section id="page-analyse" class="page">
+            <h1>Analyse de fichier</h1>
+            <p class="fr-text--lg">Explorez le contenu d'un fichier et évaluez son niveau de risque RGPD avant traitement.</p>
+
+            <h2 class="fr-mt-3w">Fichier à analyser</h2>
+            <fieldset class="fr-fieldset fr-mb-2w" aria-label="Mode d'import du fichier">
+                <legend class="fr-fieldset__legend">Comment fournir le fichier ?</legend>
+                <div class="fr-fieldset__content fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="analyse-source-upload" name="analyse-source" value="upload" checked>
+                            <label class="fr-label" for="analyse-source-upload">Upload depuis le navigateur
+                                <span class="fr-hint-text">Jusqu'à 200 Mo environ</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="fr-col-auto">
+                        <div class="fr-radio-group">
+                            <input type="radio" id="analyse-source-local" name="analyse-source" value="local">
+                            <label class="fr-label" for="analyse-source-local">Chemin sur le disque
+                                <span class="fr-hint-text">Sans limite de taille</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div id="analyse-upload-zone">
+                <div class="fr-upload-group">
+                    <label class="fr-label" for="analyse-upload-fichier">
+                        Sélectionnez votre fichier
+                        <span class="fr-hint-text">Formats acceptés : JSON, CSV, TSV, XLSX, XLS, ODS, DOCX, ODT, PDF, TXT, MD</span>
+                    </label>
+                    <input class="fr-upload" type="file" id="analyse-upload-fichier"
+                        accept=".json,.csv,.tsv,.xlsx,.xls,.ods,.docx,.odt,.pdf,.txt,.md" title="Fichier à analyser">
+                </div>
+            </div>
+            <div id="analyse-local-zone" hidden>
+                <div class="fr-input-group">
+                    <label class="fr-label" for="analyse-filepath">
+                        Chemin du fichier
+                        <span class="fr-hint-text">Chemin complet sur votre machine</span>
+                    </label>
+                    <input class="fr-input" type="text" id="analyse-filepath"
+                        placeholder="/chemin/vers/mon-fichier.json">
+                </div>
+            </div>
+
+            <div class="fr-checkbox-group fr-mt-2w">
+                <input type="checkbox" id="analyse-fort">
+                <label class="fr-label" for="analyse-fort">Mode fort (détection plus agressive)</label>
+            </div>
+
+            <div class="fr-btns-group fr-mt-2w">
+                <button class="fr-btn" id="btn-analyse" type="button">Analyser</button>
+            </div>
+
+            <div id="analyse-progress" class="fr-my-2w" role="status" aria-live="polite" hidden>
+                <p class="fr-text--bold">Analyse en cours...</p>
+                <progress aria-label="Progression de l'analyse"></progress>
+            </div>
+
+            <div id="alert-analyse" class="fr-alert fr-my-2w" role="status" aria-live="polite" hidden></div>
+
+            <!-- Resume -->
+            <div id="analyse-resume" class="fr-my-3w" hidden>
+                <h2>Résumé</h2>
+                <div class="fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-12 fr-col-md-3">
+                        <div class="fr-tile fr-tile--sm">
+                            <div class="fr-tile__body">
+                                <p class="fr-tile__title" id="analyse-stat-total">-</p>
+                                <p class="fr-tile__detail">Enregistrements</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fr-col-12 fr-col-md-3">
+                        <div class="fr-tile fr-tile--sm">
+                            <div class="fr-tile__body">
+                                <p class="fr-tile__title" id="analyse-stat-echantillon">-</p>
+                                <p class="fr-tile__detail">Analysés</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fr-col-12 fr-col-md-3">
+                        <div class="fr-tile fr-tile--sm">
+                            <div class="fr-tile__body">
+                                <p class="fr-tile__title" id="analyse-stat-moyen">-</p>
+                                <p class="fr-tile__detail">Score moyen</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fr-col-12 fr-col-md-3">
+                        <div class="fr-tile fr-tile--sm">
+                            <div class="fr-tile__body">
+                                <p class="fr-tile__title" id="analyse-stat-max">-</p>
+                                <p class="fr-tile__detail">Score max</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fr-callout fr-callout--blue-ecume fr-mt-2w">
+                    <p class="fr-callout__text">Le scoring sans mapping est indicatif. Certains mots courants peuvent être détectés à tort (faux positifs). Pour pseudonymiser ce fichier, rendez-vous dans l'onglet <a href="#import-fichier">Import fichier</a>.</p>
+                </div>
+            </div>
+
+            <!-- Fiches -->
+            <div id="analyse-fiches" class="fr-my-2w" hidden>
+                <h2>Détail des enregistrements</h2>
+                <div id="analyse-cards"></div>
             </div>
         </section>
 

@@ -1,7 +1,7 @@
 # PRD : Analyse de fichier avant traitement
 
 **Date** : 2026-03-27
-**Statut** : A faire
+**Statut** : Livre (2026-03-28)
 **Auteur** : Alex
 **Contexte** : Interface web de pseudonymisation (`interface/`)
 
