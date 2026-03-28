@@ -565,6 +565,12 @@
                 <p class="fr-summary__title" id="fr-summary-title">Sommaire</p>
                 <ol class="fr-summary__list">
                     <li>
+                        <a class="fr-summary__link" href="#doc-install">Installation</a>
+                    </li>
+                    <li>
+                        <a class="fr-summary__link" href="#doc-formats">Formats supportés</a>
+                    </li>
+                    <li>
                         <a class="fr-summary__link" href="#doc-cli">Mode ligne de commande (CLI)</a>
                     </li>
                     <li>
@@ -578,6 +584,45 @@
                     </li>
                 </ol>
             </nav>
+
+            <!-- ===== INSTALLATION ===== -->
+            <h2 class="fr-mt-5w" id="doc-install">Installation</h2>
+            <pre><code># Cloner le depot
+git clone git@github.com:Alexmacapple/pseudonymus-standalone.git
+cd pseudonymus-standalone
+
+# Installer (cree le venv + toutes les dependances + lance les tests)
+bash install.sh
+
+# Lancer le serveur
+.venv/bin/python3 serveur.py</code></pre>
+            <p>Le coeur (JSON, CSV, TSV, TXT, MD) fonctionne sans aucune dependance. Les formats bureautiques (XLSX, ODS, DOCX, PDF) et le streaming sont installes automatiquement par le script.</p>
+
+            <!-- ===== FORMATS ===== -->
+            <h2 class="fr-mt-5w" id="doc-formats">Formats supportés</h2>
+            <div class="fr-table">
+                <table>
+                    <caption>Formats en entrée et sortie</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Format</th>
+                            <th scope="col">Entrée</th>
+                            <th scope="col">Sortie</th>
+                            <th scope="col">Dépendance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>JSON</td><td>Oui</td><td>Oui</td><td>Aucune</td></tr>
+                        <tr><td>CSV / TSV</td><td>Oui</td><td>Oui</td><td>Aucune</td></tr>
+                        <tr><td>TXT / MD</td><td>Oui</td><td>Oui</td><td>Aucune</td></tr>
+                        <tr><td>XLSX / XLS</td><td>Oui</td><td>Oui</td><td>openpyxl</td></tr>
+                        <tr><td>ODS / ODT</td><td>Oui</td><td>Oui</td><td>odfpy</td></tr>
+                        <tr><td>DOCX</td><td>Oui</td><td>Oui</td><td>python-docx</td></tr>
+                        <tr><td>PDF</td><td>Oui</td><td>Texte (.txt)</td><td>pdfplumber</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Toutes les dépendances sont installées automatiquement par <code>bash install.sh</code>.</p>
 
             <!-- ===== MODE CLI ===== -->
             <h2 class="fr-mt-5w" id="doc-cli">Mode ligne de commande (CLI)</h2>
@@ -650,7 +695,7 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
             <h4>Pour traiter un fichier complet</h4>
             <ol>
                 <li>Allez dans l'onglet <a href="#import-fichier">Import fichier</a></li>
-                <li>Sélectionnez votre fichier JSON (upload) ou saisissez son chemin sur le disque (local)</li>
+                <li>Sélectionnez votre fichier (upload) ou saisissez son chemin sur le disque (local)</li>
                 <li>Cliquez sur <strong>Proposition de mapping automatique</strong> : le moteur inspecte votre fichier et propose un mapping automatique</li>
                 <li>Vérifiez le mapping dans le textarea : les champs détectés comme sensibles sont-ils les bons ? Ajustez si besoin</li>
                 <li>Cliquez sur <strong>Lancer le traitement</strong></li>
@@ -704,8 +749,8 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td><strong>Upload</strong></td><td>Le fichier est envoyé au serveur via le navigateur</td><td>Fichiers de petite taille (&lt; 50 Mo)</td></tr>
-                        <tr><td><strong>Chemin local</strong></td><td>Vous saisissez le chemin du fichier sur votre disque. Le serveur le lit directement, sans transit par le navigateur</td><td>Fichiers volumineux (50 Mo et plus). Pas de limite de taille</td></tr>
+                        <tr><td><strong>Upload</strong></td><td>Le fichier est envoyé au serveur via le navigateur</td><td>Fichiers jusqu'à 200 Mo environ</td></tr>
+                        <tr><td><strong>Chemin local</strong></td><td>Vous saisissez le chemin du fichier sur votre disque. Le serveur le lit directement</td><td>Fichiers volumineux, sans limite de taille</td></tr>
                     </tbody>
                 </table>
             </div>

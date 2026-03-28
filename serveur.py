@@ -33,6 +33,7 @@ from formats import detect_format, load_file, save_file
 
 INTERFACE_DIR = os.path.join(SCRIPT_DIR, 'interface')
 VERSION = '3.3.0'
+SUPPORTED_EXTENSIONS = {'.json', '.csv', '.tsv', '.xlsx', '.xls', '.ods', '.docx', '.odt', '.pdf', '.txt', '.md'}
 
 
 class APIHandler(SimpleHTTPRequestHandler):
@@ -155,6 +156,9 @@ class APIHandler(SimpleHTTPRequestHandler):
             if file_data:
                 filename = params.get('filename', 'upload.json')
                 ext = os.path.splitext(filename)[1].lower()
+                if ext not in SUPPORTED_EXTENSIONS:
+                    self._json_error(400, f'Format non supporté : {ext}')
+                    return
                 tmp = tempfile.NamedTemporaryFile(suffix=ext, delete=False)
                 tmp.write(file_data)
                 tmp.close()
@@ -610,6 +614,9 @@ class APIHandler(SimpleHTTPRequestHandler):
                     return
                 filename = params.get('filename', 'upload.json')
                 ext = os.path.splitext(filename)[1].lower()
+                if ext not in SUPPORTED_EXTENSIONS:
+                    self._json_error(400, f'Format non supporté : {ext}')
+                    return
                 tmp = tempfile.NamedTemporaryFile(suffix=ext, delete=False)
                 tmp.write(file_data)
                 tmp.close()
@@ -1093,6 +1100,12 @@ class APIHandler(SimpleHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
             self.send_header('Access-Control-Allow-Headers', 'Content-Type')
 
+    def _send_security_headers(self):
+        """Headers de securite HTTP."""
+        self.send_header('X-Content-Type-Options', 'nosniff')
+        self.send_header('X-Frame-Options', 'DENY')
+        self.send_header('Referrer-Policy', 'no-referrer')
+
     def _json_response(self, data, status=200):
         body = json.dumps(data, ensure_ascii=False, indent=2).encode('utf-8')
         self.send_response(status)
@@ -1109,7 +1122,13 @@ class APIHandler(SimpleHTTPRequestHandler):
         """CORS preflight."""
         self.send_response(204)
         self._send_cors_headers()
+        self._send_security_headers()
         self.end_headers()
+
+    def end_headers(self):
+        """Ajoute les headers de securite sur toutes les reponses."""
+        self._send_security_headers()
+        super().end_headers()
 
     def log_message(self, format, *args):
         """Log concis."""
@@ -1126,6 +1145,11 @@ def main():
     if not os.path.isdir(INTERFACE_DIR):
         print(f'Attention : dossier {INTERFACE_DIR} absent, creation...', file=sys.stderr)
         os.makedirs(INTERFACE_DIR, exist_ok=True)
+
+    # Securiser le dossier confidentiel
+    confidentiel_dir = os.path.join(SCRIPT_DIR, 'confidentiel')
+    if os.path.isdir(confidentiel_dir):
+        os.chmod(confidentiel_dir, 0o700)
 
     server = ThreadingHTTPServer((args.host, args.port), APIHandler)
     server._download_whitelist = set()
