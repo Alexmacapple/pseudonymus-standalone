@@ -191,6 +191,13 @@ document.getElementById('btn-clear').addEventListener('click', () => {
     hideAlert('alert-pseudo');
 });
 
+document.getElementById('btn-copier-exemple').addEventListener('click', () => {
+    const exemple = document.getElementById('exemple-texte').textContent;
+    document.getElementById('input-texte').value = exemple;
+    document.getElementById('output-texte').value = '';
+    hideAlert('alert-pseudo');
+});
+
 // --- Page Correspondances ---
 
 const ITEMS_PER_PAGE = 20;

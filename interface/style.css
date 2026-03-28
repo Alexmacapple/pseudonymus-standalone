@@ -78,13 +78,18 @@ textarea[readonly] {
 /* Bouton retour en haut */
 #btn-top {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
     z-index: 100;
     background: var(--background-default-grey);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    border-radius: 0.25rem;
-    padding: 0.5rem 1rem;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Responsive ajustements */

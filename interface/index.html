@@ -164,6 +164,63 @@
                 </div>
             </div>
 
+            <!-- Exemple pedagogique -->
+            <div class="fr-accordions-group fr-mb-2w">
+                <section class="fr-accordion">
+                    <h2 class="fr-accordion__title">
+                        <button class="fr-accordion__btn" aria-expanded="false" aria-controls="exemple-demo">Testez les options : trouvez les différences</button>
+                    </h2>
+                    <div class="fr-collapse" id="exemple-demo">
+                        <p>Copiez ce texte dans le champ source, puis cochez/décochez les options pour voir ce qui change :</p>
+                        <pre class="fr-text--sm" id="exemple-texte" style="white-space:pre-wrap;background:var(--background-alt-grey);padding:1rem;border-radius:0.25rem">Objet : Signalement de M. Dupont concernant la facturation ORANGE
+
+Bonjour Marie,
+
+Je vous confirme que le dossier de Jean-Pierre MARTINEZ (né le 12/04/1985 à Bordeaux) a été transmis à la Société Générale SA.
+
+Coordonnées :
+- Email : jean-pierre.martinez@example.fr
+- Email secondaire : martinez [at] example [dot] fr
+- Téléphone : 06 12 34 56 78
+- Adresse : 24 rue Victor Hugo, 33000 Bordeaux
+- IBAN : FR76 1234 5678 9012 3456 7890 123
+- Numéro de sécurité sociale : 1 85 04 33 123 456 78
+- IP : 192.168.42.100
+- MAC : AA:BB:CC:DD:EE:FF
+
+Cordialement, Svetlana Novikova</pre>
+                        <button class="fr-btn fr-btn--sm fr-btn--secondary fr-mt-1w" id="btn-copier-exemple" type="button">Copier dans le champ source</button>
+
+                        <h3 class="fr-mt-3w">Que chercher selon les options ?</h3>
+                        <div class="fr-table">
+                            <table>
+                                <caption>Comparaison des modes de détection</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Donnée dans le texte</th>
+                                        <th scope="col">Standard</th>
+                                        <th scope="col">+ Fort</th>
+                                        <th scope="col">+ Tech</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>M. Dupont, Marie, email, tel</td><td>Détecté</td><td>idem</td><td>idem</td></tr>
+                                    <tr><td>IBAN, NIR, adresse</td><td>Détecté</td><td>idem</td><td>idem</td></tr>
+                                    <tr><td><strong>Jean-Pierre MARTINEZ</strong></td><td>Non détecté</td><td><strong>Détecté</strong></td><td>idem</td></tr>
+                                    <tr><td><strong>33000</strong> (code postal)</td><td>Non détecté</td><td><strong>Détecté</strong></td><td>idem</td></tr>
+                                    <tr><td><strong>12/04/1985</strong> (naissance)</td><td>Non détecté</td><td><strong>Détecté</strong></td><td>idem</td></tr>
+                                    <tr><td><strong>Svetlana Novikova</strong></td><td>Non détecté</td><td><strong>Détecté</strong></td><td>idem</td></tr>
+                                    <tr><td><strong>192.168.42.100</strong> (IP)</td><td>Non détecté</td><td>Non détecté</td><td><strong>Détecté</strong></td></tr>
+                                    <tr><td><strong>AA:BB:CC:DD:EE:FF</strong> (MAC)</td><td>Non détecté</td><td>Faux positif</td><td><strong>Détecté</strong></td></tr>
+                                    <tr><td>ORANGE</td><td colspan="3">Protégé si ajouté dans la Whitelist ci-dessus</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="fr-text--sm fr-mt-1w"><strong>NLP (spaCy)</strong> : ajoute la détection par intelligence artificielle pour les noms étrangers ou rares absents des dictionnaires.</p>
+                    </div>
+                </section>
+            </div>
+
             <div class="fr-btns-group fr-btns-group--inline">
                 <button class="fr-btn" id="btn-pseudonymise" type="button">Pseudonymiser</button>
                 <button class="fr-btn fr-btn--secondary" id="btn-clear" type="button">Effacer</button>
@@ -1182,9 +1239,7 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
     </main>
 
     <!-- Bouton retour en haut -->
-    <div class="fr-container">
-        <a class="fr-link fr-icon-arrow-up-line fr-link--icon-left" href="#top" id="btn-top" hidden>Haut de page</a>
-    </div>
+    <a class="fr-btn fr-btn--sm fr-icon-arrow-up-line" href="#top" id="btn-top" title="Haut de page" aria-label="Haut de page" hidden></a>
 
     <!-- Pied de page -->
     <footer class="fr-footer" role="contentinfo" id="footer">
