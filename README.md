@@ -201,11 +201,11 @@ Les dictionnaires sont livrés dans `data/` et prêts à l'emploi. Le script `co
 # Tests moteur : 49 tests
 python3 tests/test-options.py
 
-# Tests formats, serveur, API : 117 tests (avec venv)
+# Tests formats, serveur, API : 145 tests (avec venv)
 python3 tests/test-v3.py
 ```
 
-166 tests au total (49 + 117), zéro échec. Utiliser le venv pour couvrir tous les formats : `.venv/bin/python3 tests/test-v3.py`
+208 tests au total (49 + 145 + 14 e2e), zéro échec. Utiliser le venv pour couvrir tous les formats : `.venv/bin/python3 tests/test-v3.py`
 
 ---
 
@@ -220,7 +220,7 @@ pseudonymus-standalone/
   convertir-donnees.py   Régénération des données statiques
   tests/
     test-options.py      Tests moteur (49 tests)
-    test-v3.py           Tests v3 (117 tests avec venv)
+    test-v3.py           Tests v3 (145 tests avec venv)
   requirements.txt       Dépendances optionnelles
   LICENSE                GPL v3
   CHANGELOG.md           Historique des versions

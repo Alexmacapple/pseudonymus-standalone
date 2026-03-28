@@ -12,7 +12,7 @@ Voir [CLAUDE.md](CLAUDE.md) pour l'architecture, les conventions et les commande
 Exécute les deux suites de tests (49 moteur + 43 API) et vérifie la non-régression. À lancer après toute modification de code.
 
 ```
-Seuil : 166/166, 0 FAIL, 0 SKIP
+Seuil : 208/208, 0 FAIL, 0 SKIP
 ```
 
 ---

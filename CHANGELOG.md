@@ -5,6 +5,57 @@ Issu de la branche `feature/alex-workflow` du depot `pseudonymus2`.
 
 ---
 
+## v3.4.0 — 2026-03-28
+
+Page Analyse de fichier, securisation production, couverture de tests complete.
+
+### Nouvelles fonctionnalites
+
+- **Analyse de fichier** : nouvelle page `#analyse` pour explorer le contenu d'un fichier et scorer chaque enregistrement RGPD (cards DSFR, bouton Copier, unwrap JSON auto, 50 fiches)
+- **Bouton retour en haut** : visible apres 400px de scroll, scroll smooth vers les resultats
+
+### Securite
+
+- Whitelist download : seuls les fichiers generes par le serveur sont telechargeables (403 sinon)
+- CORS restreint : uniquement localhost + variable `PSEUDONYMUS_ALLOWED_ORIGIN`
+- Content-Length : limite a 400 Mo (413 au-dela)
+- Headers HTTP : X-Content-Type-Options nosniff, X-Frame-Options DENY, Referrer-Policy no-referrer
+- Validation extension upload : seuls les 11 formats supportes sont acceptes
+- Erreurs 500 masquees (message generique sans chemin systeme)
+- tempfile.mktemp() remplace par NamedTemporaryFile
+- chmod 700 confidentiel/ au demarrage du serveur
+
+### Accessibilite
+
+- Skip links DSFR (RGAA 12.7) : contenu, menu, pied de page
+- Ancres sommaire documentation fonctionnelles (resolveHash)
+- Emails @gmail.com remplaces par @example.fr partout (fixtures, placeholders, doc)
+
+### Tests
+
+- 208 tests (49 moteur + 145 API + 14 e2e navigateur), 0 FAIL
+- NLP (spaCy), --chunk-size, --input-dir, --tech, --mapping-generate couverts
+- 12 tests de securite (path traversal, CORS, Content-Length, extensions, erreurs)
+- 11 tests API /api/analyze
+- Script e2e navigateur : tests/test-e2e.sh (agent-browser)
+- Formats TXT, MD, ODS, ODT testes
+
+### Documentation
+
+- Sections Installation et Formats supportes ajoutees
+- Sommaire 7 sections avec ancres fonctionnelles
+
+### Divers
+
+- Version centralisee dans serveur.py, exposee via /api/health
+- Modale DSFR native (dialog) avec version dynamique
+- Fixtures consolidees dans tests/fixtures/ (ex test-alex/)
+- install.sh complet avec tests automatiques
+- .editorconfig pour la coherence de formatage
+- PRD securisation et analyse livres (prd/done/)
+
+---
+
 ## v3.3.0 — 2026-03-27
 
 Refonte UX de l'interface web, nouveaux formats, documentation restructurée.

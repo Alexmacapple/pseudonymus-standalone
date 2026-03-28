@@ -36,7 +36,7 @@ pseudonymus-standalone/
 │   └── done/              # PRD terminés + documentation
 ├── tests/
 │   ├── test-options.py    # 49 tests moteur
-│   └── test-v3.py         # 117 tests formats + serveur + API
+│   └── test-v3.py         # 145 tests formats + serveur + API
 ├── requirements.txt       # Dépendances optionnelles
 ├── CHANGELOG.md           # Historique des versions
 └── LICENSE                # GPL v3
@@ -67,7 +67,7 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
 
 # Tests
 python3 tests/test-options.py         # 49 tests moteur
-.venv/bin/python3 tests/test-v3.py   # 117 tests formats + API + e2e
+.venv/bin/python3 tests/test-v3.py   # 145 tests formats + API + e2e
 ```
 
 ---
@@ -118,7 +118,7 @@ python3 tests/test-options.py    # Moteur : modes, options, formats, dépseudony
 python3 tests/test-v3.py         # Formats multi, serveur, API REST
 ```
 
-Seuil : **166/166 (49 + 117)**, 0 FAIL, 0 SKIP.
+Seuil : **208/208 (49 + 145 + 14 e2e)**, 0 FAIL, 0 SKIP.
 Exécuter avec le venv pour couvrir tous les formats : `.venv/bin/python3 tests/test-v3.py`
 
 ---

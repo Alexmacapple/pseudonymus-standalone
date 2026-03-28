@@ -32,7 +32,7 @@ from formats import detect_format, load_file, save_file
 
 
 INTERFACE_DIR = os.path.join(SCRIPT_DIR, 'interface')
-VERSION = '3.3.0'
+VERSION = '3.4.0'
 SUPPORTED_EXTENSIONS = {'.json', '.csv', '.tsv', '.xlsx', '.xls', '.ods', '.docx', '.odt', '.pdf', '.txt', '.md'}
 
 
