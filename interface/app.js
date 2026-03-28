@@ -91,16 +91,46 @@ function navigateTo(pageId) {
     }
 }
 
+// Resoudre un hash : page, page virtuelle, ou ancre interne
+function resolveHash(hash) {
+    if (!hash) return { page: DEFAULT_PAGE, anchor: null };
+    if (PAGE_TITLES[hash] || VIRTUAL_PAGES[hash]) return { page: hash, anchor: null };
+    // Ancre interne : chercher l'element dans le DOM et sa page parente
+    const el = document.getElementById(hash);
+    if (el) {
+        const parentPage = el.closest('.page');
+        if (parentPage) {
+            const pageId = parentPage.id.replace('page-', '');
+            return { page: pageId, anchor: hash };
+        }
+    }
+    return { page: hash, anchor: null };
+}
+
 // Ecouter les changements de hash
 window.addEventListener('hashchange', () => {
     const hash = window.location.hash.slice(1) || DEFAULT_PAGE;
-    navigateTo(hash);
+    const { page, anchor } = resolveHash(hash);
+    navigateTo(page);
+    if (anchor) {
+        setTimeout(() => {
+            const target = document.getElementById(anchor);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    }
 });
 
 // Navigation initiale au chargement
 (function() {
     const hash = window.location.hash.slice(1) || DEFAULT_PAGE;
-    navigateTo(hash);
+    const { page, anchor } = resolveHash(hash);
+    navigateTo(page);
+    if (anchor) {
+        setTimeout(() => {
+            const target = document.getElementById(anchor);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    }
 })();
 
 // --- Page Pseudonymisation ---
@@ -901,7 +931,7 @@ async function loadServerInfo() {
                     <caption>Informations techniques</caption>
                     <tbody>
                         <tr><td><strong>Statut</strong></td><td>${statusBadge}</td></tr>
-                        <tr><td><strong>Version</strong></td><td>v3.3.0</td></tr>
+                        <tr><td><strong>Version</strong></td><td>v${health.version || '?'}</td></tr>
                         <tr><td><strong>Adresse</strong></td><td><code>${window.location.origin}</code></td></tr>
                         <tr><td><strong>Formats supportés</strong></td><td>JSON, CSV, TSV, XLSX, XLS, ODS, DOCX, ODT, PDF, TXT, MD</td></tr>
                         <tr><td><strong>Patronymes INSEE</strong></td><td>${(dict.patronymes || 0).toLocaleString('fr-FR')}</td></tr>

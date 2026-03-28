@@ -32,6 +32,7 @@ from formats import detect_format, load_file, save_file
 
 
 INTERFACE_DIR = os.path.join(SCRIPT_DIR, 'interface')
+VERSION = '3.3.0'
 
 
 class APIHandler(SimpleHTTPRequestHandler):
@@ -49,7 +50,7 @@ class APIHandler(SimpleHTTPRequestHandler):
         elif path == '/api/stats':
             self._handle_stats()
         elif path == '/api/health':
-            self._json_response({'status': 'ok', 'dictionnaires': {
+            self._json_response({'status': 'ok', 'version': VERSION, 'dictionnaires': {
                 'patronymes': len(engine.PATRONYMES),
                 'prenoms': len(engine.PRENOMS),
             }})
