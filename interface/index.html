@@ -10,6 +10,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Liens d'evitement RGAA -->
+    <div class="fr-skiplinks">
+        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+            <ul class="fr-skiplinks__list">
+                <li><a class="fr-link" href="#main">Contenu</a></li>
+                <li><a class="fr-link" href="#header-navigation">Menu</a></li>
+                <li><a class="fr-link" href="#footer">Pied de page</a></li>
+            </ul>
+        </nav>
+    </div>
+
     <!-- En-tete -->
     <header role="banner" class="fr-header">
         <div class="fr-header__body">
@@ -34,7 +45,7 @@
         <!-- Navigation -->
         <div class="fr-header__menu">
             <div class="fr-container">
-                <nav class="fr-nav" role="navigation" aria-label="Menu principal">
+                <nav id="header-navigation" class="fr-nav" role="navigation" aria-label="Menu principal">
                     <ul class="fr-nav__list">
                         <li class="fr-nav__item">
                             <a class="fr-nav__link" href="#pseudonymisation" data-page="pseudonymisation" aria-current="page">Pseudonymisation</a>
@@ -91,7 +102,7 @@
                     <div class="fr-input-group">
                         <label class="fr-label" for="input-texte">Texte source</label>
                         <textarea class="fr-input" id="input-texte" rows="12"
-                            placeholder="Bonjour Marie Dupont, votre email est marie.dupont@gmail.com et votre numéro 06 12 34 56 78."></textarea>
+                            placeholder="Bonjour Marie Dupont, votre email est marie.dupont@example.fr et votre numéro 06 12 34 56 78."></textarea>
                     </div>
                 </div>
                 <div class="fr-col-12 fr-col-md-6">
@@ -629,12 +640,12 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
             <ol>
                 <li>Allez dans l'onglet <a href="#pseudonymisation">Pseudonymisation</a></li>
                 <li>Collez ce texte dans le champ « Texte source » :<br>
-                    <code>Bonjour Marie Dupont, votre email est marie.dupont@gmail.com et votre numéro 06 12 34 56 78.</code></li>
+                    <code>Bonjour Marie Dupont, votre email est marie.dupont@example.fr et votre numéro 06 12 34 56 78.</code></li>
                 <li>Cliquez sur <strong>Pseudonymiser</strong></li>
                 <li>Le résultat apparaît à droite :<br>
                     <code>Bonjour [PERSONNE_1], votre email est [EMAIL_1] et votre numéro [TEL_1].</code></li>
             </ol>
-            <p>Les données personnelles ont été remplacées par des jetons. La table de correspondances (onglet <a href="#correspondances">Correspondances</a>) vous montre que <code>[PERSONNE_1]</code> = Marie Dupont, <code>[EMAIL_1]</code> = marie.dupont@gmail.com, etc.</p>
+            <p>Les données personnelles ont été remplacées par des jetons. La table de correspondances (onglet <a href="#correspondances">Correspondances</a>) vous montre que <code>[PERSONNE_1]</code> = Marie Dupont, <code>[EMAIL_1]</code> = marie.dupont@example.fr, etc.</p>
 
             <h4>Pour traiter un fichier complet</h4>
             <ol>
