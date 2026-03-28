@@ -11,11 +11,20 @@ Usage :
 import argparse
 import io
 import json
+import logging
 import os
 import re
 import sys
 import tempfile
 import traceback
+
+logger = logging.getLogger('pseudonymus')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    stream=sys.stderr,
+)
 from concurrent.futures import ThreadPoolExecutor
 from http.server import HTTPServer, SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
@@ -272,7 +281,7 @@ class APIHandler(SimpleHTTPRequestHandler):
 
             ext = os.path.splitext(file_path)[1].lower()
 
-            print(f'[serveur] Traitement local : {file_path}', file=sys.stderr)
+            logger.info(f'Traitement local : {file_path}')
 
             # Charger le fichier
             if ext == '.json':
@@ -288,7 +297,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                 data = data[:100]
                 import copy
                 apercu_avant = copy.deepcopy(data[:10])
-            print(f'[serveur] {total} enregistrements charges{" (dry-run: 100 max)" if dry_run else ""}.', file=sys.stderr)
+            logger.info(f'{total} enregistrements charges{" (dry-run: 100 max)" if dry_run else ""}.')
 
             # Traitement
             tokens = engine.TokenTable()
@@ -307,12 +316,12 @@ class APIHandler(SimpleHTTPRequestHandler):
                     stats.errors += 1
                     output.append(record)
                 if (i + 1) % 1000 == 0:
-                    print(f'[serveur] [{i + 1}/{total}]', file=sys.stderr)
+                    logger.info(f'[{i + 1}/{total}]')
 
             correspondances = self._tokens_to_list(tokens)
 
-            print(f'[serveur] Termine : {len(output)} enregistrements, '
-                  f'{sum(stats.counts.values())} remplacements.', file=sys.stderr)
+            logger.info(f'Termine : {len(output)} enregistrements, '
+                  f'{sum(stats.counts.values())} remplacements.')
 
             if dry_run:
                 # Dry-run : pas d'ecriture, retour du rapport + apercu avant/apres
@@ -361,7 +370,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                     zf.write(output_path, os.path.basename(output_path))
                     if csv_path and os.path.exists(csv_path):
                         zf.write(csv_path, f'confidentiel/{os.path.basename(csv_path)}')
-                print(f'[serveur] Zip cree : {zip_path}', file=sys.stderr)
+                logger.info(f'Zip cree : {zip_path}')
 
             # Ajouter les fichiers generes a la whitelist de telechargement
             for p in [output_path, csv_path, zip_path]:
@@ -433,7 +442,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                 self._json_error(400, f'Aucun fichier traitable dans {dir_path}')
                 return
 
-            print(f'[serveur] Batch : {len(fichiers)} fichiers dans {dir_path}', file=sys.stderr)
+            logger.info(f'Batch : {len(fichiers)} fichiers dans {dir_path}')
 
             # Dry-run batch : traiter uniquement le premier fichier (100 enregistrements)
             if dry_run:
@@ -448,7 +457,7 @@ class APIHandler(SimpleHTTPRequestHandler):
 
             for nom_fichier in fichiers_a_traiter:
                 file_path = os.path.join(dir_path, nom_fichier)
-                print(f'[serveur] Batch : traitement de {nom_fichier}...', file=sys.stderr)
+                logger.info(f'Batch : traitement de {nom_fichier}...')
 
                 try:
                     ext = os.path.splitext(nom_fichier)[1].lower()
@@ -523,7 +532,7 @@ class APIHandler(SimpleHTTPRequestHandler):
                         'statut': 'erreur',
                         'erreur': str(e),
                     })
-                    print(f'[serveur] Batch : erreur sur {nom_fichier} : {e}', file=sys.stderr)
+                    logger.info(f'Batch : erreur sur {nom_fichier} : {e}')
 
             response = {
                 'fichiers': resultats,
@@ -538,8 +547,8 @@ class APIHandler(SimpleHTTPRequestHandler):
             if dry_run:
                 response['dry_run'] = True
 
-            print(f'[serveur] Batch termine : {len(fichiers_a_traiter)} fichiers, '
-                  f'{total_enregistrements} enregistrements, {total_remplacements} remplacements.', file=sys.stderr)
+            logger.info(f'Batch termine : {len(fichiers_a_traiter)} fichiers, '
+                  f'{total_enregistrements} enregistrements, {total_remplacements} remplacements.')
 
             self._json_response(response)
         except Exception as e:
@@ -1292,8 +1301,8 @@ class APIHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
     def log_message(self, format, *args):
-        """Log concis."""
-        sys.stderr.write(f'[serveur] {args[0]}\n')
+        """Log HTTP via le logger structure."""
+        logger.info(args[0])
 
 
 def main():
@@ -1304,7 +1313,7 @@ def main():
 
     # Vérifier que le dossier interface existe
     if not os.path.isdir(INTERFACE_DIR):
-        print(f'Attention : dossier {INTERFACE_DIR} absent, creation...', file=sys.stderr)
+        logger.warning(f'Dossier {INTERFACE_DIR} absent, creation...')
         os.makedirs(INTERFACE_DIR, exist_ok=True)
 
     # Securiser le dossier confidentiel
@@ -1314,15 +1323,15 @@ def main():
 
     server = PooledHTTPServer((args.host, args.port), APIHandler)
     server._download_whitelist = set()
-    print(f'\nServeur de pseudonymisation demarre', file=sys.stderr)
-    print(f'  Interface : http://{args.host}:{args.port}/', file=sys.stderr)
-    print(f'  API       : http://{args.host}:{args.port}/api/', file=sys.stderr)
-    print(f'  Arret     : Ctrl+C\n', file=sys.stderr)
+    logger.info('Serveur de pseudonymisation demarre')
+    logger.info(f'Interface : http://{args.host}:{args.port}/')
+    logger.info(f'API : http://{args.host}:{args.port}/api/')
+    logger.info('Arret : Ctrl+C')
 
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print('\nArret du serveur.', file=sys.stderr)
+        logger.info('Arret du serveur.')
         server.server_close()
 
 
