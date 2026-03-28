@@ -102,10 +102,12 @@ Tout en français : commits, documentation, messages d'erreur, interface.
 
 ## Points d'attention
 
-- **`confidentiel/`** contient les correspondances en clair (jetons / valeurs originales). Ce dossier est gitignoré et ne doit jamais être versionné.
+- **`confidentiel/`** contient les correspondances en clair (jetons / valeurs originales). Ce dossier est gitignoré (chmod 700) et ne doit jamais être versionné.
 - **`data/noms.json`** (11,6 Mo) et **`data/prenoms.json`** (1,9 Mo) sont des données de référence immuables. Elles ne sont pas régénérées par `convertir-donnees.py`.
 - **Le serveur écoute sur `127.0.0.1` uniquement** (pas d'accès réseau). Ne jamais changer pour `0.0.0.0` sans sécurisation.
-- **`/api/download`** accepte un chemin arbitraire sans validation (risque de path traversal). À sécuriser avant tout déploiement non local.
+- **`/api/download`** est sécurisé par whitelist : seuls les fichiers générés par le serveur sont téléchargeables.
+- **Fichiers > 500 Mo** : en mode chemin local (interface web), le fichier est chargé entièrement en mémoire. Pour les très gros fichiers, utiliser le CLI avec `--chunk-size 5000` (streaming par paquets, nécessite ijson).
+- **CORS** : restreint à localhost. Pour un accès externe (Tailscale), définir `PSEUDONYMUS_ALLOWED_ORIGIN=https://mon-serveur.ts.net:port`.
 
 ---
 

@@ -329,6 +329,9 @@
                         <span class="fr-hint-text">Le chemin ci-dessus est un dossier. Tous les fichiers supportés seront traités.</span>
                     </label>
                 </div>
+                <div class="fr-callout fr-callout--brown-caramel fr-mt-2w fr-text--sm">
+                    <p class="fr-callout__text">Pour les fichiers de plus de 500 Mo, privilégiez la ligne de commande avec l'option <code>--chunk-size</code> pour éviter une saturation de la mémoire :<br><code>.venv/bin/python3 pseudonymise.py fichier.json --mapping mapping.json --chunk-size 5000 --pseudo</code></p>
+                </div>
             </div>
 
             <h2 class="fr-mt-3w">Mapping</h2>

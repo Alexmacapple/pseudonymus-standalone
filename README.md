@@ -244,10 +244,22 @@ pseudonymus-standalone/
 ## Sécurité
 
 - Le serveur écoute sur `127.0.0.1` uniquement (pas d'accès réseau)
-- Le fichier `confidentiel/correspondances.csv` contient les données en clair
-- Permissions `chmod 600` appliquées automatiquement
-- Gitignoré (fichier `.gitignore` créé automatiquement)
-- Ne jamais partager les correspondances avec un service externe
+- `/api/download` sécurisé par whitelist (seuls les fichiers générés sont téléchargeables)
+- Headers HTTP : `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`
+- CORS restreint à localhost (variable `PSEUDONYMUS_ALLOWED_ORIGIN` pour les accès externes)
+- Upload limité à 400 Mo (`Content-Length` vérifié côté serveur)
+- Validation des extensions : seuls les 11 formats supportés sont acceptés
+- `confidentiel/` : chmod 700 automatique, gitignoré, correspondances en clair (ne jamais partager)
+
+## Fichiers volumineux
+
+Pour les fichiers de plus de 500 Mo, le mode chemin local de l'interface web charge le fichier en mémoire. Utilisez le CLI avec `--chunk-size` pour le streaming :
+
+```bash
+.venv/bin/python3 pseudonymise.py gros-fichier.json --mapping mapping.json --chunk-size 5000 --pseudo
+```
+
+Cette option traite le fichier par paquets de 5 000 enregistrements sans saturer la mémoire (nécessite `ijson`).
 
 ---
 
