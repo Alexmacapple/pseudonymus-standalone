@@ -25,9 +25,14 @@ Page Analyse de fichier, securisation production, couverture de tests complete.
 - tempfile.mktemp() remplace par NamedTemporaryFile
 - chmod 700 confidentiel/ au demarrage du serveur
 
-### Accessibilite
+### Accessibilite et W3C
 
 - Skip links DSFR (RGAA 12.7) : contenu, menu, pied de page
+- H1 unique cache (fr-sr-only), titres de pages en h2 (critere 9.1)
+- Roles ARIA redondants supprimes (role=navigation sur nav, etc.)
+- Suppression des title orphelins sur les inputs file (label[for] suffit)
+- Title des liens coherents avec le nom accessible visible
+- Th vides remplaces (caption "Critere")
 - Ancres sommaire documentation fonctionnelles (resolveHash)
 - Emails @gmail.com remplaces par @example.fr partout (fixtures, placeholders, doc)
 
@@ -45,6 +50,15 @@ Page Analyse de fichier, securisation production, couverture de tests complete.
 - Sections Installation et Formats supportes ajoutees
 - Sommaire 7 sections avec ancres fonctionnelles
 
+### UX et interface
+
+- Options harmonisees entre les pages Pseudonymisation et Import (radio pseudo/anon + checkboxes fort/tech/nlp)
+- Accordeon pedagogique interactif avec exemple synthetique et tableau comparatif des modes
+- Tableau pseudo vs anon (reversible/irreversible, correspondances, cas d'usage)
+- Branding : logo Gouvernement, titre Pseudonymisation - Miweb
+- Pool de threads limite (8 workers) pour la resistance a la charge
+- Logs structures avec timestamps et niveaux (module logging)
+
 ### Divers
 
 - Version centralisee dans serveur.py, exposee via /api/health
@@ -53,6 +67,7 @@ Page Analyse de fichier, securisation production, couverture de tests complete.
 - install.sh complet avec tests automatiques
 - .editorconfig pour la coherence de formatage
 - PRD securisation et analyse livres (prd/done/)
+- 46 commits, 12 PRD livres
 
 ---
 

@@ -77,30 +77,33 @@ Les dépendances sont optionnelles : le script fonctionne sans si le format n'es
 python3 serveur.py --port 8090
 ```
 
-Serveur local sur http://127.0.0.1:8090 avec 6 pages :
+Serveur local sur http://127.0.0.1:8090 avec 7 pages :
 
 | Page | URL | Fonction |
 |------|-----|----------|
 | Pseudonymisation | `/#pseudonymisation` | Coller du texte et pseudonymiser |
 | Import fichier | `/#import-fichier` | Traiter un fichier complet (upload ou chemin local) |
-| Scoring RGPD | `/#scoring-rgpd` | Évaluer le risque avant pseudonymisation |
+| Analyse fichier | `/#analyse` | Explorer un fichier et scorer chaque enregistrement RGPD |
+| Scoring RGPD | `/#scoring-rgpd` | Évaluer le risque d'un texte avant pseudonymisation |
 | Correspondances | `/#correspondances` | Table jeton/valeur avec recherche et export CSV |
 | Restauration | `/#restauration` | Dépseudonymiser avec les correspondances |
-| Documentation | `/#documentation` | CLI, guide interface web, glossaire, FAQ |
+| Documentation | `/#documentation` | Installation, CLI, interface web, glossaire, FAQ |
 
 ### API
 
 | Route | Méthode | Fonction |
 |-------|---------|----------|
 | `/api/pseudonymise-texte` | POST | Pseudonymiser du texte brut |
-| `/api/pseudonymise` | POST | Pseudonymiser un fichier (upload) |
+| `/api/pseudonymise` | POST | Pseudonymiser un fichier (upload multipart) |
 | `/api/pseudonymise-local` | POST | Pseudonymiser via chemin local (gros fichiers) |
-| `/api/depseudonymise` | POST | Restaurer les jetons |
-| `/api/score` | POST | Scoring RGPD |
 | `/api/pseudonymise-batch` | POST | Traitement par lot (dossier entier) |
+| `/api/analyze` | POST | Analyser un fichier (scoring RGPD par enregistrement) |
+| `/api/depseudonymise` | POST | Restaurer les jetons |
+| `/api/score` | POST | Scoring RGPD d'un texte |
 | `/api/mapping/generate` | POST | Génération automatique de mapping (JSON ou upload) |
+| `/api/download` | GET | Télécharger un fichier généré (whitelist) |
 | `/api/stats` | GET | Statistiques dictionnaires |
-| `/api/health` | GET | Santé du serveur |
+| `/api/health` | GET | Santé du serveur + version |
 
 ---
 
@@ -218,9 +221,12 @@ pseudonymus-standalone/
   formats.py             Parseurs multi-format (CSV, XLSX, ODS, DOCX, ODT, PDF, TXT, MD)
   serveur.py             Serveur web local (port 8090)
   convertir-donnees.py   Régénération des données statiques
+  install.sh             Installation complete (venv + dependances + tests)
   tests/
     test-options.py      Tests moteur (49 tests)
-    test-v3.py           Tests v3 (145 tests avec venv)
+    test-v3.py           Tests API/formats/securite (145 tests avec venv)
+    test-e2e.sh          Tests e2e navigateur (14 tests, agent-browser)
+    fixtures/            Donnees de reference (golden files)
   requirements.txt       Dépendances optionnelles
   LICENSE                GPL v3
   CHANGELOG.md           Historique des versions
@@ -231,7 +237,7 @@ pseudonymus-standalone/
   exemples/              Exemples de mappings et données de test
   confidentiel/          Correspondances CSV (gitignoré)
   interface/             Frontend DSFR
-    index.html           6 pages (pseudo, import, scoring, correspondances, restauration, doc)
+    index.html           7 pages (pseudo, import, analyse, scoring, correspondances, restauration, doc)
     app.js               Logique frontend
     style.css            Styles complémentaires
     dsfr/                CSS, JS et polices DSFR en local

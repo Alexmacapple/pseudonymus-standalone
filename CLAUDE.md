@@ -28,15 +28,18 @@ pseudonymus-standalone/
 ├── exemples/              # Mappings et données de test
 ├── confidentiel/          # Correspondances CSV (gitignoré, jamais versionné)
 ├── interface/             # Frontend DSFR
-│   ├── index.html         # 6 pages (pseudo, import, scoring, correspondances, restauration, doc)
+│   ├── index.html         # 7 pages (pseudo, import, analyse, scoring, correspondances, restauration, doc)
 │   ├── app.js             # Logique frontend
 │   ├── style.css          # Styles complémentaires
 │   └── dsfr/              # CSS, JS, polices DSFR embarqués
 ├── prd/                   # PRD à faire (à la racine)
 │   └── done/              # PRD terminés + documentation
+├── install.sh             # Installation complete (venv + dependances + tests)
 ├── tests/
 │   ├── test-options.py    # 49 tests moteur
-│   └── test-v3.py         # 145 tests formats + serveur + API
+│   ├── test-v3.py         # 145 tests API/formats/securite
+│   ├── test-e2e.sh        # 14 tests e2e navigateur (agent-browser)
+│   └── fixtures/          # Donnees de reference
 ├── requirements.txt       # Dépendances optionnelles
 ├── CHANGELOG.md           # Historique des versions
 └── LICENSE                # GPL v3
