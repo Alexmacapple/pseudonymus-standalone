@@ -13,7 +13,7 @@
     <div id="top"></div>
     <!-- Liens d'evitement RGAA -->
     <div class="fr-skiplinks">
-        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+        <nav class="fr-container" aria-label="Accès rapide">
             <ul class="fr-skiplinks__list">
                 <li><a class="fr-link" href="#main">Contenu</a></li>
                 <li><a class="fr-link" href="#header-navigation">Menu</a></li>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- En-tete -->
-    <header role="banner" class="fr-header">
+    <header class="fr-header">
         <div class="fr-header__body">
             <div class="fr-container">
                 <div class="fr-header__body-row">
@@ -46,7 +46,7 @@
         <!-- Navigation -->
         <div class="fr-header__menu">
             <div class="fr-container">
-                <nav id="header-navigation" class="fr-nav" role="navigation" aria-label="Menu principal">
+                <nav id="header-navigation" class="fr-nav" aria-label="Menu principal">
                     <ul class="fr-nav__list">
                         <li class="fr-nav__item">
                             <a class="fr-nav__link" href="#pseudonymisation" data-page="pseudonymisation" aria-current="page">Pseudonymisation</a>
@@ -77,7 +77,7 @@
 
     <!-- Fil d'Ariane -->
     <div class="fr-container fr-mt-2w">
-        <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <nav class="fr-breadcrumb" aria-label="vous êtes ici :">
             <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d'Ariane</button>
             <div class="fr-collapse" id="breadcrumb">
                 <ol class="fr-breadcrumb__list" id="breadcrumb-list">
@@ -92,13 +92,14 @@
         </nav>
     </div>
 
-    <main role="main" id="main" class="fr-container fr-my-4w">
+    <main id="main" class="fr-container fr-my-4w">
+        <h1 class="fr-sr-only">Pseudonymisation - Miweb</h1>
 
         <!-- ============================================ -->
         <!-- PAGE : Pseudonymisation                      -->
         <!-- ============================================ -->
         <section id="page-pseudonymisation" class="page active">
-            <h1>Pseudonymisation de texte</h1>
+            <h2>Pseudonymisation de texte</h2>
             <p class="fr-text--lg">Collez ou saisissez du texte contenant des données personnelles.</p>
 
             <div class="fr-grid-row fr-grid-row--gutters">
@@ -264,7 +265,7 @@ Cordialement, Svetlana Novikova</pre>
         <!-- PAGE : Correspondances                       -->
         <!-- ============================================ -->
         <section id="page-correspondances" class="page">
-            <h1>Table de correspondances</h1>
+            <h2>Table de correspondances</h2>
             <p class="fr-text--lg">Visualisez les correspondances jeton / valeur originale de la dernière pseudonymisation.</p>
 
             <div id="correspondances-vide" class="fr-callout fr-mt-3w">
@@ -303,7 +304,7 @@ Cordialement, Svetlana Novikova</pre>
                 </div>
 
                 <!-- Pagination -->
-                <nav role="navigation" class="fr-pagination fr-mt-2w" aria-label="Pagination de la table de correspondances">
+                <nav class="fr-pagination fr-mt-2w" aria-label="Pagination de la table de correspondances">
                     <ul class="fr-pagination__list" id="pagination-correspondances"></ul>
                 </nav>
             </div>
@@ -313,7 +314,7 @@ Cordialement, Svetlana Novikova</pre>
         <!-- PAGE : Restauration                          -->
         <!-- ============================================ -->
         <section id="page-restauration" class="page">
-            <h1>Restauration (dépseudonymisation)</h1>
+            <h2>Restauration (dépseudonymisation)</h2>
             <p class="fr-text--lg">Remplacez les jetons par les valeurs originales.</p>
 
             <div class="fr-grid-row fr-grid-row--gutters">
@@ -354,7 +355,7 @@ Cordialement, Svetlana Novikova</pre>
         <!-- PAGE : Import fichier                        -->
         <!-- ============================================ -->
         <section id="page-import-fichier" class="page">
-            <h1>Import de fichier</h1>
+            <h2>Import de fichier</h2>
             <p class="fr-text--lg">Importez un fichier pour le pseudonymiser.</p>
 
             <h2 class="fr-mt-3w">Fichier à traiter</h2>
@@ -608,7 +609,7 @@ Cordialement, Svetlana Novikova</pre>
         <!-- PAGE : Analyse fichier                       -->
         <!-- ============================================ -->
         <section id="page-analyse" class="page">
-            <h1>Analyse de fichier</h1>
+            <h2>Analyse de fichier</h2>
             <p class="fr-text--lg">Explorez le contenu d'un fichier et évaluez son niveau de risque RGPD avant traitement.</p>
 
             <h2 class="fr-mt-3w">Fichier à analyser</h2>
@@ -724,7 +725,7 @@ Cordialement, Svetlana Novikova</pre>
         <!-- PAGE : Scoring RGPD                          -->
         <!-- ============================================ -->
         <section id="page-scoring-rgpd" class="page">
-            <h1>Scoring RGPD</h1>
+            <h2>Scoring RGPD</h2>
             <p class="fr-text--lg">Évaluez le niveau de risque RGPD d'un texte avant pseudonymisation.</p>
 
             <div class="fr-input-group">
@@ -802,10 +803,10 @@ Cordialement, Svetlana Novikova</pre>
         <section id="page-documentation" class="page">
             <div class="fr-grid-row">
             <div class="fr-col-12 fr-col-md-8">
-            <h1>Documentation</h1>
+            <h2>Documentation</h2>
             <p class="fr-text--lg">Outil de pseudonymisation 100 % local. Aucune donnée personnelle ne quitte la machine.</p>
 
-            <nav class="fr-summary" role="navigation" aria-labelledby="fr-summary-title">
+            <nav class="fr-summary" aria-labelledby="fr-summary-title">
                 <p class="fr-summary__title" id="fr-summary-title">Sommaire</p>
                 <ol class="fr-summary__list">
                     <li>
@@ -1306,7 +1307,7 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
     <a class="fr-btn fr-btn--sm fr-icon-arrow-up-line" href="#top" id="btn-top" title="Haut de page" aria-label="Haut de page" hidden></a>
 
     <!-- Pied de page -->
-    <footer class="fr-footer" role="contentinfo" id="footer">
+    <footer class="fr-footer" id="footer">
         <div class="fr-container">
             <div class="fr-footer__body">
                 <div class="fr-footer__brand fr-enlarge-link">
@@ -1360,7 +1361,7 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
     </footer>
 
     <!-- Modale informations serveur -->
-    <dialog id="modal-serveur" class="fr-modal" role="dialog" aria-labelledby="modal-serveur-title">
+    <dialog id="modal-serveur" class="fr-modal" aria-labelledby="modal-serveur-title">
         <div class="fr-container fr-container--fluid fr-container-md">
             <div class="fr-grid-row fr-grid-row--center">
                 <div class="fr-col-12 fr-col-md-8">
@@ -1369,7 +1370,7 @@ python3 depseudonymise.py fichier_PSEUDO.json --correspondances confidentiel/cor
                             <button class="fr-btn--close fr-btn" id="modal-serveur-close" title="Fermer la fenêtre" aria-controls="modal-serveur">Fermer</button>
                         </div>
                         <div class="fr-modal__content">
-                            <h1 id="modal-serveur-title" class="fr-modal__title">Informations du serveur</h1>
+                            <h2 id="modal-serveur-title" class="fr-modal__title">Informations du serveur</h2>
                             <div id="modal-serveur-content">
                                 <p>Chargement...</p>
                             </div>
