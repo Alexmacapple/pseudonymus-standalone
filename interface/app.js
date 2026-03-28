@@ -611,6 +611,7 @@ document.getElementById('btn-import').addEventListener('click', async () => {
         document.getElementById('import-stat-score').textContent = data.score.total + ' (' + data.score.niveau + ')';
 
         document.getElementById('import-progress-text').textContent = 'Terminé.';
+        document.getElementById('import-result').scrollIntoView({ behavior: 'smooth' });
         let msg = data.total + ' enregistrements traités, ' + data.stats.total + ' remplacements.';
         if (data.output_path) {
             msg += ' Fichier : ' + data.output_path;
@@ -794,6 +795,7 @@ document.getElementById('btn-preview').addEventListener('click', async () => {
         showAlert('alert-import',
             'Prévisualisation terminée (dry-run). Aucun fichier écrit. Cliquez sur « Lancer le traitement » pour tout traiter.',
             'info');
+        document.getElementById('preview-result').scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
         showAlert('alert-import', 'Erreur : ' + err.message, 'error');
     } finally {
@@ -868,7 +870,7 @@ document.getElementById('btn-analyse').addEventListener('click', async () => {
             fetchOptions = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({path: filepath, fort, limit: 20}),
+                body: JSON.stringify({path: filepath, fort, limit: 50}),
             };
         } else {
             const fileInput = document.getElementById('analyse-upload-fichier');
@@ -881,7 +883,7 @@ document.getElementById('btn-analyse').addEventListener('click', async () => {
             formData.append('file', file, file.name);
             formData.append('filename', file.name);
             formData.append('fort', fort);
-            formData.append('limit', '20');
+            formData.append('limit', '50');
             fetchOptions = {
                 method: 'POST',
                 body: formData,
@@ -937,6 +939,7 @@ document.getElementById('btn-analyse').addEventListener('click', async () => {
         cardsDiv.innerHTML = html;
 
         showAlert('alert-analyse', r.echantillon + ' enregistrements analysés sur ' + r.total_enregistrements.toLocaleString('fr-FR') + '. Score max : ' + r.score_max + ' (' + r.niveau_max + ').', 'info');
+        document.getElementById('analyse-resume').scrollIntoView({ behavior: 'smooth' });
 
     } catch (err) {
         showAlert('alert-analyse', 'Erreur : ' + err.message, 'error');
@@ -1073,6 +1076,15 @@ async function loadServerInfo() {
     } catch (err) {
         container.innerHTML = '<div class="fr-alert fr-alert--error"><p>Impossible de contacter le serveur : ' + escapeHtml(err.message) + '</p></div>';
     }
+}
+
+// --- Bouton retour en haut ---
+
+const btnTop = document.getElementById('btn-top');
+if (btnTop) {
+    window.addEventListener('scroll', () => {
+        btnTop.hidden = window.scrollY < 400;
+    });
 }
 
 // --- Utilitaires ---
