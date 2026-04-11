@@ -1,0 +1,12 @@
+name: "Header et navigation"
+description: "Header DSFR, menu 7 liens, fil d'Ariane"
+priority: haute
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/"
+  - action: llm-check
+    description: "Header DSFR visible"
+    criteria: "Le header affiche Gouvernement, titre Pseudonymisation Miweb, sous-titre traitement local. Le menu contient 7 liens de navigation. Le fil d'Ariane est present"
+    severity: haute
+    screenshot: "header-navigation.png"

@@ -1,0 +1,12 @@
+name: "Pseudonymisation"
+description: "Page principale — formulaire texte, options, resultats"
+priority: critique
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/#pseudonymisation"
+  - action: llm-check
+    description: "Formulaire visible"
+    criteria: "Le formulaire de pseudonymisation est visible avec zone de texte, options (mode pseudo/anon, force, tech, NLP), whitelist, blacklist, bouton Lancer"
+    severity: critique
+    screenshot: "pseudonymisation.png"

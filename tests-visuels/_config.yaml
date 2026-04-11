@@ -1,0 +1,14 @@
+version: 1
+projet: "Pseudonymus"
+framework: statique
+url_base: "http://localhost:8090"
+dossier_source: "interface"
+commande_build: ""
+authentification:
+  active: false
+captures:
+  dossier: "tests-visuels/_resultats/captures"
+  pleine_page: true
+rapport: "tests-visuels/_resultats/rapport.md"
+categories: auto
+agent_browser_version: "0.9.x"

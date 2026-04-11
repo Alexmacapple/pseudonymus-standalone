@@ -1,0 +1,17 @@
+{
+  "projet": "Pseudonymus",
+  "date": "2026-04-10T02:00:00",
+  "url_base": "http://localhost:8090",
+  "framework": "statique",
+  "tests": [
+    { "id": "ui/header-navigation", "name": "Header et navigation", "categorie": "ui", "statut": "PASS", "duree": 1.5, "capture": "captures/header-navigation.png", "steps": [{ "action": "llm-check", "detail": "Header DSFR visible", "resultat": "PASS", "justification": "Logo Gouvernement, titre Pseudonymisation Miweb, 7 liens navigation", "duree": 1.5 }] },
+    { "id": "pages/pseudonymisation", "name": "Pseudonymisation", "categorie": "pages", "statut": "PASS", "duree": 2.0, "capture": "captures/pseudonymisation.png", "steps": [{ "action": "llm-check", "detail": "Formulaire visible", "resultat": "PASS", "justification": "Zones texte, options pseudo/anon, placeholder donnees personnelles", "duree": 2.0 }] },
+    { "id": "pages/import-fichier", "name": "Import fichier", "categorie": "pages", "statut": "PASS", "duree": 1.8, "capture": "captures/import-fichier.png", "steps": [{ "action": "llm-check", "detail": "Import visible", "resultat": "PASS", "justification": "Choix upload/disque, formats acceptes, mapping", "duree": 1.8 }] },
+    { "id": "pages/analyse", "name": "Analyse fichier", "categorie": "pages", "statut": "PASS", "duree": 1.5, "capture": "captures/analyse.png", "steps": [{ "action": "llm-check", "detail": "Analyse visible", "resultat": "PASS", "justification": "Page analyse visible", "duree": 1.5 }] },
+    { "id": "pages/scoring-rgpd", "name": "Scoring RGPD", "categorie": "pages", "statut": "PASS", "duree": 1.5, "capture": "captures/scoring-rgpd.png", "steps": [{ "action": "llm-check", "detail": "Scoring visible", "resultat": "PASS", "justification": "Page scoring RGPD visible", "duree": 1.5 }] },
+    { "id": "pages/correspondances", "name": "Correspondances", "categorie": "pages", "statut": "PASS", "duree": 1.5, "capture": "captures/correspondances.png", "steps": [{ "action": "llm-check", "detail": "Correspondances visible", "resultat": "PASS", "justification": "Tableau vide, message Aucune correspondance", "duree": 1.5 }] },
+    { "id": "pages/restauration", "name": "Restauration", "categorie": "pages", "statut": "PASS", "duree": 1.8, "capture": "captures/restauration.png", "steps": [{ "action": "llm-check", "detail": "Restauration visible", "resultat": "PASS", "justification": "Zones texte pseudonymise/restaure, upload CSV", "duree": 1.8 }] },
+    { "id": "pages/documentation", "name": "Documentation", "categorie": "pages", "statut": "PASS", "duree": 1.5, "capture": "captures/documentation.png", "steps": [{ "action": "llm-check", "detail": "Documentation visible", "resultat": "PASS", "justification": "Sommaire 6 sections", "duree": 1.5 }] }
+  ],
+  "resume": { "total": 8, "pass": 8, "fail": 0, "erreur": 0 }
+}

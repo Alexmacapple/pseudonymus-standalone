@@ -1,0 +1,12 @@
+name: "Analyse fichier"
+description: "Page analyse — statistiques et scoring"
+priority: normale
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/#analyse"
+  - action: llm-check
+    description: "Page analyse visible"
+    criteria: "La page analyse est visible avec un tableau ou un message invitant a charger un fichier"
+    severity: haute
+    screenshot: "analyse.png"

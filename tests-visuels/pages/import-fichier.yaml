@@ -1,0 +1,12 @@
+name: "Import fichier"
+description: "Page import — upload fichier, mapping, options batch"
+priority: haute
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/#import-fichier"
+  - action: llm-check
+    description: "Interface import visible"
+    criteria: "La page import est visible avec choix source (upload/local), champ fichier, mapping, options (pseudo/anon, force, tech, NLP), bouton Traiter"
+    severity: haute
+    screenshot: "import-fichier.png"

@@ -1,0 +1,12 @@
+name: "Scoring RGPD"
+description: "Page scoring — evaluation conformite RGPD"
+priority: normale
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/#scoring-rgpd"
+  - action: llm-check
+    description: "Page scoring visible"
+    criteria: "La page scoring RGPD est visible avec un tableau de resultats ou un message d'etat vide"
+    severity: haute
+    screenshot: "scoring-rgpd.png"

@@ -1,0 +1,12 @@
+name: "Restauration"
+description: "Page restauration — depseudonymisation"
+priority: haute
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/#restauration"
+  - action: llm-check
+    description: "Page restauration visible"
+    criteria: "La page restauration est visible avec une zone de texte pour coller le texte pseudonymise, un bouton Restaurer et une zone de resultat"
+    severity: haute
+    screenshot: "restauration.png"

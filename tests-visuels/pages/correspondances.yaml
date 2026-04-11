@@ -1,0 +1,12 @@
+name: "Correspondances"
+description: "Page correspondances — tableau jetons, recherche, export"
+priority: haute
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/#correspondances"
+  - action: llm-check
+    description: "Page correspondances visible"
+    criteria: "La page correspondances est visible avec un champ de recherche, un tableau de correspondances ou un message d'etat vide, et un bouton d'upload CSV"
+    severity: haute
+    screenshot: "correspondances.png"

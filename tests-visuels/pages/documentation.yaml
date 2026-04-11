@@ -1,0 +1,12 @@
+name: "Documentation"
+description: "Page documentation — guide utilisateur"
+priority: normale
+requires_auth: false
+steps:
+  - action: open
+    url: "{url_base}/#documentation"
+  - action: llm-check
+    description: "Documentation visible"
+    criteria: "La page documentation est visible avec du contenu textuel structure (titres, paragraphes, exemples)"
+    severity: normale
+    screenshot: "documentation.png"
